@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.google.gson.JsonObject;
 import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.resource.model.IModel;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
@@ -14,6 +15,6 @@ public interface IItemModel extends IModel {
 	String getParent();
 	IItemDisplay getDisplay();
 	Map<String, ItemTexture> getLayers();
-	String generateResouce(@Nonnull IMinecraftMod mod) throws IOException;
+	String generateResource(@Nonnull IMinecraftMod mod) throws IOException;
 
 }

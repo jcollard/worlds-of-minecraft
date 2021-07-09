@@ -9,16 +9,16 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
-import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 /**
  * A MinecraftModBuilder is used to specify the components which should be
@@ -124,13 +124,12 @@ public class MinecraftModBuilder {
 
 	private void generateItems(MinecraftMod mod) {
 		Utils utils = Utils.getInstance();
-
 		for (IItem item : this.items.values()) {
 			Path outfile = utils.getItemModelsDir(mod).resolve(item.getSimpleRegistryName() + ".json");
 			System.out.println("Creating model file: " + outfile);
 			// TODO(jcollard 7/9/2021): CREATE_NEW and blow up if file alredy exists?
 			try {
-				Files.write(outfile, item.getModel().generateResouce(mod).toString().getBytes(), StandardOpenOption.CREATE);
+				Files.write(outfile, item.getModel().generateResource(mod).getBytes(), StandardOpenOption.CREATE);
 			} catch (IOException e) {
 				throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
 			}
@@ -138,21 +137,17 @@ public class MinecraftModBuilder {
 	}
 
 	private void generateLangFile(MinecraftMod mod) {
-		StringBuilder b = new StringBuilder();
-		// TODO(jcollard 7/8/2021): Use JSON writier
-		b.append("{\n");
+		JsonObject lang = new JsonObject();
 		List<String> entries = new LinkedList<String>();
 		for (String registryName : this.items.keySet()) {
-			entries.add("  \"" + registryName + "\": \"" + items.get(registryName).getName() + "\"");
+			lang.add(registryName, new JsonPrimitive(items.get(registryName).getName()));
 		}
-		b.append(String.join(",\n", entries));
-		b.append('\n');
-		b.append("}\n");
+		
 		Path outfile = Utils.getInstance().getLangFileDir(mod).resolve("en_us.json");
 		System.out.println("Creating language file: " + outfile);
 		try {
 			Files.createDirectories(Utils.getInstance().getLangFileDir(mod));
-			Files.write(outfile, b.toString().getBytes(), StandardOpenOption.CREATE);
+			Files.write(outfile, Utils.getInstance().getGson().toJson(lang).getBytes(), StandardOpenOption.CREATE);
 		} catch (IOException e) {
 			throw new BuildFailedException("Could not create language file \"" + outfile + "\".", e);
 		}

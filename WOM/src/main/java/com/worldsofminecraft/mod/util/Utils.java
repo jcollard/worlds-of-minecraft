@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.worldsofminecraft.mod.IMinecraftMod;
 
 public class Utils {
@@ -16,6 +18,8 @@ public class Utils {
 	
 	private String rootDir = ".";
 	private boolean live = false;
+	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	
 	
 	public static Utils getInstance() {
 		return INSTANCE;
@@ -147,6 +151,10 @@ public class Utils {
 	
 	public boolean isLive() {
 		return this.live;
+	}
+	
+	public Gson getGson() {
+		return this.gson;
 	}
 
 

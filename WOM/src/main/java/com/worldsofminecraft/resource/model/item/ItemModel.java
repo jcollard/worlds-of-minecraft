@@ -2,8 +2,6 @@ package com.worldsofminecraft.resource.model.item;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -11,7 +9,13 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.IMinecraftMod;
+import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemDisplay.Position;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
@@ -79,45 +83,48 @@ public class ItemModel implements IItemModel {
 	}
 
 	@Override
-	public String generateResouce(IMinecraftMod mod) throws IOException {
+	public String generateResource(IMinecraftMod mod) throws IOException {
 
-		List<String> textures = new LinkedList<String>();
-
-		// Generate all textures
+		JsonObject model = new JsonObject();
+		model.add("parent", new JsonPrimitive(parent));
+		
+		JsonObject textures = new JsonObject();
 		for (Entry<String, ItemTexture> texture : layers.entrySet()) {
 			String textureRegistryName = texture.getValue().generateResource(mod);
-			textures.add("    \"" + texture.getKey() + "\": \"" + textureRegistryName + "\"");
+			textures.add(texture.getKey(), new JsonPrimitive(textureRegistryName));
 		}
-
-		// TODO(jcollard 7/9/2021): Write JSON type for items.
-		StringBuilder b = new StringBuilder();
-		b.append("{\n");
-		b.append("  \"parent\": \"" + parent + "\",\n");
-
-		b.append("  \"textures\": {\n");
-		b.append(String.join(",\n", textures));
-		b.append("\n");
-		b.append("  }\n");
+		model.add("textures", textures);
 
 		if(this.display != null) {
-			b.append(",  \"display\":{\n");
-			for(Entry<Position, IItemTransform> transform : display.getTransforms().entrySet()) {
-				Vector3D r = transform.getValue().getRotation();
-				Vector3D t = transform.getValue().getTranslation();
-				Vector3D s = transform.getValue().getScale();
-				b.append("    \"" + transform.getKey().KEY + "\": {\n");
-				b.append("      \"rotation\": [ " + r.X + ", " + r.Y + ", " + r.Z + " ],\n");
-				b.append("      \"translation\": [ " + t.X + ", " + t.Y + ", " + t.Z + " ],\n");
-				b.append("      \"scale\": [ " + s.X + ", " + s.Y + ", " + s.Z + " ]\n");
-				b.append("    }\n");
+			JsonObject display = new JsonObject();
+			
+			for(Entry<Position, IItemTransform> transform : this.display.getTransforms().entrySet()) {
+				JsonObject transforms = new JsonObject();
+				
+				JsonArray rotation = new JsonArray();
+				rotation.add(new JsonPrimitive(transform.getValue().getRotation().X));
+				rotation.add(new JsonPrimitive(transform.getValue().getRotation().Y));
+				rotation.add(new JsonPrimitive(transform.getValue().getRotation().Z));
+				transforms.add("rotation", rotation);
+				
+				JsonArray translation = new JsonArray();
+				translation.add(new JsonPrimitive(transform.getValue().getTranslation().X));
+				translation.add(new JsonPrimitive(transform.getValue().getTranslation().Y));
+				translation.add(new JsonPrimitive(transform.getValue().getTranslation().Z));
+				transforms.add("translation", translation);
+				
+				JsonArray scale = new JsonArray();
+				scale.add(new JsonPrimitive(transform.getValue().getScale().X));
+				scale.add(new JsonPrimitive(transform.getValue().getScale().Y));
+				scale.add(new JsonPrimitive(transform.getValue().getScale().Z));
+				transforms.add("scale", scale);
+				
+				display.add(transform.getKey().KEY, transforms);
 			}
-			b.append("  }\n");
+			model.add("display",  display);
 		}
 		
-		
-		b.append("}");
-
-		return b.toString();
+		return Utils.getInstance().getGson().toJson(model);
 	}
 
 }
