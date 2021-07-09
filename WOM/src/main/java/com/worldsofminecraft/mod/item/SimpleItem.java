@@ -1,18 +1,25 @@
 package com.worldsofminecraft.mod.item;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.worldsofminecraft.mod.BuildFailedException;
+import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.util.Utils;
+import com.worldsofminecraft.resource.model.item.IItemModel;
+import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
-import com.worldsofminecraft.resource.texture.ITexture;
-import com.worldsofminecraft.resource.texture.ItemTexture;
+import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 public class SimpleItem implements IItem {
 
 	private final String name;
-	private final ItemTexture texture;
-	private String parent;
+	private final IItemModel model;
 	private String registryName;
 	private String simpleRegistryName;
 	
@@ -21,22 +28,19 @@ public class SimpleItem implements IItem {
 	}
 	
 	public SimpleItem(@Nonnull String name, @Nonnull ItemTexture texture) {
+		this(name, ItemModel.getBuilder(texture).build());
+	}
+	
+	public SimpleItem(@Nonnull String name, @Nonnull IItemModel model) {
 		Preconditions.checkArgument(name != null, "item name must not be null.");
-		Preconditions.checkArgument(texture != null, "texture must not be null");
+		Preconditions.checkArgument(model != null, "model must not be null");
 		this.name = Utils.getInstance().validateName(name);
-		this.texture = texture;
-		//TODO(jcollard 7/9/2021): Implement ability to have different parent
-		this.parent = "item/generated";
+		this.model = model;
 	}
 	
 	@Override
 	public String getName() {
 		return this.name;
-	}
-
-	@Override
-	public ITexture getTexture() {
-		return this.texture;
 	}
 
 	@Override
@@ -64,8 +68,8 @@ public class SimpleItem implements IItem {
 	}
 
 	@Override
-	public String getParent() {
-		return this.parent;
+	public IItemModel getModel() {
+		return this.model;
 	}
 
 }

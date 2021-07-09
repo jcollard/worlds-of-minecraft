@@ -1,4 +1,4 @@
-package com.worldsofminecraft.resource.texture;
+package com.worldsofminecraft.resource.texture.item;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +13,7 @@ import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
+import com.worldsofminecraft.resource.texture.ITexture;
 
 public class ItemTexture implements ITexture {
 	

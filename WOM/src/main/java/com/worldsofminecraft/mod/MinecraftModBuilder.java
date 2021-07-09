@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
@@ -17,6 +18,7 @@ import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
+import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 /**
  * A MinecraftModBuilder is used to specify the components which should be
@@ -104,14 +106,13 @@ public class MinecraftModBuilder {
 		items.put(item.getRegistryName(), item);
 		return this;
 	}
-	
-	public Map<String, IItem> getItems(){
+
+	public Map<String, IItem> getItems() {
 		return Collections.unmodifiableMap(this.items);
 	}
 
-
 	public IMinecraftMod build() {
-		if(Utils.getInstance().isLive()) {
+		if (Utils.getInstance().isLive()) {
 			throw new BuildFailedException("Cannot build mod during live mode.", new IllegalStateException());
 		}
 		MinecraftMod mod = new MinecraftMod(this);
@@ -120,59 +121,28 @@ public class MinecraftModBuilder {
 		generateLangFile(mod);
 		return mod;
 	}
-	
+
 	private void generateItems(MinecraftMod mod) {
 		Utils utils = Utils.getInstance();
 
-		Path itemDir = utils.getItemModelsDir(mod);
-		//TODO(jcollard 7/9/2021): Delete old files?
-		if(Files.notExists(itemDir)) {
-			System.out.println("Creating item model directory \"" + itemDir + "\"");
-			try {
-				Files.createDirectories(itemDir);
-			} catch (IOException e) {
-				throw new BuildFailedException("Could not create item directory \"" + itemDir + "\".", e);
-			}
-		}
-		
-		for(String registryName : this.items.keySet()) {
-			IItem item = this.items.get(registryName);
+		for (IItem item : this.items.values()) {
 			Path outfile = utils.getItemModelsDir(mod).resolve(item.getSimpleRegistryName() + ".json");
-			String textureRegistryName = null;
+			System.out.println("Creating model file: " + outfile);
+			// TODO(jcollard 7/9/2021): CREATE_NEW and blow up if file alredy exists?
 			try {
-				textureRegistryName = item.getTexture().generateResource(mod);
-			} catch (IOException e) {
-				throw new BuildFailedException("Unable to generate the texture for \"" + item.getName() + "\". ", e);
-			}
-			
-			//TODO(jcollard 7/9/2021): Write JSON type for items.
-			System.out.println("Creating item json: " + outfile);
-			StringBuilder b = new StringBuilder();
-			b.append("{\n");
-			b.append("  \"parent\": \"" + item.getParent() + "\",\n");
-			b.append("  \"textures\": {\n");
-			b.append("    \"layer0\": \"" + textureRegistryName + "\"\n");
-			b.append("  }\n");
-			b.append("}");
-			
-			
-			
-			//TODO(jcollard 7/9/2021): CREATE_NEW and blow up if file alredy exists?
-			try {
-				Files.write(outfile, b.toString().getBytes(), StandardOpenOption.CREATE);
+				Files.write(outfile, item.getModel().generateResouce(mod).toString().getBytes(), StandardOpenOption.CREATE);
 			} catch (IOException e) {
 				throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
 			}
-			
 		}
 	}
-	
+
 	private void generateLangFile(MinecraftMod mod) {
 		StringBuilder b = new StringBuilder();
-		//TODO(jcollard 7/8/2021): Use JSON writier
+		// TODO(jcollard 7/8/2021): Use JSON writier
 		b.append("{\n");
 		List<String> entries = new LinkedList<String>();
-		for(String registryName : this.items.keySet()) {
+		for (String registryName : this.items.keySet()) {
 			entries.add("  \"" + registryName + "\": \"" + items.get(registryName).getName() + "\"");
 		}
 		b.append(String.join(",\n", entries));
@@ -187,7 +157,7 @@ public class MinecraftModBuilder {
 			throw new BuildFailedException("Could not create language file \"" + outfile + "\".", e);
 		}
 	}
-	
+
 	private void generateModTOML(MinecraftMod mod) {
 		Utils utils = Utils.getInstance();
 		String modsToMLContents = Utils.getInstance().getModsToML(mod);
@@ -199,7 +169,8 @@ public class MinecraftModBuilder {
 			Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
 
 			if (mod.getLogo() != null) {
-				System.out.println("Creating logo file: " + utils.getResourcesDir().resolve(mod.getLogo().getFileName()));
+				System.out
+						.println("Creating logo file: " + utils.getResourcesDir().resolve(mod.getLogo().getFileName()));
 				Files.copy(mod.getLogo().getPath(), utils.getResourcesDir().resolve(mod.getLogo().getFileName()),
 						StandardCopyOption.REPLACE_EXISTING);
 			}
