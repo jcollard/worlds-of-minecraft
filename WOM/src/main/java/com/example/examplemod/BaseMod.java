@@ -1,5 +1,12 @@
 package com.example.examplemod;
 
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.worldsofminecraft.mod.MinecraftModBuilder;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,20 +20,25 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 
-public class ExampleMod
+public abstract class BaseMod
 {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
+    private final MinecraftModBuilder builder;
 
-    public ExampleMod() {
-        // Register the setup method for modloading
+    public BaseMod() {
+        builder = getBuilder();
+        init();
+    }
+    
+    private void init() {
+    	if(FMLJavaModLoadingContext.get() == null) {
+    		return;
+    	}
+    	// Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
@@ -81,4 +93,6 @@ public class ExampleMod
             LOGGER.info("HELLO from Register Block");
         }
     }
+    
+    public abstract MinecraftModBuilder getBuilder();
 }

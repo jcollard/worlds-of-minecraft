@@ -3,6 +3,7 @@ package com.worldsofminecraft.mod;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,12 +12,13 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.util.Utils;
+import com.worldsofminecraft.resource.png.IPNGResource;
 
 /**
  * A MinecraftModBuilder is used to specify the components which should be provided
- * with a MinecraftMod.
+ * with a {@link IMinecraftMod}.
  *  
- * @author Joseph Collard <jcollard@chadwickschool.org>
+ * @author Joseph Collard <jcollard@worldsofminecraft.ocm>
  *
  */
 public class MinecraftModBuilder {
@@ -87,20 +89,32 @@ public class MinecraftModBuilder {
 	}
 	
 	public IMinecraftMod build() {
-		IMinecraftMod mod = new MinecraftMod(this);
+		MinecraftMod mod = new MinecraftMod(this);
+		generateModTOML(mod);
+		
+		return mod;
+	}
+	
+	private void generateModTOML(MinecraftMod mod) {
+		Utils utils = Utils.getInstance();
 		String modsToMLContents = Utils.getInstance().getModsToML(mod);
-		Path modsToML = Utils.getInstance().getMetaDir().resolve("mods.toml");
+		Path modsToML = utils.getMetaDir().resolve("mods.toml");
 		try {
 			System.out.println("Writing " + modsToML);
 			Files.deleteIfExists(modsToML);
 			Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
+			
+			if (mod.getLogo() != null) {
+				System.out.println("Copying Logo File");
+				Files.copy(mod.getLogo().getPath(), utils.getResourcesDir().resolve(mod.getLogo().getFileName()), StandardCopyOption.REPLACE_EXISTING);
+			}
 			System.out.println("Done.");
 		} catch (IOException e) {
 			System.err.println("Could not create mods.toml.");
 			e.printStackTrace();
+			//TODO(jcollard 7/9/2021): Use Logging / Build Error list
 			System.exit(-1);
 		}
-		return mod;
 	}
 	
 	private static class MinecraftMod implements IMinecraftMod {
@@ -179,11 +193,11 @@ public class MinecraftModBuilder {
 		}
 
 		@Override
-		public String getLogoFile() {
+		public IPNGResource getLogo() {
 			if(logoFile == null) {
 				return null;
 			}
-			return logoFile.getFileName();
+			return logoFile;
 		}
 
 		@Override

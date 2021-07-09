@@ -5,9 +5,10 @@ modLoader="javafml"
 loaderVersion="[36,)"
 license="All rights reserved"
 [[mods]]
-modId="examplemod"
+modId="mymod"
 version="0.0.0"
 displayName="Example Mod"
+logoFile="banana.png"
 authors="Joseph Collard"
 description='''
 This is an example mod. Modify this line of code to change the description in Minecraft!

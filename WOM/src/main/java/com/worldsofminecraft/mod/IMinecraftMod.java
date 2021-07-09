@@ -2,6 +2,8 @@ package com.worldsofminecraft.mod;
 
 import java.util.List;
 
+import com.worldsofminecraft.resource.png.IPNGResource;
+
 public interface IMinecraftMod {
 
 	public String getModLoader();
@@ -13,7 +15,7 @@ public interface IMinecraftMod {
 	public String getUpdateJSONURL();
 	public String getIssueTrackerURL();
 	public String getDisplayURL();
-	public String getLogoFile();
+	public IPNGResource getLogo();
 	public String getCredits();
 	public String getAuthors();
 	public String getDescription();

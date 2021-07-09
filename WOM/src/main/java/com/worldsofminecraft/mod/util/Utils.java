@@ -39,7 +39,9 @@ public class Utils {
 		mapping.put("displayName", mod.getDisplayName());
 		mapping.put("updateJSONURL", mod.getUpdateJSONURL());
 		mapping.put("displayURL", mod.getDisplayURL());
-		mapping.put("logoFile", mod.getLogoFile());
+		if(mod.getLogo() != null) {
+			mapping.put("logoFile", mod.getLogo().getFileName());
+		}
 		mapping.put("credits", mod.getCredits());
 		mapping.put("authors", mod.getAuthors());
 		mapping.put("description", mod.getDescription());
@@ -86,6 +88,10 @@ public class Utils {
 	public Path getAssetsDir(@Nonnull IMinecraftMod mod) {
 		Preconditions.checkArgument(mod != null);
 		return Paths.get(rootDir).resolve("src/main/resources/assets/" + mod.getModId());
+	}
+
+	public Path getResourcesDir() {
+		return Paths.get(rootDir).resolve("src/main/resources/");
 	}
 	
 }
