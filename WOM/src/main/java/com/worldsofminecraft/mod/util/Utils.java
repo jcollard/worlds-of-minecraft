@@ -15,6 +15,7 @@ public class Utils {
 	private static final Utils INSTANCE = new Utils();
 	
 	private String rootDir = ".";
+	private boolean live = false;
 	
 	public static Utils getInstance() {
 		return INSTANCE;
@@ -93,5 +94,62 @@ public class Utils {
 	public Path getResourcesDir() {
 		return Paths.get(rootDir).resolve("src/main/resources/");
 	}
+	
+	public Path getItemModelsDir(@Nonnull IMinecraftMod mod) {
+		Preconditions.checkArgument(mod != null);
+		return getAssetsDir(mod).resolve("models/item/");
+	}
+
+	public Path getItemsTextureDir(@Nonnull IMinecraftMod mod) {
+		Preconditions.checkArgument(mod != null);
+		return getAssetsDir(mod).resolve("textures/items/");
+	}
+
+	public Path getLangFileDir(@Nonnull IMinecraftMod mod) {
+		Preconditions.checkArgument(mod != null);
+		return getAssetsDir(mod).resolve("lang/");
+	}
+
+	/**
+	 * Converts a string to a registry safe name by replacing all non-safe characters with an underscore.
+	 * @param string The string to convert
+	 * @return The registry safe version of the string
+	 */
+	public String safeRegistryName(@Nonnull String name) {
+		Preconditions.checkArgument(name != null);
+		return name.toLowerCase().replaceAll("\\W", "_");
+	}
+
+	public String validateName(String name) {
+		if(!name.matches("^[A-Za-z0-9]*[A-Za-z0-9 ][A-Za-z0-9 ]*$")) {
+			throw new InvalidNameException("The name \"" + name + "\" is invalid. A name may only contain letters, numbers, and spaces.");
+		}
+		return name;
+	}
+
+	public String validateRegistryName(String name) {
+		if(!name.matches("^[a-z][a-z0-9_]*$")) {
+			throw new InvalidNameException("The registry name \"" + name + "\" is invalid. A registry name must begin with a letter and contain only lowercase letters, numbers, and underscores.");
+		}
+		return name;
+	}
+
+	public String validateModId(String modId) {
+		if(!modId.matches("^[a-z][a-z_]*$")) {
+			throw new InvalidNameException("The modId \"" + modId + "\" is invalid. A modId must begin with a letter and contain only lowercase letters and underscores.");
+		}
+		return modId;
+	}
+
+	public void setLive(boolean b) {
+		this.live = b;
+	}
+	
+	public boolean isLive() {
+		return this.live;
+	}
+
+
+	
 	
 }

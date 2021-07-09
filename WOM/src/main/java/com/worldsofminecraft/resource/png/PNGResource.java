@@ -47,8 +47,14 @@ public class PNGResource implements IPNGResource {
 	 */
 	public static PNGResource get(@Nonnull Path path) {
 		Preconditions.checkArgument(path != null);
+		
+		//If we are live, we don't have access to the local file structure.
+		if(Utils.getInstance().isLive()) {
+			return new PNGResource(path);
+		}
+		
 		if (Files.notExists(path)) {
-			throw new PNGResourceException("No file not found at " + path);
+			throw new PNGResourceException("No file found at " + path);
 		}
 
 		String type;
@@ -86,13 +92,6 @@ public class PNGResource implements IPNGResource {
 	@Override
 	public Path getPath() {
 		return path;
-	}
-	
-	public static void main(String ... args) {
-		PNGResource png = PNGResource.get("assets/banana.png");
-		System.out.println(png.getFileName());
-		System.out.println(png.getSimpleName());
-		System.out.println(png.getPath());
 	}
 
 }
