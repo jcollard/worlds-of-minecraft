@@ -14,6 +14,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
@@ -147,6 +148,8 @@ public class MinecraftMod implements IMinecraftMod {
 		public final String MOD_ID;
 		public final String MOD_NAME;
 		public final String AUTHORS;
+		
+		private Logger LOGGER = Utils.getInstance().getLogger();
 
 		private final Map<String, IItem> items = new TreeMap<>();
 
@@ -250,7 +253,8 @@ public class MinecraftMod implements IMinecraftMod {
 			if (!Files.exists(modDir)) {
 				return;
 			}
-			System.out.println("Clearing out previous mod files: " + modDir);
+			
+			LOGGER.info("Clearing out previous mod files: " + modDir);
 			try {
 				Files.walk(modDir).map(Path::toFile).forEach(File::delete);
 			} catch (IOException e) {
@@ -262,7 +266,7 @@ public class MinecraftMod implements IMinecraftMod {
 			Utils utils = Utils.getInstance();
 			for (IItem item : this.items.values()) {
 				Path outfile = utils.getItemModelsDir(mod).resolve(item.getSimpleRegistryName() + ".json");
-				System.out.println("Creating model file: " + outfile);
+				LOGGER.info("Creating model file: " + outfile);
 				// TODO(2021-07-09 jcollard): CREATE_NEW and blow up if file alredy exists?
 				try {
 					Files.write(outfile, item.getModel().generateResource(mod).getBytes(), StandardOpenOption.CREATE);
@@ -279,7 +283,7 @@ public class MinecraftMod implements IMinecraftMod {
 			}
 
 			Path outfile = Utils.getInstance().getLangFileDir(mod).resolve("en_us.json");
-			System.out.println("Creating language file: " + outfile);
+			LOGGER.info("Creating language file: " + outfile);
 			try {
 				Files.createDirectories(Utils.getInstance().getLangFileDir(mod));
 				Files.write(outfile, Utils.getInstance().getGson().toJson(lang).getBytes(), StandardOpenOption.CREATE);
@@ -294,12 +298,12 @@ public class MinecraftMod implements IMinecraftMod {
 			Path modsToML = utils.getMetaDir().resolve("mods.toml");
 			try {
 				Files.createDirectories(utils.getMetaDir());
-				System.out.println("Creating " + modsToML);
+				LOGGER.info("Creating " + modsToML);
 				Files.deleteIfExists(modsToML);
 				Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
 
 				if (mod.getLogo() != null) {
-					System.out.println(
+					LOGGER.info(
 							"Creating logo file: " + utils.getResourcesDir().resolve(mod.getLogo().getFileName()));
 					Files.copy(mod.getLogo().getPath(), utils.getResourcesDir().resolve(mod.getLogo().getFileName()),
 							StandardCopyOption.REPLACE_EXISTING);

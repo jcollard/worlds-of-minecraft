@@ -44,7 +44,7 @@ public class ItemTexture implements ITexture {
 		Path textureDir = Utils.getInstance().getItemsTextureDir(mod);
 		Files.createDirectories(textureDir);
 		Path outfile = textureDir.resolve(png.getFileName());
-		System.out.println("Creating item texture: " + outfile);
+		Utils.getInstance().getLogger().info("Creating item texture: " + outfile);
 		Files.copy(png.getPath(), outfile, StandardCopyOption.REPLACE_EXISTING);
 		this.generated = mod.getModId() + ":items/" + png.getSimpleName(); 
 		return this.generated;

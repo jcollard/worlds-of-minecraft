@@ -60,6 +60,15 @@ public class ItemTransform implements IItemTransform {
 		this.translation = b.translation;
 		this.scale = b.scale;
 	}
+	
+	public ItemTransform(@Nonnull Vector3D rotation, @Nonnull Vector3D translation, @Nonnull Vector3D scale) {
+		Preconditions.checkArgument(rotation != null, "rotation must be non-null.");
+		Preconditions.checkArgument(translation != null, "translation must be non-null.");
+		Preconditions.checkArgument(scale != null, "scale must be non-null.");
+		this.rotation = rotation;
+		this.translation = translation;
+		this.scale = scale;
+	}
 
 	@Override
 	public Vector3D getRotation() {

@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,6 +22,7 @@ public class Utils {
 	private String rootDir = ".";
 	private boolean live = false;
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	private final Logger logger = LogManager.getLogger();
 	
 	
 	public static Utils getInstance() {
@@ -155,6 +159,10 @@ public class Utils {
 	
 	public Gson getGson() {
 		return this.gson;
+	}
+	
+	public Logger getLogger() {
+		return logger;
 	}
 
 
