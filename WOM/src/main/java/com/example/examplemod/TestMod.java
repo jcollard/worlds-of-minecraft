@@ -13,6 +13,7 @@ import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.model.item.ItemTransform;
 import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
+import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
 import net.minecraftforge.fml.common.Mod;
 
@@ -39,6 +40,10 @@ public class TestMod extends BaseMod {
 
 		builder.addItem(banana);
 		builder.addItem(banana2);
+		
+		ItemModel model2 = ItemModel.getBuilder(new MinecraftItemTexture("item/iron_sword")).parent("item/iron_sword").build();
+		QuickItem sword = new QuickItem("My Sword", model2);
+		builder.addItem(sword);
 		
 		builder.addResource(Paths.get("banana.png"), Paths.get("banana2.png"));
 		

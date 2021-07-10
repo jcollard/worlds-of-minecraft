@@ -236,7 +236,7 @@ public class MinecraftMod implements IMinecraftMod {
 		public Builder addResource(@Nonnull Path fromPath, @Nonnull Path toPath) {
 			Preconditions.checkArgument(fromPath != null);
 			Preconditions.checkArgument(toPath != null);
-			if(!Files.exists(fromPath)) {
+			if(!Utils.getInstance().isLive() && !Files.exists(fromPath)) {
 				throw new IllegalArgumentException("The file \"" + fromPath + "\" could not be found.");
 			}
 			resources.put(fromPath, toPath);
