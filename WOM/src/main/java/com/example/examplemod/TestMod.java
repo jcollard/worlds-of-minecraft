@@ -1,8 +1,10 @@
 package com.example.examplemod;
 
+import java.nio.file.Paths;
+
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
-import com.worldsofminecraft.mod.item.SimpleItem;
+import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.resource.model.item.IItemDisplay;
 import com.worldsofminecraft.resource.model.item.IItemDisplay.Position;
 import com.worldsofminecraft.resource.model.item.IItemTransform;
@@ -26,16 +28,19 @@ public class TestMod extends BaseMod {
 		builder.logoFile(PNGResource.get("assets/common/banana.png"));
 		builder.description("This is an example mod. Modify this line of code to change the description in Minecraft!");
 
-		SimpleItem banana = new SimpleItem("Banana of Greatness", PNGResource.get("assets/common/banana.png"));
-		IItemTransform transform = ItemTransform.getBuilder().scale(1.5f, 1.5f, 1.5f).build();
+		QuickItem banana = new QuickItem("Banana of Greatness", "assets/common/banana.png");
 		
+		IItemTransform transform = ItemTransform.getBuilder().scale(1.5f, 1.5f, 1.5f).build();
 		IItemDisplay display = ItemDisplay.getBuilder().transform(Position.FIRSTPERSON_LEFTHAND, transform).build();
 		ItemModel model = ItemModel.getBuilder(ItemTexture.get(PNGResource.get("assets/common/banana.png")))
 				.display(display).build();
-		SimpleItem banana2 = new SimpleItem("Banana", model);
+		
+		QuickItem banana2 = new QuickItem("Banana", model);
 
 		builder.addItem(banana);
 		builder.addItem(banana2);
+		
+		builder.addResource(Paths.get("banana.png"), Paths.get("banana2.png"));
 		
 		return builder;
 	}

@@ -7,30 +7,37 @@ import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
+import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
-public class SimpleItem implements IItem {
+public class QuickItem implements IItem {
 
 	private final String name;
 	private final IItemModel model;
 	private String registryName;
 	private String simpleRegistryName;
 	
-	public SimpleItem(@Nonnull String name, @Nonnull IPNGResource texture) {
+
+	public QuickItem(@Nonnull String name, @Nonnull String texture) {
+		this(name, PNGResource.get(texture));
+	}
+	
+	public QuickItem(@Nonnull String name, @Nonnull IPNGResource texture) {
 		this(name, ItemTexture.get(texture));
 	}
 	
-	public SimpleItem(@Nonnull String name, @Nonnull ItemTexture texture) {
+	public QuickItem(@Nonnull String name, @Nonnull ItemTexture texture) {
 		this(name, ItemModel.getBuilder(texture).build());
 	}
 	
-	public SimpleItem(@Nonnull String name, @Nonnull IItemModel model) {
+	public QuickItem(@Nonnull String name, @Nonnull IItemModel model) {
 		Preconditions.checkArgument(name != null, "item name must not be null.");
 		Preconditions.checkArgument(model != null, "model must not be null");
 		this.name = Utils.getInstance().validateName(name);
 		this.model = model;
 	}
 	
+
 	@Override
 	public String getName() {
 		return this.name;

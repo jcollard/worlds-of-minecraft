@@ -7,9 +7,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
@@ -152,6 +154,7 @@ public class MinecraftMod implements IMinecraftMod {
 		private Logger LOGGER = Utils.getInstance().getLogger();
 
 		private final Map<String, IItem> items = new TreeMap<>();
+		private final Map<Path, Path> resources = new HashMap<>();
 
 		// TODO(2021-07-08 jcollard): Consider if these should be part of the
 		// builder.
@@ -224,13 +227,24 @@ public class MinecraftMod implements IMinecraftMod {
 			return this;
 		}
 
-		public Map<String, IItem> getItems() {
-			return Collections.unmodifiableMap(this.items);
-		}
 
 		public Builder clearPreviousMod(boolean clear) {
 			this.clearPreviousMod = clear;
 			return this;
+		}
+		
+		public Builder addResource(@Nonnull Path fromPath, @Nonnull Path toPath) {
+			Preconditions.checkArgument(fromPath != null);
+			Preconditions.checkArgument(toPath != null);
+			if(!Files.exists(fromPath)) {
+				throw new IllegalArgumentException("The file \"" + fromPath + "\" could not be found.");
+			}
+			resources.put(fromPath, toPath);
+			return this;
+		}
+
+		public Map<String, IItem> getItems() {
+			return Collections.unmodifiableMap(this.items);
 		}
 
 		public IMinecraftMod build() {
@@ -242,9 +256,25 @@ public class MinecraftMod implements IMinecraftMod {
 			generateModTOML(mod);
 			generateItems(mod);
 			generateLangFile(mod);
+			generateResources(mod);
 			return mod;
 		}
 
+		private void generateResources(IMinecraftMod mod) {
+			if(resources.isEmpty()) {
+				return;
+			}
+			
+			for(Entry<Path, Path> resource : resources.entrySet()) {
+				try {
+					LOGGER.info("Creating resource: " + resource.getValue()); 
+					Files.copy(resource.getKey(), Utils.getInstance().getResourcesDir().resolve(resource.getValue()), StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					throw new BuildFailedException("Could not copy resource from \"" + resource.getKey() + "\" to \"" + resource.getValue() + "\".", e);
+				}
+			}
+		}
+		
 		private void clearPreviousMod(MinecraftMod mod) {
 			if(!clearPreviousMod) {
 				return;

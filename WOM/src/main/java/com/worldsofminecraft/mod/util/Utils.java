@@ -22,7 +22,7 @@ public class Utils {
 	private String rootDir = ".";
 	private boolean live = false;
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	private final Logger logger = LogManager.getLogger();
+	private final Logger logger = LogManager.getLogger("WOM");
 	
 	
 	public static Utils getInstance() {
