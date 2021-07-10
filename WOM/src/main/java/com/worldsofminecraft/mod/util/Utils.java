@@ -62,7 +62,7 @@ public class Utils {
 		b.append(mod.getDescription());
 		b.append("\n'''");
 		
-		//TODO(jcollard 7/8/2021): Write dependencies
+		//TODO(2021-07-08 jcollard): Write dependencies
 		
 		return b.toString();
 	}

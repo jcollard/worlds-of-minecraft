@@ -34,7 +34,7 @@ public abstract class BaseMod
 {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
-    private final MinecraftModBuilder builder;
+    private final MinecraftMod.Builder builder;
 
     public BaseMod() {
     	if(FMLJavaModLoadingContext.get() != null) {
@@ -118,5 +118,5 @@ public abstract class BaseMod
         }
     }
     
-    public abstract MinecraftModBuilder getBuilder();
+    public abstract MinecraftMod.Builder getBuilder();
 }

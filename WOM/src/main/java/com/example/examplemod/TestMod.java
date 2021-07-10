@@ -1,7 +1,7 @@
 package com.example.examplemod;
 
 import com.worldsofminecraft.mod.BaseMod;
-import com.worldsofminecraft.mod.MinecraftModBuilder;
+import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.item.SimpleItem;
 import com.worldsofminecraft.resource.model.item.IItemDisplay;
 import com.worldsofminecraft.resource.model.item.IItemDisplay.Position;
@@ -19,10 +19,10 @@ public class TestMod extends BaseMod {
 
 	public static final String MODID = "mymod";
 
-	public MinecraftModBuilder getBuilder() {
+	public MinecraftMod.Builder getBuilder() {
 		String authors = "Joseph Collard";
 		String modName = "Example Mod";
-		MinecraftModBuilder builder = new MinecraftModBuilder(authors, modName, MODID);
+		MinecraftMod.Builder builder = MinecraftMod.getBuilder(authors, modName, MODID);
 		builder.logoFile(PNGResource.get("assets/common/banana.png"));
 		builder.description("This is an example mod. Modify this line of code to change the description in Minecraft!");
 
@@ -36,7 +36,7 @@ public class TestMod extends BaseMod {
 
 		builder.addItem(banana);
 		builder.addItem(banana2);
-
+		
 		return builder;
 	}
 

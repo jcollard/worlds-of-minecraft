@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.google.gson.JsonObject;
 import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.resource.model.IModel;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;

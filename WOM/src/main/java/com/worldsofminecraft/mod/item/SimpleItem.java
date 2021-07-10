@@ -1,15 +1,8 @@
 package com.worldsofminecraft.mod.item;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
-import com.worldsofminecraft.mod.BuildFailedException;
-import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;

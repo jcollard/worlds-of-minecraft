@@ -9,8 +9,6 @@ import java.util.TreeMap;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -33,7 +31,7 @@ public class ItemModel implements IItemModel {
 
 		public ItemModelBuilder parent(@Nonnull String parent) {
 			Preconditions.checkArgument(parent != null);
-			// TODO(jcollard 7/9/20210): parent should be `item/generated` or another
+			// TODO(2021-07-09 jcollard): parent should be `item/generated` or another
 			// `item`. Ideally, we should do a check against all registered items /
 			// minecraft defaults
 			this.parent = parent;
