@@ -7,12 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.worldsofminecraft.mod.item.IItem;
+import com.worldsofminecraft.mod.item.ItemAdapter;
 import com.worldsofminecraft.mod.util.Utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -70,7 +70,7 @@ public abstract class BaseMod
     	Map<String, IItem> items = builder.getItems();
     	for(String registryName : items.keySet()) {
     		IItem i = items.get(registryName);
-    		ITEMS.register(i.getSimpleRegistryName(), () -> new Item(new Item.Properties().tab(ItemGroup.TAB_MISC)));
+    		ITEMS.register(i.getSimpleRegistryName(), () -> i.getItemBuilder().apply(i));
     	}
     	ITEMS.register(bus);
     }

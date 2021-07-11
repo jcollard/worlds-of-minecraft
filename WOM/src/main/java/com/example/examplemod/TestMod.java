@@ -4,7 +4,9 @@ import java.nio.file.Paths;
 
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
+import com.worldsofminecraft.mod.item.ItemUseContext;
 import com.worldsofminecraft.mod.item.QuickItem;
+import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemDisplay;
 import com.worldsofminecraft.resource.model.item.IItemDisplay.Position;
 import com.worldsofminecraft.resource.model.item.IItemTransform;
@@ -43,11 +45,16 @@ public class TestMod extends BaseMod {
 		
 		ItemModel model2 = ItemModel.getBuilder(new MinecraftItemTexture("item/iron_sword")).parent("item/iron_sword").build();
 		QuickItem sword = new QuickItem("My Sword", model2);
+		sword.setOnUse(TestMod::onUse);
 		builder.addItem(sword);
 		
 		builder.addResource(Paths.get("banana.png"), Paths.get("banana2.png"));
 		
 		return builder;
+	}
+	
+	public static void onUse(ItemUseContext context) {
+		Utils.getInstance().getLogger().debug("Testing!");
 	}
 
 	public static void main(String[] args) {

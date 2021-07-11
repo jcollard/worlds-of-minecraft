@@ -1,5 +1,8 @@
 package com.worldsofminecraft.mod.item;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
@@ -10,12 +13,19 @@ import com.worldsofminecraft.resource.png.IPNGResource;
 import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+
 public class QuickItem implements IItem {
 
 	private final String name;
 	private final IItemModel model;
+	private ItemTab tab = ItemTab.MISC;
 	private String registryName;
 	private String simpleRegistryName;
+	private Function<IItem, Item> supplier = (item) -> new ItemAdapter(item);
+	private Function<ItemUseContext, ActionResult<ItemStack>> onUse;
 	
 
 	public QuickItem(@Nonnull String name, @Nonnull String texture) {
@@ -70,6 +80,44 @@ public class QuickItem implements IItem {
 	@Override
 	public IItemModel getModel() {
 		return this.model;
+	}
+
+	@Override
+	public ItemTab getTab() {
+		return this.tab;
+	}
+	
+	public void setTab(@Nonnull ItemTab tab) {
+		Preconditions.checkArgument(tab != null);
+		this.tab = tab;
+	}
+
+	@Override
+	public Function<IItem, Item> getItemBuilder() {
+		return this.supplier;
+	}
+	
+	public void setItemBuilder(Function<IItem, Item> supplier) {
+		this.supplier = supplier;
+	}
+
+	@Override
+	public void setOnUse(@Nonnull Function<ItemUseContext, ActionResult<ItemStack>> onUse) {
+		Preconditions.checkArgument(onUse != null);
+		this.onUse = onUse;
+	}
+
+	@Override
+	public void setOnUse(Consumer<ItemUseContext> onUse) {
+		this.onUse = (context) -> {
+			onUse.accept(context);
+			return context.defaultBehavior.get();
+		};
+	}
+	
+	@Override
+	public Function<ItemUseContext, ActionResult<ItemStack>> onUse(){
+		return this.onUse;
 	}
 
 }
