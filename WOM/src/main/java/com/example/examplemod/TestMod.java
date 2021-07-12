@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
+import com.worldsofminecraft.mod.item.ItemTab;
 import com.worldsofminecraft.mod.item.ItemUseContext;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.util.Utils;
@@ -38,7 +39,11 @@ public class TestMod extends BaseMod {
 		ItemModel model = ItemModel.getBuilder(ItemTexture.get(PNGResource.get("assets/common/banana.png")))
 				.display(display).build();
 		
+		ItemTab bananaTab = builder.createCustomTab("Bananas", banana);
+		banana.setTab(bananaTab);
 		QuickItem banana2 = new QuickItem("Banana", model);
+		banana2.setTab(bananaTab);
+		
 
 		builder.addItem(banana);
 		builder.addItem(banana2);
@@ -59,7 +64,7 @@ public class TestMod extends BaseMod {
 
 	public static void main(String[] args) {
 		TestMod mod = new TestMod();
-		mod.getBuilder().build();
+		mod.BUILDER.build();
 	}
 
 }

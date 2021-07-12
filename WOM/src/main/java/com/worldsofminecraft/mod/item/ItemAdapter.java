@@ -9,15 +9,17 @@ import net.minecraft.world.World;
 
 public class ItemAdapter extends Item {
 	
-	private final IItem item;
+	private final QuickItem item;
 
-	public ItemAdapter(IItem item) {
+	public ItemAdapter(QuickItem item) {
 		super(ItemAdapter.getProperties(item));
 		this.item = item;
 	}
 
-	private static Properties getProperties(IItem item) {
-		return new Item.Properties().tab(item.getTab().getItemGroup());
+	private static Properties getProperties(QuickItem item) {
+		Properties p = new Item.Properties();
+		item.initProperties(p);
+		return p;
 	}
 
 	@Override

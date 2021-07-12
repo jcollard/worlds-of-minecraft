@@ -1,9 +1,13 @@
 package com.worldsofminecraft.mod.item;
 
+import javax.annotation.Nonnull;
+
+import com.google.common.base.Preconditions;
+
 import net.minecraft.item.ItemGroup;
 
 public class ItemTab {
-	
+
 	public static final ItemTab BREWING = new ItemTab(ItemGroup.TAB_BREWING);
 	public static final ItemTab BUILDING_BLOCKS = new ItemTab(ItemGroup.TAB_BUILDING_BLOCKS);
 	public static final ItemTab COMBAT = new ItemTab(ItemGroup.TAB_COMBAT);
@@ -19,13 +23,14 @@ public class ItemTab {
 	public static final ItemTab TRANSPORTATION = new ItemTab(ItemGroup.TAB_TRANSPORTATION);
 	
 	private final ItemGroup itemGroup;
-	
-	private ItemTab(ItemGroup tab) {
+
+	public ItemTab(@Nonnull ItemGroup tab) {
+		Preconditions.checkArgument(tab != null, "ItemGroup must be non-null.");
 		this.itemGroup = tab;
 	}
-	
+
 	public ItemGroup getItemGroup() {
 		return this.itemGroup;
 	}
-	
+
 }

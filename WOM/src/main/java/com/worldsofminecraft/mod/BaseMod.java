@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.worldsofminecraft.mod.item.IItem;
-import com.worldsofminecraft.mod.item.ItemAdapter;
 import com.worldsofminecraft.mod.util.Utils;
 
 import net.minecraft.block.Block;
@@ -18,6 +17,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -34,13 +34,13 @@ public abstract class BaseMod
 {
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
-    private final MinecraftMod.Builder builder;
+    public final MinecraftMod.Builder BUILDER;
 
     public BaseMod() {
     	if(FMLJavaModLoadingContext.get() != null) {
     		Utils.getInstance().setLive(true);
     	} 
-        builder = getBuilder();
+        BUILDER = getBuilder();
         init();
     }
     
@@ -61,20 +61,10 @@ public abstract class BaseMod
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         
-        registerItems(bus);
+        BUILDER.registerItems(bus);
         
     }
     
-    protected void registerItems(IEventBus bus) {
-    	DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, builder.MOD_ID);
-    	Map<String, IItem> items = builder.getItems();
-    	for(String registryName : items.keySet()) {
-    		IItem i = items.get(registryName);
-    		ITEMS.register(i.getSimpleRegistryName(), () -> i.getItemBuilder().apply(i));
-    	}
-    	ITEMS.register(bus);
-    }
-
     private void setup(final FMLCommonSetupEvent event)
     {
         // some preinit code

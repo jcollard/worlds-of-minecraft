@@ -2,6 +2,7 @@ package com.worldsofminecraft.mod.item;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +25,7 @@ public class QuickItem implements IItem {
 	private ItemTab tab = ItemTab.MISC;
 	private String registryName;
 	private String simpleRegistryName;
-	private Function<IItem, Item> supplier = (item) -> new ItemAdapter(item);
+	private Supplier<Item> supplier = () -> new ItemAdapter(this);
 	private Function<ItemUseContext, ActionResult<ItemStack>> onUse;
 	
 
@@ -81,33 +82,29 @@ public class QuickItem implements IItem {
 	public IItemModel getModel() {
 		return this.model;
 	}
-
-	@Override
-	public ItemTab getTab() {
-		return this.tab;
-	}
 	
 	public void setTab(@Nonnull ItemTab tab) {
 		Preconditions.checkArgument(tab != null);
 		this.tab = tab;
 	}
-
-	@Override
-	public Function<IItem, Item> getItemBuilder() {
-		return this.supplier;
-	}
 	
-	public void setItemBuilder(Function<IItem, Item> supplier) {
-		this.supplier = supplier;
+	public void initProperties(Item.Properties p) {
+		p.tab(tab.getItemGroup());
 	}
 
-	@Override
+//	public Function<IItem, Item> getItemAdapter() {
+//		return this.supplier;
+//	}
+//	
+//	public void setItemBuilder(Function<IItem, Item> supplier) {
+//		this.supplier = supplier;
+//	}
+	
 	public void setOnUse(@Nonnull Function<ItemUseContext, ActionResult<ItemStack>> onUse) {
 		Preconditions.checkArgument(onUse != null);
 		this.onUse = onUse;
 	}
 
-	@Override
 	public void setOnUse(Consumer<ItemUseContext> onUse) {
 		this.onUse = (context) -> {
 			onUse.accept(context);
@@ -115,9 +112,13 @@ public class QuickItem implements IItem {
 		};
 	}
 	
-	@Override
 	public Function<ItemUseContext, ActionResult<ItemStack>> onUse(){
 		return this.onUse;
+	}
+
+	@Override
+	public Supplier<Item> toItem() {
+		return this.supplier;
 	}
 
 }
