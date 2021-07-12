@@ -24,8 +24,10 @@ import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.item.CustomItemTab;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.ItemTab;
+import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
+import com.worldsofminecraft.resource.png.PNGResource;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -293,6 +295,19 @@ public class MinecraftMod implements IMinecraftMod {
 					return new ItemStack(itemRegistryObject.get(item.getSimpleRegistryName()).get());
 				}
 			};
+		}
+
+		/**
+		 * Creates a Custom Tab with the specified label and icon.
+		 * @param label the label for the new tab
+		 * @param icon the icon for the new tab
+		 * @return a new ItemTab that can be used for setting the creative tab.
+		 */
+		public ItemTab createCustomTab(@Nonnull String label, @Nonnull IPNGResource icon) {
+			QuickItem item = new QuickItem("Custom Tab Icon " + label, icon);
+			item.clearTab();
+			this.addItem(item);
+			return createCustomTab(label, item);
 		}
 
 		public ItemTab createCustomTab(@Nonnull String label, @Nonnull IItem item) {

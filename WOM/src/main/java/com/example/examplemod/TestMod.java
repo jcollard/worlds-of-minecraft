@@ -32,21 +32,15 @@ public class TestMod extends BaseMod {
 		builder.logoFile(PNGResource.get("assets/common/banana.png"));
 		builder.description("This is an example mod. Modify this line of code to change the description in Minecraft!");
 
-		QuickItem banana = new QuickItem("Banana of Greatness", "assets/common/banana.png");
+		ItemTab bananaTab = builder.createCustomTab("Bananas", PNGResource.get("assets/common/Bananas.png"));
 		
-		IItemTransform transform = ItemTransform.getBuilder().scale(1.5f, 1.5f, 1.5f).build();
-		IItemDisplay display = ItemDisplay.getBuilder().transform(Position.FIRSTPERSON_LEFTHAND, transform).build();
-		ItemModel model = ItemModel.getBuilder(ItemTexture.get(PNGResource.get("assets/common/banana.png")))
-				.display(display).build();
+		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/Banana Peeled.png");
+		peeledBanana.setTab(bananaTab);
+		builder.addItem(peeledBanana);	
 		
-		ItemTab bananaTab = builder.createCustomTab("Bananas", banana);
+		QuickItem banana = new QuickItem("Banana", "assets/common/Banana.png");
 		banana.setTab(bananaTab);
-		QuickItem banana2 = new QuickItem("Banana", model);
-		banana2.setTab(bananaTab);
-		
-
 		builder.addItem(banana);
-		builder.addItem(banana2);
 		
 		ItemModel model2 = ItemModel.getBuilder(new MinecraftItemTexture("item/iron_sword")).parent("item/iron_sword").build();
 		QuickItem sword = new QuickItem("My Sword", model2);

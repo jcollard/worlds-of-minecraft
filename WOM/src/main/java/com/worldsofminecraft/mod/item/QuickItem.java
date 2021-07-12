@@ -88,8 +88,14 @@ public class QuickItem implements IItem {
 		this.tab = tab;
 	}
 	
+	public void clearTab() {
+		this.tab = null;
+	}
+	
 	public void initProperties(Item.Properties p) {
-		p.tab(tab.getItemGroup());
+		if(this.tab != null) {
+			p.tab(tab.getItemGroup());
+		}
 	}
 
 //	public Function<IItem, Item> getItemAdapter() {
