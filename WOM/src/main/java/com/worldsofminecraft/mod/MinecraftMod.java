@@ -27,7 +27,6 @@ import com.worldsofminecraft.mod.item.ItemTab;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
-import com.worldsofminecraft.resource.png.PNGResource;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;

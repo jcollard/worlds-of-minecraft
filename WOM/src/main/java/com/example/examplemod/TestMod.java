@@ -3,14 +3,13 @@ package com.example.examplemod;
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.item.ItemTab;
+import com.worldsofminecraft.mod.item.ItemUseAnimation;
 import com.worldsofminecraft.mod.item.QuickItem;
-import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(TestMod.MODID)
@@ -27,8 +26,6 @@ public class TestMod extends BaseMod {
 
 		ItemTab bananaTab = builder.createCustomTab("Bananas", PNGResource.get("assets/common/bananas.png"));
 		
-		
-		
 		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/banana_peeled.png");
 		peeledBanana.setTab(bananaTab);
 		builder.addItem(peeledBanana);	
@@ -44,11 +41,11 @@ public class TestMod extends BaseMod {
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
 		bananas.setTab(bananaTab);
 		bananas.setOnUse((context) -> {
-			Utils.getInstance().getLogger().debug("Testing!");
 			return new ItemStack(banana.construct(), 8 * context.itemStack.getCount());
 		});
+		
 		bananas.setUseDuration(32);
-		bananas.setUseAnimation(UseAction.EAT);
+		bananas.setUseAnimation(ItemUseAnimation.EAT);
 		builder.addItem(bananas);
 		
 		ItemModel model2 = ItemModel.getBuilder(new MinecraftItemTexture("item/iron_sword")).parent("item/iron_sword").build();

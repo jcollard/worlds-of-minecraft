@@ -15,7 +15,6 @@ import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -28,8 +27,9 @@ public class QuickItem implements IItem {
 	private String simpleRegistryName;
 	private Function<ItemUseContext, ItemStack> onUse;
 	private RegistryObject<Item> registryObject;
+	
 	private int useDuration = 16;
-	private UseAction animation = UseAction.EAT;
+	private ItemUseAnimation animation = ItemUseAnimation.EAT;
 	
 
 	public QuickItem(@Nonnull String name, @Nonnull String texture) {
@@ -125,11 +125,11 @@ public class QuickItem implements IItem {
 		return useDuration;
 	}
 	
-	public UseAction getUseAnimation() {
+	public ItemUseAnimation getUseAnimation() {
 		return this.animation;
 	}
 	
-	public QuickItem setUseAnimation(@Nonnull UseAction animation) {
+	public QuickItem setUseAnimation(@Nonnull ItemUseAnimation animation) {
 		Preconditions.checkArgument(animation != null, "Cannot set to null animaiton.");
 		this.animation = animation;
 		return this;

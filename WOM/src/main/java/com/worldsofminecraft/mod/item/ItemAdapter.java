@@ -40,7 +40,7 @@ public class ItemAdapter extends Item {
 		if (item.onUse() == null) {
 			return super.getUseAnimation(stack);
 		}
-		return item.getUseAnimation();
+		return item.getUseAnimation().getUseAction();
 	}
 
 	@Override
