@@ -1,5 +1,7 @@
 package com.example.examplemod;
 
+import java.util.Random;
+
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.item.ItemTab;
@@ -9,7 +11,9 @@ import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(TestMod.MODID)
@@ -41,7 +45,33 @@ public class TestMod extends BaseMod {
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
 		bananas.setTab(bananaTab);
 		bananas.setOnUse((context) -> {
-			return new ItemStack(banana.construct(), 8 * context.itemStack.getCount());
+			Vector3d vec3d = context.player.getPosition(0.0f);
+			Vector3d front = context.player.getForward();
+			Random r = new Random();
+			for(int i = 0; i < 8; i++) {
+				final long delay = 100 * i;
+				Thread t = new Thread( new Runnable() {
+					
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(delay);
+						} catch (InterruptedException e) {
+						}
+						double x = vec3d.x + front.x*2 + (2 * r.nextDouble() - 1);
+						double y = context.player.getEyeY() + (r.nextDouble()/2);
+						double z = vec3d.z + front.z*2 + (2 * r.nextDouble() - 1);
+						ItemEntity entity = new ItemEntity(context.world, x, y, z);
+						entity.setPickUpDelay(32);
+						
+						entity.setItem(new ItemStack(banana.construct(), 1));
+						context.world.addFreshEntity(entity);
+					}
+				});
+				t.start();
+			}
+			context.itemStack.setCount(context.itemStack.getCount() - 1);
+			return context.itemStack;
 		});
 		
 		bananas.setUseDuration(32);

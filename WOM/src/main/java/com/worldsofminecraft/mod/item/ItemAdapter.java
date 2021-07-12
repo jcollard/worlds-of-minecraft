@@ -23,15 +23,13 @@ public class ItemAdapter extends Item {
 		item.initProperties(p);
 		return p;
 	}
-	
-	
 
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
 		if(item.onUse() == null) {
 			return super.finishUsingItem(stack, world, livingEntity);
 		}
-		ItemUseContext context = new ItemUseContext(stack, world, livingEntity, () -> super.finishUsingItem(stack, world, livingEntity));
+		ItemUseContext context = new ItemUseContext(stack, world, livingEntity);
 		return item.onUse().apply(context);
 	}
 
@@ -50,8 +48,6 @@ public class ItemAdapter extends Item {
 		}
 		return this.item.getUseDuration();
 	}
-	
-	
 
 	@Override
 	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {

@@ -115,6 +115,15 @@ public class QuickItem implements IItem {
 		return this;
 	}
 	
+
+	public void setOnUse(@Nonnull Consumer<ItemUseContext> onUse) {
+		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
+		this.setOnUse((context) -> {
+			onUse.accept(context);
+			return context.itemStack;
+		});
+	}
+	
 	public QuickItem setUseDuration(int duration) {
 		Preconditions.checkArgument(duration >= 0, "Delay must be greater than or equal to 0.");
 		this.useDuration = duration;
@@ -133,14 +142,6 @@ public class QuickItem implements IItem {
 		Preconditions.checkArgument(animation != null, "Cannot set to null animaiton.");
 		this.animation = animation;
 		return this;
-	}
-
-	public void setOnUse(int delay, Consumer<ItemUseContext> onUse) {
-		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
-		this.setOnUse((context) -> {
-			onUse.accept(context);
-			return context.defaultBehavior.get();
-		});
 	}
 	
 	public Function<ItemUseContext, ItemStack> onUse(){
