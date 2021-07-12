@@ -32,13 +32,13 @@ public class TestMod extends BaseMod {
 		builder.logoFile(PNGResource.get("assets/common/banana.png"));
 		builder.description("This is an example mod. Modify this line of code to change the description in Minecraft!");
 
-		ItemTab bananaTab = builder.createCustomTab("Bananas", PNGResource.get("assets/common/Bananas.png"));
+		ItemTab bananaTab = builder.createCustomTab("Bananas", PNGResource.get("assets/common/bananas.png"));
 		
-		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/Banana Peeled.png");
+		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/banana_peeled.png");
 		peeledBanana.setTab(bananaTab);
 		builder.addItem(peeledBanana);	
 		
-		QuickItem banana = new QuickItem("Banana", "assets/common/Banana.png");
+		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
 		banana.setTab(bananaTab);
 		builder.addItem(banana);
 		

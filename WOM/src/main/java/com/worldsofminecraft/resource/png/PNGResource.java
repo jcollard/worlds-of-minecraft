@@ -14,7 +14,8 @@ import com.worldsofminecraft.mod.util.Utils;
 /**
  * A PNGResource is used to reference a PNG file within the project.
  * 
- * A PNGResource can be acquired by using the static {@link PNGResource#getPNGResource} method.
+ * A PNGResource can be acquired by using the static
+ * {@link PNGResource#getPNGResource} method.
  * 
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
@@ -30,7 +31,10 @@ public class PNGResource implements IPNGResource {
 	}
 
 	/**
-	 * Retrieve a {@link PNGResource} from a string path. The path provided is relative to the root directory of the project as specified by {@Utils#getRootDir}.
+	 * Retrieve a {@link PNGResource} from a string path. The path provided is
+	 * relative to the root directory of the project as specified by
+	 * {@Utils#getRootDir}.
+	 * 
 	 * @param path The relative path to the PNG to be loaded
 	 * @return a {@link PNGResource} from the relative path
 	 * @throws {@link PNGResourceException} if the PNG cannot be resolved.
@@ -39,20 +43,29 @@ public class PNGResource implements IPNGResource {
 		return get(Utils.getInstance().getRootDir().resolve(path));
 	}
 
+	public static void validateFileName(@Nonnull Path path) {
+		if (!path.getFileName().toString().matches("^[a-z][a-z_0-9]*.png$")) {
+			throw new PNGResourceException("Invalid PNG file name detected: \"" + path.getFileName().toString()
+					+ "\". A PNG name end with \".png\", may contain digits, lower case letters, and underscores, and must begin with a letter.");
+		}
+	}
+
 	/**
-	 * Retrieve a {@link PNGResource} from a Path. 
+	 * Retrieve a {@link PNGResource} from a Path.
+	 * 
 	 * @param path The path to the PNG to be loaded
 	 * @return a {@link PNGResource} from the relative path
 	 * @throws {@link PNGResourceException} if the PNG cannot be resolved.
 	 */
 	public static PNGResource get(@Nonnull Path path) {
 		Preconditions.checkArgument(path != null);
-		
-		//If we are live, we don't have access to the local file structure.
-		if(Utils.getInstance().isLive()) {
+		validateFileName(path);
+
+		// If we are live, we don't have access to the local file structure.
+		if (Utils.getInstance().isLive()) {
 			return new PNGResource(path);
 		}
-		
+
 		if (Files.notExists(path)) {
 			throw new PNGResourceException("No file found at " + path);
 		}
@@ -70,12 +83,12 @@ public class PNGResource implements IPNGResource {
 			if (!lookup.containsKey(path)) {
 				lookup.put(path, new PNGResource(path));
 			}
-			
+
 			return lookup.get(path);
 		} catch (IOException e) {
 			throw new PNGResourceException(e.getMessage());
 		}
-		
+
 	}
 
 	@Override
