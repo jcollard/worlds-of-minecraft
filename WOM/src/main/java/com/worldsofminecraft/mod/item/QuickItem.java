@@ -2,7 +2,6 @@ package com.worldsofminecraft.mod.item;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
@@ -16,7 +15,9 @@ import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
+import net.minecraft.item.UseAction;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 public class QuickItem implements IItem {
 
@@ -25,8 +26,10 @@ public class QuickItem implements IItem {
 	private ItemTab tab = ItemTab.MISC;
 	private String registryName;
 	private String simpleRegistryName;
-	private Supplier<Item> supplier = () -> new ItemAdapter(this);
-	private Function<ItemUseContext, ActionResult<ItemStack>> onUse;
+	private Function<ItemUseContext, ItemStack> onUse;
+	private RegistryObject<Item> registryObject;
+	private int useDuration = 16;
+	private UseAction animation = UseAction.EAT;
 	
 
 	public QuickItem(@Nonnull String name, @Nonnull String texture) {
@@ -106,25 +109,60 @@ public class QuickItem implements IItem {
 //		this.supplier = supplier;
 //	}
 	
-	public void setOnUse(@Nonnull Function<ItemUseContext, ActionResult<ItemStack>> onUse) {
-		Preconditions.checkArgument(onUse != null);
+	public QuickItem setOnUse(@Nonnull Function<ItemUseContext, ItemStack> onUse) {
+		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
 		this.onUse = onUse;
-	}
-
-	public void setOnUse(Consumer<ItemUseContext> onUse) {
-		this.onUse = (context) -> {
-			onUse.accept(context);
-			return context.defaultBehavior.get();
-		};
+		return this;
 	}
 	
-	public Function<ItemUseContext, ActionResult<ItemStack>> onUse(){
+	public QuickItem setUseDuration(int duration) {
+		Preconditions.checkArgument(duration >= 0, "Delay must be greater than or equal to 0.");
+		this.useDuration = duration;
+		return this;
+	}
+	
+	public int getUseDuration() {
+		return useDuration;
+	}
+	
+	public UseAction getUseAnimation() {
+		return this.animation;
+	}
+	
+	public QuickItem setUseAnimation(@Nonnull UseAction animation) {
+		Preconditions.checkArgument(animation != null, "Cannot set to null animaiton.");
+		this.animation = animation;
+		return this;
+	}
+
+	public void setOnUse(int delay, Consumer<ItemUseContext> onUse) {
+		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
+		this.setOnUse((context) -> {
+			onUse.accept(context);
+			return context.defaultBehavior.get();
+		});
+	}
+	
+	public Function<ItemUseContext, ItemStack> onUse(){
 		return this.onUse;
 	}
 
 	@Override
-	public Supplier<Item> toItem() {
-		return this.supplier;
+	public RegistryObject<Item> getRegistryObject() {
+		return this.registryObject;
+	}
+
+	@Override
+	public RegistryObject<Item> register(DeferredRegister<Item> register) {
+		Preconditions.checkState(this.registryObject == null, "This item was previously registered. Cannot register an item multiple times.");
+		this.registryObject = register.register(simpleRegistryName, () -> new ItemAdapter(this));
+		return this.registryObject;
+	}
+
+	@Override
+	public Item construct() {
+		Preconditions.checkState(this.registryObject != null, "Cannot construct an item that has not yet been registered.");
+		return this.registryObject.get();
 	}
 
 }

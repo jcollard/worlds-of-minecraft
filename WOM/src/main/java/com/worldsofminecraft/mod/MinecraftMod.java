@@ -272,10 +272,8 @@ public class MinecraftMod implements IMinecraftMod {
 		public void registerItems(@Nonnull IEventBus bus) {
 	    	DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 	    	Map<String, IItem> items = getItems();
-	    	for(String registryName : items.keySet()) {
-	    		IItem i = items.get(registryName);
-	    		RegistryObject<Item> registryObject = ITEMS.register(i.getSimpleRegistryName(), i.toItem());
-	    		itemRegistryObject.put(i.getSimpleRegistryName(), registryObject);
+	    	for(IItem item : items.values()) {
+	    		itemRegistryObject.put(item.getSimpleRegistryName(), item.register(ITEMS));
 	    	}
 	    	ITEMS.register(bus);
 	    }
