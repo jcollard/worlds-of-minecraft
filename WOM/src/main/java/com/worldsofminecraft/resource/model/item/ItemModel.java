@@ -16,7 +16,8 @@ import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemDisplay.Position;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
-import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
+import com.worldsofminecraft.resource.texture.item.VanillaItemTexture;
+import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 public class ItemModel implements IItemModel {
 
@@ -50,11 +51,17 @@ public class ItemModel implements IItemModel {
 		}
 
 	}
+	
+	
+
+	public static VanillaItemModel get(VanillaItem vanillaItem) {
+		return new VanillaItemModel(new VanillaItemTexture(vanillaItem.REGISTRY_NAME));
+	}
 
 	public static Builder getBuilder(@Nonnull ItemTexture texture) {
 		Preconditions.checkArgument(texture != null);
-		if(texture instanceof MinecraftItemTexture) {
-			return MinecraftItemModel.getBuilder((MinecraftItemTexture)texture);
+		if(texture instanceof VanillaItemTexture) {
+			return VanillaItemModel.getBuilder((VanillaItemTexture)texture);
 		}
 		return new Builder(texture);
 	}

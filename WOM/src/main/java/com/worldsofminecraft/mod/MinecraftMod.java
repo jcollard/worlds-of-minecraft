@@ -28,7 +28,6 @@ import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
 
-import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -264,19 +263,20 @@ public class MinecraftMod implements IMinecraftMod {
 		 */
 		private final Map<String, CustomItemTab> tabs = new TreeMap<>();
 		private final Map<String, RegistryObject<Item>> itemRegistryObject = new HashMap<>();
-		
+
 		/**
 		 * Register all items from this builder on the specified EventBus.
+		 * 
 		 * @param bus
 		 */
 		public void registerItems(@Nonnull IEventBus bus) {
-	    	DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
-	    	Map<String, IItem> items = getItems();
-	    	for(IItem item : items.values()) {
-	    		itemRegistryObject.put(item.getSimpleRegistryName(), item.register(ITEMS));
-	    	}
-	    	ITEMS.register(bus);
-	    }
+			DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+			Map<String, IItem> items = getItems();
+			for (IItem item : items.values()) {
+				itemRegistryObject.put(item.getSimpleRegistryName(), item.register(ITEMS));
+			}
+			ITEMS.register(bus);
+		}
 
 		/**
 		 * A helper method for initializing a new ItemGroup.
@@ -287,7 +287,7 @@ public class MinecraftMod implements IMinecraftMod {
 		 */
 		private ItemGroup initCustomItemGroup(String registryName, IItem item) {
 			return new ItemGroup(registryName) {
-				
+
 				@Override
 				public ItemStack makeIcon() {
 					return new ItemStack(itemRegistryObject.get(item.getSimpleRegistryName()).get());
@@ -297,8 +297,9 @@ public class MinecraftMod implements IMinecraftMod {
 
 		/**
 		 * Creates a Custom Tab with the specified label and icon.
+		 * 
 		 * @param label the label for the new tab
-		 * @param icon the icon for the new tab
+		 * @param icon  the icon for the new tab
 		 * @return a new ItemTab that can be used for setting the creative tab.
 		 */
 		public ItemTab createCustomTab(@Nonnull String label, @Nonnull IPNGResource icon) {
@@ -379,7 +380,8 @@ public class MinecraftMod implements IMinecraftMod {
 				LOGGER.info("Creating model file: " + outfile);
 				// TODO(2021-07-09 jcollard): CREATE_NEW and blow up if file alredy exists?
 				try {
-					Files.write(outfile, item.getItemModel().generateResource(mod).getBytes(), StandardOpenOption.CREATE);
+					Files.write(outfile, item.getItemModel().generateResource(mod).getBytes(),
+							StandardOpenOption.CREATE);
 				} catch (IOException e) {
 					throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
 				}

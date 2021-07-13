@@ -22,7 +22,7 @@ public class QuickItem extends AbstractItem {
 	private ItemTab tab = ItemTab.MISC;
 	private Function<ItemUseContext, IItemStack> onUse;
 	private int useDuration = 16;
-	private ItemUseAnimation animation = ItemUseAnimation.EAT;
+	private ItemAction animation = ItemAction.EAT;
 
 	public QuickItem(@Nonnull String name, @Nonnull String texture) {
 		this(name, PNGResource.get(texture));
@@ -80,11 +80,11 @@ public class QuickItem extends AbstractItem {
 		return useDuration;
 	}
 
-	public ItemUseAnimation getUseAnimation() {
+	public ItemAction getUseAnimation() {
 		return this.animation;
 	}
 
-	public QuickItem setUseAnimation(@Nonnull ItemUseAnimation animation) {
+	public QuickItem setUseAction(@Nonnull ItemAction animation) {
 		Preconditions.checkArgument(animation != null, "Cannot set to null animaiton.");
 		this.animation = animation;
 		return this;

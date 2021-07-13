@@ -8,19 +8,19 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.util.Utils;
-import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
+import com.worldsofminecraft.resource.texture.item.VanillaItemTexture;
 
-public class MinecraftItemModel extends ItemModel {
+public class VanillaItemModel extends ItemModel {
 
 	private JsonObject model;
-	private final MinecraftItemTexture texture;
+	private final VanillaItemTexture texture;
 
-	public MinecraftItemModel(MinecraftItemTexture texture) {
-		super(MinecraftItemModel.getBuilder(texture));
+	public VanillaItemModel(VanillaItemTexture texture) {
+		super(VanillaItemModel.getBuilder(texture));
 		this.texture = texture;
 	}
 
-	public static ItemModel.Builder getBuilder(MinecraftItemTexture texture) {
+	public static ItemModel.Builder getBuilder(VanillaItemTexture texture) {
 		try {
 			Builder b = new Builder(texture);
 			b.parent(texture.generateResource(null));
@@ -50,5 +50,7 @@ public class MinecraftItemModel extends ItemModel {
 		
 		return Utils.getInstance().getGson().toJson(model);
 	}
+
+	
 
 }

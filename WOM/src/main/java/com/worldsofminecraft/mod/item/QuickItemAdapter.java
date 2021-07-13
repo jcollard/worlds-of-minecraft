@@ -55,7 +55,7 @@ public class QuickItemAdapter extends Item {
 			return super.use(world, player, hand);
 		}
 		player.startUsingItem(hand);
-		return ActionResult.consume(player.getItemInHand(hand));
+		return ActionResult.pass(player.getItemInHand(hand));
 		
 	}
 

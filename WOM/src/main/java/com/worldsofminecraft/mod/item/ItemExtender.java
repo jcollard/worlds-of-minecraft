@@ -11,10 +11,8 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
 import com.worldsofminecraft.resource.model.item.IItemModel;
-import com.worldsofminecraft.resource.model.item.ItemModel;
-import com.worldsofminecraft.resource.png.IPNGResource;
-import com.worldsofminecraft.resource.png.PNGResource;
-import com.worldsofminecraft.resource.texture.item.ItemTexture;
+import com.worldsofminecraft.resource.model.item.VanillaItemModel;
+import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.FontRenderer;
@@ -52,8 +50,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
 
 public class ItemExtender extends AbstractItem {
 
@@ -73,13 +69,17 @@ public class ItemExtender extends AbstractItem {
 //		this(name, ItemModel.getBuilder(texture).build(), itemToModel, supplier);
 //	}
 
-	public ItemExtender(@Nonnull String name, @Nonnull IItemModel model, @Nonnull Supplier<Item> itemToModel, Supplier<Item> supplier) {
+	public ItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem, @Nonnull Supplier<Item> supplier) {
+		this(name, VanillaItemModel.get(vanillaItem), vanillaItem, supplier);
+	}
+	
+	public ItemExtender(@Nonnull String name, @Nonnull IItemModel model, @Nonnull VanillaItem itemToModel, Supplier<Item> supplier) {
 		super(name, model);
 		Preconditions.checkArgument(name != null, "item name must not be null.");
 		Preconditions.checkArgument(model != null, "model must not be null");
 		Preconditions.checkArgument(itemToModel != null, "The itemToModel must be non-null");
 		this.supplier = supplier;
-		this.itemToModel = itemToModel;
+		this.itemToModel = itemToModel.SUPPLIER;
 	}
 
 	@Override

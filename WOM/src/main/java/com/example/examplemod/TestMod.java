@@ -10,7 +10,7 @@ import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.ItemExtender;
-import com.worldsofminecraft.mod.item.ItemUseAnimation;
+import com.worldsofminecraft.mod.item.ItemAction;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
@@ -18,16 +18,13 @@ import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
-import com.worldsofminecraft.resource.model.item.MinecraftItemModel;
 import com.worldsofminecraft.resource.png.PNGResource;
-import com.worldsofminecraft.resource.texture.item.ItemTextures;
-import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
+import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.RegistryKey;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -83,11 +80,11 @@ public class TestMod extends QuickMod {
 		});
 		
 		bananas.setUseDuration(32);
-		bananas.setUseAnimation(ItemUseAnimation.EAT);
+		bananas.setUseAction(ItemAction.EAT);
 		builder.addItem(bananas);
 		
-		ItemModel swordModel = ItemModel.getBuilder(ItemTextures.IRON_SWORD).build();
-		QuickItem sword = new QuickItem("My Sword", swordModel);
+		QuickItem sword = new QuickItem("My Sword", ItemModel.get(VanillaItem.IRON_SWORD));
+		sword.setUseAction(ItemAction.BLOCK);
 		sword.setOnUse((context) -> {
 			if(!context.world.getModel().isClientSide()) {
 				return;
@@ -101,9 +98,11 @@ public class TestMod extends QuickMod {
 		});
 		builder.addItem(sword);
 		
-		MinecraftItemModel model = new MinecraftItemModel((MinecraftItemTexture)ItemTextures.COMPASS);
-		ItemExtender customCompass = new ItemExtender("My Book", model, () -> Items.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
+		ItemExtender customCompass = new ItemExtender("My Compass", VanillaItem.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
 		builder.addItem(customCompass);
+		
+		ItemExtender customClock = new ItemExtender("My Clock", VanillaItem.CLOCK, () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_TOOLS)));
+		builder.addItem(customClock);
 		
 		return builder;
 	}

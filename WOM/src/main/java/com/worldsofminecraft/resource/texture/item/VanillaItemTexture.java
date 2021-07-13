@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import com.worldsofminecraft.mod.IMinecraftMod;
 
-public class MinecraftItemTexture extends ItemTexture {
+public class VanillaItemTexture extends ItemTexture {
 	
 	private final String registryName;
 	
-	public MinecraftItemTexture(String registryName) {
+	public VanillaItemTexture(String registryName) {
 		this.registryName = registryName;
 	}
 
