@@ -24,7 +24,6 @@ public class Utils {
 	private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private final Logger logger = LogManager.getLogger("WOM");
 	
-	
 	public static Utils getInstance() {
 		return INSTANCE;
 	}

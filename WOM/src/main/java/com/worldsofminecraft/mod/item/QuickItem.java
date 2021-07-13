@@ -6,6 +6,8 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.worldsofminecraft.mod.item.stack.IItemStack;
+import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
@@ -14,7 +16,6 @@ import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -25,9 +26,8 @@ public class QuickItem implements IItem {
 	private ItemTab tab = ItemTab.MISC;
 	private String registryName;
 	private String simpleRegistryName;
-	private Function<ItemUseContext, ItemStack> onUse;
+	private Function<ItemUseContext, IItemStack> onUse;
 	private RegistryObject<Item> registryObject;
-	
 	private int useDuration = 16;
 	private ItemUseAnimation animation = ItemUseAnimation.EAT;
 	
@@ -109,19 +109,20 @@ public class QuickItem implements IItem {
 //		this.supplier = supplier;
 //	}
 	
-	public QuickItem setOnUse(@Nonnull Function<ItemUseContext, ItemStack> onUse) {
+	public QuickItem setOnUse(@Nonnull Function<ItemUseContext, IItemStack> onUse) {
 		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
 		this.onUse = onUse;
 		return this;
 	}
 	
 
-	public void setOnUse(@Nonnull Consumer<ItemUseContext> onUse) {
+	public QuickItem setOnUse(@Nonnull Consumer<ItemUseContext> onUse) {
 		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
 		this.setOnUse((context) -> {
 			onUse.accept(context);
 			return context.itemStack;
 		});
+		return this;
 	}
 	
 	public QuickItem setUseDuration(int duration) {
@@ -144,7 +145,7 @@ public class QuickItem implements IItem {
 		return this;
 	}
 	
-	public Function<ItemUseContext, ItemStack> onUse(){
+	public Function<ItemUseContext, IItemStack> onUse(){
 		return this.onUse;
 	}
 

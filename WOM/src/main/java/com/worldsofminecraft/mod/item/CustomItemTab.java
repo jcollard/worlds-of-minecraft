@@ -2,6 +2,8 @@ package com.worldsofminecraft.mod.item;
 
 import javax.annotation.Nonnull;
 
+import com.worldsofminecraft.mod.item.tab.ItemTab;
+
 import net.minecraft.item.ItemGroup;
 
 public class CustomItemTab extends ItemTab {

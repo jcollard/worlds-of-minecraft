@@ -1,4 +1,4 @@
-package com.worldsofminecraft.mod.item;
+package com.worldsofminecraft.mod.item.tab;
 
 import javax.annotation.Nonnull;
 

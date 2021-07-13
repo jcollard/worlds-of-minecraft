@@ -23,8 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.item.CustomItemTab;
 import com.worldsofminecraft.mod.item.IItem;
-import com.worldsofminecraft.mod.item.ItemTab;
 import com.worldsofminecraft.mod.item.QuickItem;
+import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
 

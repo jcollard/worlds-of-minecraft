@@ -1,6 +1,6 @@
 package com.worldsofminecraft.mod.block;
 
-import com.worldsofminecraft.mod.item.IBlockItem;
+import com.worldsofminecraft.mod.item.blockitem.IBlockItem;
 
 public interface IBlock {
 	

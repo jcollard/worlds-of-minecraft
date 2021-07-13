@@ -4,16 +4,18 @@ import java.util.Random;
 
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
-import com.worldsofminecraft.mod.item.ItemTab;
+import com.worldsofminecraft.mod.MinecraftMod.Builder;
+import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.ItemUseAnimation;
 import com.worldsofminecraft.mod.item.QuickItem;
+import com.worldsofminecraft.mod.item.stack.IItemStack;
+import com.worldsofminecraft.mod.item.tab.ItemTab;
+import com.worldsofminecraft.mod.util.DelayedExecution;
+import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(TestMod.MODID)
@@ -21,7 +23,7 @@ public class TestMod extends BaseMod {
 
 	public static final String MODID = "mymod";
 
-	public MinecraftMod.Builder getBuilder() {
+	public Builder getBuilder() {
 		String authors = "Joseph Collard";
 		String modName = "Example Mod";
 		MinecraftMod.Builder builder = MinecraftMod.getBuilder(authors, modName, MODID);
@@ -45,30 +47,21 @@ public class TestMod extends BaseMod {
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
 		bananas.setTab(bananaTab);
 		bananas.setOnUse((context) -> {
-			Vector3d vec3d = context.player.getPosition(0.0f);
-			Vector3d front = context.player.getForward();
+			Vector3d vec3d = context.entity.getPosition();
+			Vector3d front = context.entity.getForward();
 			Random r = new Random();
+			DelayedExecution execution = new DelayedExecution(() -> {
+				double x = vec3d.x + front.x;
+				double y = context.entity.getEyeY();
+				double z = vec3d.z + front.z;
+				IItemEntity entity = IItemEntity.construct(context.world, x, y, z);
+				entity.setVelocity(front.x/4, r.nextDouble()/4, front.z/4);
+				entity.setPickUpDelay(32);
+				entity.setItem(IItemStack.construct(banana, 1));
+				context.world.addItemEntity(entity);
+			});
 			for(int i = 0; i < 8; i++) {
-				final long delay = 100 * i;
-				Thread t = new Thread( new Runnable() {
-					
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(delay);
-						} catch (InterruptedException e) {
-						}
-						double x = vec3d.x + front.x*2 + (2 * r.nextDouble() - 1);
-						double y = context.player.getEyeY() + (r.nextDouble()/2);
-						double z = vec3d.z + front.z*2 + (2 * r.nextDouble() - 1);
-						ItemEntity entity = new ItemEntity(context.world, x, y, z);
-						entity.setPickUpDelay(32);
-						
-						entity.setItem(new ItemStack(banana.construct(), 1));
-						context.world.addFreshEntity(entity);
-					}
-				});
-				t.start();
+				execution.executeAfter(0.1 * i);
 			}
 			context.itemStack.setCount(context.itemStack.getCount() - 1);
 			return context.itemStack;

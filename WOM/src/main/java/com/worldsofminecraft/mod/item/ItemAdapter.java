@@ -30,7 +30,7 @@ public class ItemAdapter extends Item {
 			return super.finishUsingItem(stack, world, livingEntity);
 		}
 		ItemUseContext context = new ItemUseContext(stack, world, livingEntity);
-		return item.onUse().apply(context);
+		return item.onUse().apply(context).getModel();
 	}
 
 	@Override
