@@ -16,6 +16,7 @@ import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemDisplay.Position;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
+import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
 public class ItemModel implements IItemModel {
 
@@ -52,7 +53,18 @@ public class ItemModel implements IItemModel {
 
 	public static ItemModelBuilder getBuilder(@Nonnull ItemTexture texture) {
 		Preconditions.checkArgument(texture != null);
+		if(texture instanceof MinecraftItemTexture) {
+			getBuilder((MinecraftItemTexture)texture);
+		}
 		return new ItemModelBuilder(texture);
+	}
+	
+	public static ItemModelBuilder getBuilder(MinecraftItemTexture texture) {
+		try {
+			return new ItemModelBuilder(texture).parent(texture.generateResource(null));
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to create model. " + e.getClass().getSimpleName() + ": " + e.getLocalizedMessage());
+		}
 	}
 
 	private final Map<String, ItemTexture> layers;

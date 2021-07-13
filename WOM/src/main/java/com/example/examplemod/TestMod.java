@@ -1,7 +1,10 @@
 package com.example.examplemod;
 
+import java.util.Map.Entry;
 import java.util.Random;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.MinecraftMod.Builder;
@@ -11,12 +14,18 @@ import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.DelayedExecution;
+import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.PNGResource;
-import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
+import com.worldsofminecraft.resource.texture.item.ItemTextures;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.RegistryKey;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(TestMod.MODID)
 public class TestMod extends BaseMod {
@@ -71,8 +80,19 @@ public class TestMod extends BaseMod {
 		bananas.setUseAnimation(ItemUseAnimation.EAT);
 		builder.addItem(bananas);
 		
-		ItemModel model2 = ItemModel.getBuilder(new MinecraftItemTexture("item/iron_sword")).parent("item/iron_sword").build();
-		QuickItem sword = new QuickItem("My Sword", model2);
+		ItemModel swordModel = ItemModel.getBuilder(ItemTextures.IRON_SWORD).build();
+		QuickItem sword = new QuickItem("My Sword", swordModel);
+		sword.setOnUse((context) -> {
+			if(!context.world.getModel().isClientSide()) {
+				return;
+			}
+			IForgeRegistry<Item> items = ForgeRegistries.ITEMS;
+			JsonObject json = new JsonObject();
+			for(Entry<RegistryKey<Item>, Item> e : items.getEntries()) {
+				json.add(e.getValue().getRegistryName().toString(), new JsonPrimitive(e.getValue().getName(new ItemStack(e.getValue())).getString()));
+			}
+			System.out.println(Utils.getInstance().getGson().toJson(json));
+		});
 		builder.addItem(sword);
 		
 		return builder;
