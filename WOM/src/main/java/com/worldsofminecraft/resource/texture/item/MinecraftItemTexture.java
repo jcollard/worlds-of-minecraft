@@ -17,4 +17,8 @@ public class MinecraftItemTexture extends ItemTexture {
 		return this.registryName;
 	}
 
+	public String getRegistryName() {
+		return this.registryName;
+	}
+
 }

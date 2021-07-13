@@ -20,17 +20,17 @@ import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
 public class ItemModel implements IItemModel {
 
-	public static class ItemModelBuilder {
+	public static class Builder {
 
 		private final Map<String, ItemTexture> layers = new TreeMap<>();
 		private String parent = "item/generated";
 		private IItemDisplay display = null;
 
-		private ItemModelBuilder(ItemTexture texture) {
+		protected Builder(ItemTexture texture) {
 			this.layers.put("layer0", texture);
 		}
 
-		public ItemModelBuilder parent(@Nonnull String parent) {
+		public Builder parent(@Nonnull String parent) {
 			Preconditions.checkArgument(parent != null);
 			// TODO(2021-07-09 jcollard): parent should be `item/generated` or another
 			// `item`. Ideally, we should do a check against all registered items /
@@ -39,7 +39,7 @@ public class ItemModel implements IItemModel {
 			return this;
 		}
 
-		public ItemModelBuilder display(@Nonnull IItemDisplay display) {
+		public Builder display(@Nonnull IItemDisplay display) {
 			Preconditions.checkArgument(display != null);
 			this.display = display;
 			return this;
@@ -51,27 +51,20 @@ public class ItemModel implements IItemModel {
 
 	}
 
-	public static ItemModelBuilder getBuilder(@Nonnull ItemTexture texture) {
+	public static Builder getBuilder(@Nonnull ItemTexture texture) {
 		Preconditions.checkArgument(texture != null);
 		if(texture instanceof MinecraftItemTexture) {
-			getBuilder((MinecraftItemTexture)texture);
+			return MinecraftItemModel.getBuilder((MinecraftItemTexture)texture);
 		}
-		return new ItemModelBuilder(texture);
-	}
-	
-	public static ItemModelBuilder getBuilder(MinecraftItemTexture texture) {
-		try {
-			return new ItemModelBuilder(texture).parent(texture.generateResource(null));
-		} catch (IOException e) {
-			throw new IllegalStateException("Unable to create model. " + e.getClass().getSimpleName() + ": " + e.getLocalizedMessage());
-		}
+		return new Builder(texture);
 	}
 
 	private final Map<String, ItemTexture> layers;
 	private final String parent;
 	private final IItemDisplay display;
 
-	private ItemModel(ItemModelBuilder b) {
+	public ItemModel(@Nonnull Builder b) {
+		Preconditions.checkArgument(b != null, "Cannot create an ItemModel with a null builder.");
 		this.layers = new TreeMap<>(b.layers);
 		this.parent = b.parent;
 		this.display = b.display;
@@ -96,7 +89,7 @@ public class ItemModel implements IItemModel {
 	public String generateResource(IMinecraftMod mod) throws IOException {
 
 		JsonObject model = new JsonObject();
-		model.add("parent", new JsonPrimitive(parent));
+		model.add("parent", new JsonPrimitive(this.parent));
 		
 		JsonObject textures = new JsonObject();
 		for (Entry<String, ItemTexture> texture : layers.entrySet()) {

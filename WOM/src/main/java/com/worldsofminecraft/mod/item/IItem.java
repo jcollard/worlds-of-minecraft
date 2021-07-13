@@ -11,7 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 public interface IItem {
 	
 	String getName();
-	IItemModel getModel();
+	IItemModel getItemModel();
 	String getRegistryName();
 	String getSimpleRegistryName();
 	void setRegistryName(@Nonnull String modID, @Nonnull String name);

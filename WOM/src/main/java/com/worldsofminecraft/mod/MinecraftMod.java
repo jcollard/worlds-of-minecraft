@@ -28,6 +28,7 @@ import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
 
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -378,7 +379,7 @@ public class MinecraftMod implements IMinecraftMod {
 				LOGGER.info("Creating model file: " + outfile);
 				// TODO(2021-07-09 jcollard): CREATE_NEW and blow up if file alredy exists?
 				try {
-					Files.write(outfile, item.getModel().generateResource(mod).getBytes(), StandardOpenOption.CREATE);
+					Files.write(outfile, item.getItemModel().generateResource(mod).getBytes(), StandardOpenOption.CREATE);
 				} catch (IOException e) {
 					throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
 				}

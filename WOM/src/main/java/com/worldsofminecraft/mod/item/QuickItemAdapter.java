@@ -9,12 +9,12 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class ItemAdapter extends Item {
+public class QuickItemAdapter extends Item {
 	
 	private final QuickItem item;
 
-	public ItemAdapter(QuickItem item) {
-		super(ItemAdapter.getProperties(item));
+	public QuickItemAdapter(QuickItem item) {
+		super(QuickItemAdapter.getProperties(item));
 		this.item = item;
 	}
 

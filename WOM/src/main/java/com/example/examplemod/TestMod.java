@@ -5,10 +5,11 @@ import java.util.Random;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.worldsofminecraft.mod.BaseMod;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.MinecraftMod.Builder;
+import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.entity.item.IItemEntity;
+import com.worldsofminecraft.mod.item.ItemExtender;
 import com.worldsofminecraft.mod.item.ItemUseAnimation;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
@@ -17,18 +18,23 @@ import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
+import com.worldsofminecraft.resource.model.item.MinecraftItemModel;
 import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTextures;
+import com.worldsofminecraft.resource.texture.item.MinecraftItemTexture;
 
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.RegistryKey;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(TestMod.MODID)
-public class TestMod extends BaseMod {
+public class TestMod extends QuickMod {
 
 	public static final String MODID = "mymod";
 
@@ -94,6 +100,10 @@ public class TestMod extends BaseMod {
 			System.out.println(Utils.getInstance().getGson().toJson(json));
 		});
 		builder.addItem(sword);
+		
+		MinecraftItemModel model = new MinecraftItemModel((MinecraftItemTexture)ItemTextures.COMPASS);
+		ItemExtender customCompass = new ItemExtender("My Book", model, () -> Items.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
+		builder.addItem(customCompass);
 		
 		return builder;
 	}

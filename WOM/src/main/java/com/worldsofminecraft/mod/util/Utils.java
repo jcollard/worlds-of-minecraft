@@ -116,6 +116,10 @@ public class Utils {
 		Preconditions.checkArgument(mod != null);
 		return getAssetsDir(mod).resolve("lang/");
 	}
+	
+	public Path get_1_16_AssetsDir() {
+		return getRootDir().resolve("assets/1.16.5/minecraft");
+	}
 
 	/**
 	 * Converts a string to a registry safe name by replacing all non-safe characters with an underscore.
