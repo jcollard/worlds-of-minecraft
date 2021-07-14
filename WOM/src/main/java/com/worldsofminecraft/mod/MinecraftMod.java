@@ -303,7 +303,7 @@ public class MinecraftMod implements IMinecraftMod {
 		 */
 		public ItemTab createCustomTab(@Nonnull String label, @Nonnull IPNGResource icon) {
 			QuickItem item = new QuickItem("Custom Tab Icon " + label, icon);
-			item.clearTab();
+			item.getProperties().tab(null);
 			this.addItem(item);
 			return createCustomTab(label, item);
 		}

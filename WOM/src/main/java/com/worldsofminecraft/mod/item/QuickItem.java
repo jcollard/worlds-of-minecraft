@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
-import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
@@ -19,10 +18,7 @@ import net.minecraft.item.Item;
 
 public class QuickItem extends AbstractItem {
 
-	private ItemTab tab = ItemTab.MISC;
 	private Function<ItemUseContext, IItemStack> onUse;
-	private int useDuration = 16;
-	private ItemAction animation = ItemAction.EAT;
 
 	public QuickItem(@Nonnull String name, @Nonnull String texture) {
 		this(name, PNGResource.get(texture));
@@ -40,21 +36,6 @@ public class QuickItem extends AbstractItem {
 		super(name, model);
 	}
 
-	public void setTab(@Nonnull ItemTab tab) {
-		Preconditions.checkArgument(tab != null);
-		this.tab = tab;
-	}
-
-	public void clearTab() {
-		this.tab = null;
-	}
-
-	public void initProperties(Item.Properties p) {
-		if (this.tab != null) {
-			p.tab(tab.getItemGroup());
-		}
-	}
-
 	public QuickItem setOnUse(@Nonnull Function<ItemUseContext, IItemStack> onUse) {
 		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
 		this.onUse = onUse;
@@ -70,33 +51,13 @@ public class QuickItem extends AbstractItem {
 		return this;
 	}
 
-	public QuickItem setUseDuration(int duration) {
-		Preconditions.checkArgument(duration >= 0, "Delay must be greater than or equal to 0.");
-		this.useDuration = duration;
-		return this;
-	}
-
-	public int getUseDuration() {
-		return useDuration;
-	}
-
-	public ItemAction getUseAnimation() {
-		return this.animation;
-	}
-
-	public QuickItem setUseAction(@Nonnull ItemAction animation) {
-		Preconditions.checkArgument(animation != null, "Cannot set to null animaiton.");
-		this.animation = animation;
-		return this;
-	}
-
 	public Function<ItemUseContext, IItemStack> onUse() {
 		return this.onUse;
 	}
 
 	@Override
 	protected Supplier<Item> getItemSupplier() {
-		return () -> new QuickItemAdapter(this);
+		return () -> new ItemAdapter(this);
 	}
 
 }

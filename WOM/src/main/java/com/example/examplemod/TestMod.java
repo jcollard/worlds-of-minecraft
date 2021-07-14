@@ -9,8 +9,8 @@ import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.entity.item.IItemEntity;
+import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.ItemExtender;
-import com.worldsofminecraft.mod.item.ItemAction;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
@@ -45,19 +45,19 @@ public class TestMod extends QuickMod {
 		ItemTab bananaTab = builder.createCustomTab("Bananas", PNGResource.get("assets/common/bananas.png"));
 		
 		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/banana_peeled.png");
-		peeledBanana.setTab(bananaTab);
+		peeledBanana.getProperties().tab(bananaTab);
 		builder.addItem(peeledBanana);	
 		
 		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
-		banana.setTab(bananaTab);
+		banana.getProperties().tab(bananaTab);
 		builder.addItem(banana);
 		
 		QuickItem bananaPeel = new QuickItem("Banana Peel", "assets/common/banana_peel.png");
-		bananaPeel.setTab(bananaTab);
+		bananaPeel.getProperties().tab(bananaTab);
 		builder.addItem(bananaPeel);
 		
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
-		bananas.setTab(bananaTab);
+		bananas.getProperties().tab(bananaTab);
 		bananas.setOnUse((context) -> {
 			Vector3d vec3d = context.entity.getPosition();
 			Vector3d front = context.entity.getForward();
@@ -80,11 +80,11 @@ public class TestMod extends QuickMod {
 		});
 		
 		bananas.setUseDuration(32);
-		bananas.setUseAction(ItemAction.EAT);
+		bananas.setUseAction(IItem.Action.EAT);
 		builder.addItem(bananas);
 		
 		QuickItem sword = new QuickItem("My Sword", ItemModel.get(VanillaItem.IRON_SWORD));
-		sword.setUseAction(ItemAction.BLOCK);
+		sword.setUseAction(IItem.Action.BLOCK);
 		sword.setOnUse((context) -> {
 			if(!context.world.getModel().isClientSide()) {
 				return;
