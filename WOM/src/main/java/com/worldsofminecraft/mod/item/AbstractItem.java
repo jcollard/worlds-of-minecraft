@@ -20,10 +20,7 @@ public abstract class AbstractItem implements IItem {
 	
 	private final String name;
 	private final IItemModel model;
-
-	private String registryName;
 	private String simpleRegistryName;
-	
 	private RegistryObject<Item> registryObject;
 	
 	public AbstractItem(@Nonnull String name, @Nonnull String texture) {
@@ -42,6 +39,7 @@ public abstract class AbstractItem implements IItem {
 		Preconditions.checkArgument(name != null, "item name must not be null.");
 		Preconditions.checkArgument(model != null, "model must not be null");
 		this.name = Utils.getInstance().validateName(name);
+		this.simpleRegistryName = Utils.getInstance().validateRegistryName(Utils.getInstance().safeRegistryName(name));
 		this.model = model;
 	}
 	
@@ -55,27 +53,10 @@ public abstract class AbstractItem implements IItem {
 		return this.model;
 	}
 
-	@Override
-	public String getRegistryName() {
-		return this.registryName;
-	}
 
 	@Override
 	public String getSimpleRegistryName() {
 		return this.simpleRegistryName;
-	}
-
-	@Override
-	public void setRegistryName(@Nonnull String modId, @Nonnull String name) {
-		if(this.registryName != null) {
-			throw new IllegalStateException("Registry name may only be set once.");
-		}
-		Preconditions.checkArgument(name != null);
-		Preconditions.checkArgument(modId != null);
-		name = Utils.getInstance().validateRegistryName(name);
-		modId = Utils.getInstance().validateModId(modId);
-		this.registryName = "item." + modId + "." + name;
-		this.simpleRegistryName = name;
 	}
 
 	@Override
@@ -87,6 +68,7 @@ public abstract class AbstractItem implements IItem {
 
 	@Override
 	public RegistryObject<Item> getRegistryObject() {
+		Preconditions.checkState(this.registryObject != null, "This item has not yet been registered.");
 		return this.registryObject;
 	}
 

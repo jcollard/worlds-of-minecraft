@@ -225,16 +225,15 @@ public class MinecraftMod implements IMinecraftMod {
 			return this;
 		}
 
-		public Builder addItem(IItem item) {
-			if (item.getRegistryName() == null) {
-				item.setRegistryName(MOD_ID, Utils.getInstance().safeRegistryName(item.getName()));
-			}
-			if (items.containsKey(item.getRegistryName())) {
+		public Builder addItem(@Nonnull IItem item) {
+			Preconditions.checkArgument(item != null, "Cannot add a null item to a mod. Did you initialize it?");
+			String registryName = "item." + MOD_ID + "." + item.getSimpleRegistryName();
+			if (items.containsKey(registryName)) {
 				throw new IllegalStateException(
 						"Unable to add the item \"" + item.getName() + "\". The registry name, \""
-								+ item.getRegistryName() + "\", matched another item that was previously registered.");
+								+ registryName + "\", matched another item that was previously registered.");
 			}
-			items.put(item.getRegistryName(), item);
+			items.put(registryName, item);
 			return this;
 		}
 
