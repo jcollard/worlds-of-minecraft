@@ -13,6 +13,7 @@ import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.ItemExtender;
 import com.worldsofminecraft.mod.item.QuickItem;
+import com.worldsofminecraft.mod.item.QuickSwordItem;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.DelayedExecution;
@@ -25,6 +26,7 @@ import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTier;
 import net.minecraft.util.RegistryKey;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -83,7 +85,9 @@ public class TestMod extends QuickMod {
 		bananas.setUseAction(IItem.Action.EAT);
 		builder.addItem(bananas);
 		
-		QuickItem sword = new QuickItem("My Sword", ItemModel.get(VanillaItem.IRON_SWORD));
+		QuickSwordItem sword = new QuickSwordItem("My Sword", ItemModel.get(VanillaItem.IRON_SWORD));
+		sword.setDamage(3);
+		sword.setSpeed(-2.4F);
 		sword.setUseAction(IItem.Action.BLOCK);
 		sword.onUse = (context) -> {
 			if(!context.world.getModel().isClientSide()) {

@@ -1,5 +1,8 @@
 package com.worldsofminecraft.resource.vanilla;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.item.Item;
@@ -986,10 +989,21 @@ public enum VanillaItem {
 	
 	public final String REGISTRY_NAME;
 	public final Supplier<Item> SUPPLIER;
+	private static final List<VanillaItem> items = new ArrayList<>(values().length);
+	
+	static {
+		for(VanillaItem i : values()) {
+			items.add(i);
+		}
+	}
 	
 	private VanillaItem(String registryName, Supplier<Item> itemSupplier) {
 		this.REGISTRY_NAME = registryName;
 		this.SUPPLIER = itemSupplier;
+	}
+
+	public static List<VanillaItem> valuesList() {
+		return Collections.unmodifiableList(items);
 	}
 
 }

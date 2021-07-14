@@ -4,36 +4,28 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class ItemAdapter extends Item {
+public class SwordItemAdapter extends SwordItem {
+	
+	private final QuickSwordItem item;
 
-	private final IItem item;
-
-	public ItemAdapter(@Nonnull IItem item) {
-		super(ItemAdapter.getProperties(item));
+	public SwordItemAdapter(@Nonnull QuickSwordItem item) {
+		super(QuickTieredItem.getTier(item.getTier()), item.getDamage(), item.getSpeed(), ItemAdapter.getProperties(item));
 		this.item = item;
 	}
 
-	public static Properties getProperties(@Nonnull IItem item) {
-		Preconditions.checkNotNull(item, "Cannot create an ItemAdapter from a null IItem.");
-		Properties p = new Item.Properties();
-		if(item.getProperties().getTab() != null) {
-			p.tab(item.getProperties().getTab().getItemGroup());
-		}
-		return p;
-	}
-
+	//TODO(2021-07-14 jcollard): This is copy / pasted from ItemAdapter. This should be organized somewhere specific
+	
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
 		Supplier<IItemStack> defaultAction = () -> IItemStack
@@ -59,5 +51,5 @@ public class ItemAdapter extends Item {
 		return ActionResult.pass(player.getItemInHand(hand));
 
 	}
-
+	
 }

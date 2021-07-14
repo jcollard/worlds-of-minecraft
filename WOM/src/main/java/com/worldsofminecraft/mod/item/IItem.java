@@ -5,12 +5,14 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;
+import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.UseAction;
@@ -72,4 +74,117 @@ public interface IItem {
 
 	}
 
+
+	public static class Tier {
+	
+		private int level = 0;
+		private int uses = 59;
+		private float speed = 2.0F;
+		private float damage = 0.0F;
+		private int enchantability = 15;
+		private IIngredient repairIngredient = IIngredient.EMPTY;
+		
+		//TODO(2021-07-14 jcollard): Need to be able to set repair ingredient based on a tag.
+		private static VanillaItem[] planks = new VanillaItem[] {
+			VanillaItem.OAK_PLANKS,
+			VanillaItem.SPRUCE_PLANKS,
+			VanillaItem.BIRCH_PLANKS,
+			VanillaItem.JUNGLE_PLANKS,
+			VanillaItem.ACACIA_PLANKS,
+			VanillaItem.DARK_OAK_PLANKS,
+			VanillaItem.CRIMSON_PLANKS,
+			VanillaItem.WARPED_PLANKS
+		};
+		
+		//TODO(2021-07-14 jcollard): Tiers should be immutable so the static classes cannot be changed.
+		public static Tier WOOD = new Tier().level(0).durability(59).speed(2.0F).damage(0.0F).enchantabilty(15).repairIngredient(planks);		
+		//TODO(2021-07-14 jcollard): Cobbled Deepslate / Blackstone are listed as repair ingredients
+		public static Tier STONE = new Tier().level(1).durability(131).speed(4.0F).damage(1.0F).enchantabilty(5).repairIngredient(VanillaItem.COBBLESTONE);
+		public static Tier IRON = new Tier().level(2).durability(250).speed(6.0F).damage(2.0F).enchantabilty(14).repairIngredient(VanillaItem.IRON_INGOT);
+		public static Tier DIAMOND = new Tier().level(3).durability(1561).speed(8.0F).damage(3.0F).enchantabilty(10).repairIngredient(VanillaItem.DIAMOND);
+		public static Tier GOLD = new Tier().level(0).durability(2031).speed(9.0F).damage(4.0F).enchantabilty(15).repairIngredient(VanillaItem.GOLD_INGOT);
+		public static Tier NETHERITE = new Tier().level(4).durability(32).speed(12.0F).damage(0.0F).enchantabilty(22).repairIngredient(VanillaItem.NETHERITE_INGOT);
+		
+		public int getLevel() {
+			return level;
+		}
+		
+		public Tier level(int level) {
+			Preconditions.checkArgument(level >= 0, "Level must be greater than or equal to 0.");
+			this.level = level;
+			return this;
+		}
+		
+		public int getUses() {
+			return uses;
+		}
+		
+		public Tier durability(int uses) {
+			Preconditions.checkArgument(uses >= 0, "Uses must be greater than or equal to 0.");
+			this.uses = uses;
+			return this;
+		}
+		
+		public float getSpeed() {
+			return speed;
+		}
+		
+		public Tier speed(float speed) {
+			Preconditions.checkArgument(speed >= 0, "Speed must be greater than or equal to 0.");
+			this.speed = speed;
+			return this;
+		}
+		
+		public float getDamage() {
+			return damage;
+		}
+		
+		public Tier damage(float damage) {
+			Preconditions.checkArgument(damage >= 0, "Damage must be greater than or equal to 0.");
+			this.damage = damage;
+			return this;
+		}
+		
+		public int getEnchantability() {
+			return enchantability;
+		}
+		
+		public Tier enchantabilty(int enchantability) {
+			Preconditions.checkArgument(enchantability >= 0, "Enchantability must be greater than or equal to 0.");
+			this.enchantability = enchantability;
+			return this;
+		}
+		
+		public IIngredient getRepairIngredient() {
+			return repairIngredient;
+		}
+		
+		public Tier repairIngredient(@Nonnull IIngredient repairIngredient) {
+			this.repairIngredient = repairIngredient;
+			return this;
+		}
+		
+		public Tier repairIngredient(@Nonnull VanillaItem vanillaItem) {
+			this.repairIngredient = IIngredient.simple(vanillaItem);
+			return this;
+		}
+		
+		public Tier repairIngredient(@Nonnull IItem item) {
+			this.repairIngredient = IIngredient.simple(item);
+			return this;
+		}
+		
+		public Tier repairIngredient(@Nonnull IItem ... items) {
+			this.repairIngredient = IIngredient.simple(items);
+			return this;
+		}
+		
+		public Tier repairIngredient(@Nonnull VanillaItem ... items) {
+			this.repairIngredient = IIngredient.simple(items);
+			return this;
+		}
+		
+		
+	}
+	
 }
