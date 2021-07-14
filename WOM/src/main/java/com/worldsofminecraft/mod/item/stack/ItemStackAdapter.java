@@ -10,7 +10,7 @@ public class ItemStackAdapter implements IItemStack {
 	private final ItemStack stack;
 
 	public ItemStackAdapter(IItem item, int amount) {
-		this.stack = new ItemStack(item.construct(), amount);
+		this.stack = new ItemStack(item.getRegistryObject().get(), amount);
 	}
 
 	@UsesForge

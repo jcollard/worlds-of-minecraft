@@ -11,9 +11,7 @@ public interface IItem {
 	String getName();
 	IItemModel getItemModel();
 	String getSimpleRegistryName();
-	
 	RegistryObject<Item> getRegistryObject();
 	RegistryObject<Item> register(DeferredRegister<Item> register);
-	Item construct();
 
 }

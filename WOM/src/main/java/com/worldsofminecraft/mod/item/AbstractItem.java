@@ -71,12 +71,6 @@ public abstract class AbstractItem implements IItem {
 		Preconditions.checkState(this.registryObject != null, "This item has not yet been registered.");
 		return this.registryObject;
 	}
-
-	@Override
-	public Item construct() {
-		Preconditions.checkState(this.registryObject != null, "Cannot construct an item that has not yet been registered.");
-		return this.registryObject.get();
-	}
 	
 	protected abstract Supplier<Item> getItemSupplier();
 
