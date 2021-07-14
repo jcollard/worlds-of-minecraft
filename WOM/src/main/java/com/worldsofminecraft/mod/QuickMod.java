@@ -81,7 +81,7 @@ public abstract class QuickMod {
 		BUILDER.getItems().forEach((key, item) -> {
 			if (item instanceof ItemExtender) {
 				ItemExtender ie = (ItemExtender) item;
-				Item modeled = ie.getItemToModel();
+				Item modeled = ie.getVanillaItem().SUPPLIER.get();
 				Utils.getInstance().getLogger().info("Copying properties from \"" + modeled.getRegistryName() + "\" to \"" + BUILDER.MOD_ID + ":" + ie.getSimpleRegistryName() + "\".");
 				if(!ITEM_PROPERTIES.containsKey(modeled)) {
 					Utils.getInstance().getLogger().info("No properties found.");
