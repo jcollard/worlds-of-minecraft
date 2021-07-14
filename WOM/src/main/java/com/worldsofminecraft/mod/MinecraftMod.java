@@ -27,6 +27,7 @@ import com.worldsofminecraft.mod.item.tab.CustomItemTab;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
+import com.worldsofminecraft.resource.png.PNGResource;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -207,6 +208,12 @@ public class MinecraftMod implements IMinecraftMod {
 			return this;
 		}
 
+		public Builder logoFile(@Nonnull String logoFile) {
+			Preconditions.checkNotNull(logoFile, "logoFile must be non-null.");
+			this.logoFile = PNGResource.get(logoFile);
+			return this;
+		}
+		
 		public Builder logoFile(@Nonnull IPNGResource logoFile) {
 			Preconditions.checkArgument(logoFile != null, "logoFile must be non-null.");
 			this.logoFile = logoFile;
@@ -294,6 +301,11 @@ public class MinecraftMod implements IMinecraftMod {
 			};
 		}
 
+
+		public ItemTab createCustomTab(@Nonnull String label, @Nonnull String icon) {
+			return createCustomTab(label, PNGResource.get(icon));
+		}
+		
 		/**
 		 * Creates a Custom Tab with the specified label and icon.
 		 * 

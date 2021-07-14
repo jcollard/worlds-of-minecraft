@@ -18,7 +18,6 @@ import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
-import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.item.CompassItem;
@@ -39,10 +38,10 @@ public class TestMod extends QuickMod {
 		String authors = "Joseph Collard";
 		String modName = "Example Mod";
 		MinecraftMod.Builder builder = MinecraftMod.getBuilder(authors, modName, MODID);
-		builder.logoFile(PNGResource.get("assets/common/banana.png"));
+		builder.logoFile("assets/common/banana.png");
 		builder.description("This is an example mod. Modify this line of code to change the description in Minecraft!");
 
-		ItemTab bananaTab = builder.createCustomTab("Bananas", PNGResource.get("assets/common/bananas.png"));
+		ItemTab bananaTab = builder.createCustomTab("Bananas", "assets/common/bananas.png");
 		
 		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/banana_peeled.png");
 		peeledBanana.getProperties().tab(bananaTab);

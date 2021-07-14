@@ -27,7 +27,10 @@ public class ItemAdapter extends Item {
 
 	private static Properties getProperties(@Nonnull IItem item) {
 		Preconditions.checkNotNull(item, "Cannot create an ItemAdapter from a null IItem.");
-		Properties p = new Item.Properties().tab(item.getProperties().getTab().getItemGroup());
+		Properties p = new Item.Properties();
+		if(item.getProperties().getTab() != null) {
+			p.tab(item.getProperties().getTab().getItemGroup());
+		}
 		return p;
 	}
 
