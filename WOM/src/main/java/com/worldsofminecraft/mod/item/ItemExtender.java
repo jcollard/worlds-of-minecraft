@@ -7,16 +7,23 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.resource.model.item.IItemModel;
+import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.model.item.VanillaItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.item.Item;
 
 @Volatile
-public class ItemExtender extends AbstractItem {
+public class ItemExtender extends QuickItem {
 
 	private final Supplier<Item> itemSupplier;
 	private final VanillaItem vanillaItem;
+	
+	public ItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem) {
+		super(name, ItemModel.get(vanillaItem));
+		this.itemSupplier = () -> new ItemAdapter(this);
+		this.vanillaItem = vanillaItem;
+	}
 
 	public ItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem, @Nonnull Supplier<Item> supplier) {
 		this(name, VanillaItemModel.get(vanillaItem), vanillaItem, supplier);
@@ -39,6 +46,5 @@ public class ItemExtender extends AbstractItem {
 	public VanillaItem getVanillaItem() {
 		return this.vanillaItem;
 	}
-
 
 }

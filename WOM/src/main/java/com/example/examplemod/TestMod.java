@@ -25,6 +25,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -102,8 +104,13 @@ public class TestMod extends QuickMod {
 		ItemExtender customCompass = new ItemExtender("My Compass", VanillaItem.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
 		builder.addItem(customCompass);
 		
-		ItemExtender customClock = new ItemExtender("My Clock", VanillaItem.CLOCK, () -> new Item((new Item.Properties()).tab(ItemGroup.TAB_TOOLS)));
-		builder.addItem(customClock);
+		ItemExtender talkingClock = new ItemExtender("Talking Clock", VanillaItem.CLOCK);
+		talkingClock.onUse = (context) -> {
+			long time = context.world.getModel().getDayTime();
+			context.entity.showMessage("The time is " + time);
+			return context.itemStack;
+		};
+		builder.addItem(talkingClock);
 		
 		return builder;
 	}
