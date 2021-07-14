@@ -1,4 +1,4 @@
-package com.worldsofminecraft.mod.item;
+package com.worldsofminecraft.mod.item.util.functional;
 
 import java.util.function.Supplier;
 

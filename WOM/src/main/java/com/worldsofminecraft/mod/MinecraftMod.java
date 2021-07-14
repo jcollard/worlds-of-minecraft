@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.worldsofminecraft.mod.exception.BuildFailedException;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.tab.CustomItemTab;

@@ -15,22 +15,21 @@ import net.minecraft.item.crafting.Ingredient;
 
 public class QuickTieredItem extends QuickItem {
 
-	private Tier tier = new Tier();
+	private final Tier tier;
 	
-	public QuickTieredItem(@Nonnull String name, @Nonnull String texture) {
-		super(name, texture);
-	}
-	
-	public QuickTieredItem(String name, IItemModel model) {
+	public QuickTieredItem(String name, IItemModel model, @Nonnull Tier tier) {
 		super(name, model);
+		this.tier = tier;
 	}
 
-	public QuickTieredItem(String name, IPNGResource texture) {
+	public QuickTieredItem(String name, IPNGResource texture, @Nonnull Tier tier) {
 		super(name, texture);
+		this.tier = tier;
 	}
 
-	public QuickTieredItem(String name, ItemTexture texture) {
+	public QuickTieredItem(String name, ItemTexture texture, @Nonnull Tier tier) {
 		super(name, texture);
+		this.tier = tier;
 	}
 	
 	public QuickTieredItem(@Nonnull String name, @Nonnull String texture, @Nonnull Tier tier) {
@@ -41,11 +40,6 @@ public class QuickTieredItem extends QuickItem {
 	
 	public Tier getTier() {
 		return this.tier;
-	}
-	
-	public void setTier(@Nonnull Tier tier) {
-		Preconditions.checkNotNull(tier, "The specified tier must be non-null.");
-		this.tier = tier;
 	}
 
 	protected static IItemTier getTier(Tier tier) {

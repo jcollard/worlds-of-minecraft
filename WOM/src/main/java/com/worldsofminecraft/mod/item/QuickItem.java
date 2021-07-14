@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
+import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;

@@ -10,6 +10,7 @@ import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.item.util.functional.FinishUsingItemFunction;
+import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;

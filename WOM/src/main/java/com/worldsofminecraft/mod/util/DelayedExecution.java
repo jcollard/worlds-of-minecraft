@@ -1,5 +1,7 @@
 package com.worldsofminecraft.mod.util;
 
+import com.worldsofminecraft.util.functional.Executor;
+
 public class DelayedExecution {
 	
 	private Executor executor;

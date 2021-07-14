@@ -11,9 +11,14 @@ import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.IItem;
+import com.worldsofminecraft.mod.item.IItem.Tier;
 import com.worldsofminecraft.mod.item.ItemExtender;
+import com.worldsofminecraft.mod.item.QuickAxe;
+import com.worldsofminecraft.mod.item.QuickHoe;
 import com.worldsofminecraft.mod.item.QuickItem;
-import com.worldsofminecraft.mod.item.QuickSwordItem;
+import com.worldsofminecraft.mod.item.QuickPickaxe;
+import com.worldsofminecraft.mod.item.QuickShovel;
+import com.worldsofminecraft.mod.item.QuickSword;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.util.DelayedExecution;
@@ -84,7 +89,7 @@ public class TestMod extends QuickMod {
 		bananas.setUseAction(IItem.Action.EAT);
 		builder.addItem(bananas);
 		
-		QuickSwordItem sword = new QuickSwordItem("My Sword", ItemModel.get(VanillaItem.IRON_SWORD));
+		QuickSword sword = new QuickSword("My Sword", ItemModel.get(VanillaItem.IRON_SWORD), Tier.IRON);
 		sword.setDamage(3);
 		sword.setSpeed(-2.4F);
 		sword.setUseAction(IItem.Action.BLOCK);
@@ -122,6 +127,15 @@ public class TestMod extends QuickMod {
 			return context.itemStack;
 		};
 		builder.addItem(talkingClock);
+		
+		QuickAxe myAxe = new QuickAxe("My Axe", ItemModel.get(VanillaItem.IRON_AXE), Tier.IRON);
+		builder.addItem(myAxe);
+		QuickHoe myHoe = new QuickHoe("My Hoe", ItemModel.get(VanillaItem.IRON_HOE), Tier.IRON);
+		builder.addItem(myHoe);
+		QuickPickaxe myPickaxe = new QuickPickaxe("My Pickaxe", ItemModel.get(VanillaItem.IRON_PICKAXE), Tier.IRON);
+		builder.addItem(myPickaxe);
+		QuickShovel myShovel = new QuickShovel("My Shovel", ItemModel.get(VanillaItem.IRON_SHOVEL), Tier.IRON);
+		builder.addItem(myShovel);
 		
 		return builder;
 	}

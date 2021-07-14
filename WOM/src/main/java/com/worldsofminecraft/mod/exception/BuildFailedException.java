@@ -1,4 +1,4 @@
-package com.worldsofminecraft.mod;
+package com.worldsofminecraft.mod.exception;
 
 public class BuildFailedException extends RuntimeException {
 

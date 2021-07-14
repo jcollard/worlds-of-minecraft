@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
-import com.worldsofminecraft.mod.item.IItem.Adapter.Delegate;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
@@ -20,32 +19,24 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class QuickSwordItem extends QuickTieredItem {
+public class QuickSword extends QuickTieredItem {
 
 	private int damage = 3;
 	private float speed = -2.4F;
 
-	public QuickSwordItem(String name, String texture) {
-		super(name, texture);
-		setTier(Tier.IRON);
+	public QuickSword(String name, IItemModel model, Tier tier) {
+		super(name, model, tier);
 	}
 
-	public QuickSwordItem(String name, IItemModel model) {
-		super(name, model);
-		setTier(Tier.IRON);
+	public QuickSword(String name, IPNGResource texture, Tier tier) {
+		super(name, texture, tier);
 	}
 
-	public QuickSwordItem(String name, IPNGResource texture) {
-		super(name, texture);
-		setTier(Tier.IRON);
+	public QuickSword(String name, ItemTexture texture, Tier tier) {
+		super(name, texture, tier);
 	}
 
-	public QuickSwordItem(String name, ItemTexture texture) {
-		super(name, texture);
-		setTier(Tier.IRON);
-	}
-
-	public QuickSwordItem(String name, String texture, Tier tier) {
+	public QuickSword(String name, String texture, Tier tier) {
 		super(name, texture, tier);
 	}
 
@@ -57,13 +48,13 @@ public class QuickSwordItem extends QuickTieredItem {
 		return speed;
 	}
 
-	public QuickSwordItem setDamage(int damage) {
+	public QuickSword setDamage(int damage) {
 		Preconditions.checkArgument(damage >= 0, "Damage must be greater than or equal to 0.");
 		this.damage = damage;
 		return this;
 	}
 
-	public QuickSwordItem setSpeed(float speed) {
+	public QuickSword setSpeed(float speed) {
 		this.speed = speed;
 		return this;
 	}
@@ -75,12 +66,12 @@ public class QuickSwordItem extends QuickTieredItem {
 
 	private static class Adapter extends SwordItem {
 
-		private final Delegate delegate;
+		private final IItem.Adapter.Delegate delegate;
 
-		public Adapter(@Nonnull QuickSwordItem item) {
+		public Adapter(@Nonnull QuickSword item) {
 			super(QuickTieredItem.getTier(item.getTier()), item.getDamage(), item.getSpeed(),
 					IItem.Adapter.getProperties(item));
-			this.delegate = new Delegate(item, super::finishUsingItem);
+			this.delegate = new IItem.Adapter.Delegate(item, super::finishUsingItem);
 		}
 		
 		@Override

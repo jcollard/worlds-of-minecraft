@@ -1,4 +1,4 @@
-package com.worldsofminecraft.mod.util;
+package com.worldsofminecraft.util.functional;
 
 @FunctionalInterface
 public interface Executor {
