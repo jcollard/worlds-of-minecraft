@@ -1,7 +1,7 @@
 package com.worldsofminecraft.mod.item.stack;
 
 import com.worldsofminecraft.mod.item.IItem;
-import com.worldsofminecraft.mod.util.UsesForge;
+import com.worldsofminecraft.mod.util.Volatile;
 
 import net.minecraft.item.ItemStack;
 
@@ -13,13 +13,13 @@ public class ItemStackAdapter implements IItemStack {
 		this.stack = new ItemStack(item.getRegistryObject().get(), amount);
 	}
 
-	@UsesForge
+	@Volatile
 	public ItemStackAdapter(ItemStack itemStack) {
 		this.stack = itemStack;
 	}
 
 	@Override
-	@UsesForge
+	@Volatile
 	public ItemStack getModel() {
 		return stack;
 	}

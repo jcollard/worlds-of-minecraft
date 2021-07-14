@@ -10,6 +10,6 @@ package com.worldsofminecraft.mod.util;
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
  */
-public @interface UsesForge {
+public @interface Volatile {
 
 }

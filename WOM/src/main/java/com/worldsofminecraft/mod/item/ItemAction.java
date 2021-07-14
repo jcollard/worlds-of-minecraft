@@ -1,6 +1,6 @@
 package com.worldsofminecraft.mod.item;
 
-import com.worldsofminecraft.mod.util.UsesForge;
+import com.worldsofminecraft.mod.util.Volatile;
 
 import net.minecraft.item.UseAction;
 
@@ -19,7 +19,7 @@ public enum ItemAction{
 		this.action = action;
 	}
 	
-	@UsesForge
+	@Volatile
 	public UseAction getUseAction() {
 		return this.action;
 	}
