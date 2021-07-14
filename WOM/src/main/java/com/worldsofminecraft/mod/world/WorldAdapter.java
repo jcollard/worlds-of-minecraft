@@ -24,5 +24,14 @@ public class WorldAdapter implements IWorld {
 		world.addFreshEntity(entity.getModel());
 		
 	}
+	
+	@Override
+	public long getDayTime() {
+		return world.getDayTime();
+	}
 
+	@Override
+	public float getTimeOfDay() {
+		return world.getTimeOfDay(0);
+	}
 }

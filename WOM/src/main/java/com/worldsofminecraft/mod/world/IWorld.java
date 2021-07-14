@@ -8,9 +8,12 @@ public interface IWorld {
 
 	World getModel();
 	void addItemEntity(IItemEntity entity);
+	long getDayTime();
+	float getTimeOfDay();
 	
+
 	static IWorld convert(World world) {
 		return new WorldAdapter(world);
 	}
-
+	
 }

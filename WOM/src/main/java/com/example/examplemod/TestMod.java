@@ -3,6 +3,7 @@ package com.example.examplemod;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.MinecraftMod;
@@ -25,8 +26,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.RegistryKey;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -106,8 +105,17 @@ public class TestMod extends QuickMod {
 		
 		ItemExtender talkingClock = new ItemExtender("Talking Clock", VanillaItem.CLOCK);
 		talkingClock.onUse = (context) -> {
-			long time = context.world.getModel().getDayTime();
-			context.entity.showMessage("The time is " + time);
+			float time = context.world.getTimeOfDay();
+			int minutes = ((int)((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
+			int hour = minutes/60;
+			String ampm = hour > 11 ? "PM" : "AM";
+			if (hour > 12) {
+				hour -= 12;
+			} else if (hour == 0) {
+				hour = 12;
+			}
+			String timeMessage = hour + ":" + Strings.padStart("" + minutes % 60, 2, '0') + " " + ampm;
+			context.entity.showMessage("The time is " + timeMessage);
 			return context.itemStack;
 		};
 		builder.addItem(talkingClock);
