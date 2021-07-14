@@ -1,13 +1,13 @@
 package com.worldsofminecraft.mod.item;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Preconditions;
+import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
+import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
@@ -18,7 +18,7 @@ import net.minecraft.item.Item;
 
 public class QuickItem extends AbstractItem {
 
-	private Function<ItemUseContext, IItemStack> onUse;
+	public Function<ItemUseContext, IItemStack> onUse;
 
 	public QuickItem(@Nonnull String name, @Nonnull String texture) {
 		this(name, PNGResource.get(texture));
@@ -36,23 +36,13 @@ public class QuickItem extends AbstractItem {
 		super(name, model);
 	}
 
-	public QuickItem setOnUse(@Nonnull Function<ItemUseContext, IItemStack> onUse) {
-		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
-		this.onUse = onUse;
-		return this;
-	}
-
-	public QuickItem setOnUse(@Nonnull Consumer<ItemUseContext> onUse) {
-		Preconditions.checkArgument(onUse != null, "onUse must not be null.");
-		this.setOnUse((context) -> {
-			onUse.accept(context);
-			return context.itemStack;
-		});
-		return this;
-	}
-
-	public Function<ItemUseContext, IItemStack> onUse() {
-		return this.onUse;
+	@Override
+	public IItemStack onUse(IItemStack stack, IWorld world, ILivingEntity livingEntity,
+			Supplier<IItemStack> defaultAction) {
+		if (onUse != null) {
+			return onUse.apply(new ItemUseContext(stack, world, livingEntity, defaultAction));
+		}
+		return super.onUse(stack, world, livingEntity, defaultAction);
 	}
 
 	@Override

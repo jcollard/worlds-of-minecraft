@@ -58,7 +58,7 @@ public class TestMod extends QuickMod {
 		
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
 		bananas.getProperties().tab(bananaTab);
-		bananas.setOnUse((context) -> {
+		bananas.onUse = (context) -> {
 			Vector3d vec3d = context.entity.getPosition();
 			Vector3d front = context.entity.getForward();
 			Random r = new Random();
@@ -77,7 +77,7 @@ public class TestMod extends QuickMod {
 			}
 			context.itemStack.setCount(context.itemStack.getCount() - 1);
 			return context.itemStack;
-		});
+		};
 		
 		bananas.setUseDuration(32);
 		bananas.setUseAction(IItem.Action.EAT);
@@ -85,9 +85,9 @@ public class TestMod extends QuickMod {
 		
 		QuickItem sword = new QuickItem("My Sword", ItemModel.get(VanillaItem.IRON_SWORD));
 		sword.setUseAction(IItem.Action.BLOCK);
-		sword.setOnUse((context) -> {
+		sword.onUse = (context) -> {
 			if(!context.world.getModel().isClientSide()) {
-				return;
+				return context.itemStack;
 			}
 			IForgeRegistry<Item> items = ForgeRegistries.ITEMS;
 			JsonObject json = new JsonObject();
@@ -95,7 +95,9 @@ public class TestMod extends QuickMod {
 				json.add(e.getValue().getRegistryName().toString(), new JsonPrimitive(e.getValue().getName(new ItemStack(e.getValue())).getString()));
 			}
 			System.out.println(Utils.getInstance().getGson().toJson(json));
-		});
+			return context.itemStack;
+		};
+		
 		builder.addItem(sword);
 		
 		ItemExtender customCompass = new ItemExtender("My Compass", VanillaItem.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));

@@ -33,9 +33,9 @@ public class ItemAdapter extends Item {
 
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
-		ItemUseContext context = new ItemUseContext(stack, world, livingEntity);
 		Supplier<IItemStack> defaultAction = () -> IItemStack
 				.convert(super.finishUsingItem(stack, world, livingEntity));
+		ItemUseContext context = new ItemUseContext(stack, world, livingEntity, defaultAction);
 		IItemStack s = item.onUse(context.itemStack, context.world, context.entity, defaultAction);
 		return s.getModel();
 	}

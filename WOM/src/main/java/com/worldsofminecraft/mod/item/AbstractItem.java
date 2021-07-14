@@ -6,7 +6,6 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.util.Utils;
-import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
