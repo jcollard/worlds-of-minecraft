@@ -9,13 +9,20 @@ import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
+import com.worldsofminecraft.mod.item.util.functional.FinishUsingItemFunction;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
@@ -185,6 +192,81 @@ public interface IItem {
 		}
 		
 		
+	}
+	
+	public static class Adapter extends Item {
+
+		private final Delegate delegate;
+
+		public Adapter(@Nonnull IItem item) {
+			super(Adapter.getProperties(item));
+			this.delegate = new Delegate(item, super::finishUsingItem);
+		}
+
+		public static Properties getProperties(@Nonnull IItem item) {
+			Preconditions.checkNotNull(item, "Cannot create an ItemAdapter from a null IItem.");
+			Properties p = new Item.Properties();
+			if(item.getProperties().getTab() != null) {
+				p.tab(item.getProperties().getTab().getItemGroup());
+			}
+			return p;
+		}
+
+		@Override
+		public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
+			return delegate.finishUsingItem(stack, world, livingEntity);
+		}
+
+		@Override
+		public UseAction getUseAnimation(ItemStack stack) {
+			return this.delegate.getUseAnimation(stack);
+		}
+
+		@Override
+		public int getUseDuration(ItemStack stack) {
+			return this.delegate.getUseDuration(stack);
+		}
+
+		@Override
+		public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+			return this.delegate.use(world, player, hand);
+
+		}
+		
+		public static class Delegate {
+			public FinishUsingItemFunction f;
+			public IItem item;
+			
+			public Delegate(@Nonnull IItem item, @Nonnull FinishUsingItemFunction finishUsingItem) {
+				Preconditions.checkNotNull(item);
+				Preconditions.checkNotNull(finishUsingItem);
+				this.f = finishUsingItem;
+				this.item = item;
+			}
+			
+			public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
+				Supplier<IItemStack> defaultAction = () -> IItemStack
+						.convert(f.apply(stack, world, livingEntity));
+				ItemUseContext context = new ItemUseContext(stack, world, livingEntity, defaultAction);
+				IItemStack s = item.onUse(context.itemStack, context.world, context.entity, defaultAction);
+				return s.getModel();
+			}
+			
+			public UseAction getUseAnimation(ItemStack stack) {
+				return this.item.getUseAction().getUseAction();
+			}
+
+			public int getUseDuration(ItemStack stack) {
+				return this.item.getUseDuration();
+			}
+
+			public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+				player.startUsingItem(hand);
+				return ActionResult.pass(player.getItemInHand(hand));
+
+			}
+		}
+
 	}
 	
 }

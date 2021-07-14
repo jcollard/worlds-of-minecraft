@@ -21,7 +21,7 @@ public class ItemExtender extends QuickItem {
 	
 	public ItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem) {
 		super(name, ItemModel.get(vanillaItem));
-		this.itemSupplier = () -> new ItemAdapter(this);
+		this.itemSupplier = () -> new IItem.Adapter(this);
 		this.vanillaItem = vanillaItem;
 	}
 
