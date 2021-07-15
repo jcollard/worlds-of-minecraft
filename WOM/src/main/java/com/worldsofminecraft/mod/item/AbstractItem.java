@@ -23,7 +23,7 @@ public abstract class AbstractItem implements IItem {
 	private final IItem.Properties properties = new IItem.Properties();
 	private final String simpleRegistryName;
 	private RegistryObject<Item> registryObject;
-	private Action action = Action.EAT;
+	private Action action = Action.NONE;
 	private int useDuration = 20;
 	
 	public AbstractItem(@Nonnull String name, @Nonnull String texture) {

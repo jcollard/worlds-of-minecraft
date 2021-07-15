@@ -14,6 +14,7 @@ import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.IItem.Tier;
 import com.worldsofminecraft.mod.item.ItemExtender;
 import com.worldsofminecraft.mod.item.QuickAxe;
+import com.worldsofminecraft.mod.item.QuickFood;
 import com.worldsofminecraft.mod.item.QuickHoe;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.QuickPickaxe;
@@ -21,6 +22,8 @@ import com.worldsofminecraft.mod.item.QuickShovel;
 import com.worldsofminecraft.mod.item.QuickSword;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
+import com.worldsofminecraft.mod.potion.Effect;
+import com.worldsofminecraft.mod.potion.Effect.Type;
 import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.mod.util.math.Vector3d;
@@ -50,8 +53,10 @@ public class TestMod extends QuickMod {
 
 		ItemTab bananaTab = builder.createCustomTab("Bananas", "assets/common/bananas.png");
 		
-		QuickItem peeledBanana = new QuickItem("Peeled Banana", "assets/common/banana_peeled.png");
+		QuickFood peeledBanana = new QuickFood("Peeled Banana", "assets/common/banana_peeled.png");
 		peeledBanana.getProperties().tab(bananaTab);
+		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST).level(5).duration(20.0F), 0.5F);
+		peeledBanana.foodPoints(3);
 		builder.addItem(peeledBanana);	
 		
 		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
