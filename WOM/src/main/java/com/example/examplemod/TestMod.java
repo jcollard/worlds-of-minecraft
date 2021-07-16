@@ -22,6 +22,7 @@ import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
+import com.worldsofminecraft.util.SimpleItemGenerator;
 
 import net.minecraftforge.fml.common.Mod;
 
@@ -131,6 +132,13 @@ public class TestMod extends QuickMod {
 			return context.itemStack;
 		};
 		builder.addItem(boatCapsul);
+
+		QuickItem simpleItemFinder = new QuickItem("Simple Item Finder", ItemModel.get(VanillaItem.END_ROD));
+		simpleItemFinder.onUse = (context) -> {
+			SimpleItemGenerator.generate();
+			return context.itemStack;
+		};
+		builder.addItem(simpleItemFinder);
 
 		return builder;
 	}
