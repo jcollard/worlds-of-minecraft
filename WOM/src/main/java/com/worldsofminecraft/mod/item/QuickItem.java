@@ -30,7 +30,8 @@ public class QuickItem extends AbstractItem {
 	}
 
 	public QuickItem(@Nonnull String name, @Nonnull ItemTexture texture) {
-		this(name, ItemModel.getBuilder(texture).build());
+		this(name, ItemModel.getBuilder(texture)
+							.build());
 	}
 
 	public QuickItem(@Nonnull String name, @Nonnull IItemModel model) {
@@ -48,10 +49,9 @@ public class QuickItem extends AbstractItem {
 
 	@Override
 	protected Supplier<Item> getItemSupplier() {
-		return () -> new IItem.Adapter.Builder<Item>(Item.class)
-				.constructor(Item.Properties.class)
-				.args(IItem.Adapter.getProperties(this))
-				.build(this).MODEL;
+		return () -> new IItem.Adapter.Builder<Item>(Item.class).constructor(Item.Properties.class)
+																.args(IItem.Adapter.getProperties(this))
+																.build(this).MODEL;
 	}
 
 }

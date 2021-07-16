@@ -2,7 +2,6 @@ package com.worldsofminecraft.mod.entity;
 
 import javax.annotation.Nonnull;
 
-import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -10,9 +9,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.text.StringTextComponent;
 
 public class LivingEntityAdapter implements ILivingEntity {
-	
+
 	private final LivingEntity entity;
-	
+
 	public LivingEntityAdapter(@Nonnull LivingEntity entity) {
 		this.entity = entity;
 	}
@@ -39,7 +38,7 @@ public class LivingEntityAdapter implements ILivingEntity {
 
 	@Override
 	public void showMessage(String message) {
-		if(entity instanceof ClientPlayerEntity) {
+		if (entity instanceof ClientPlayerEntity) {
 			entity.sendMessage(new StringTextComponent(message), entity.getUUID());
 		}
 	}

@@ -10,10 +10,13 @@ import com.worldsofminecraft.resource.model.IModel;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 public interface IItemModel extends IModel {
-	
+
 	String getParent();
+
 	IItemDisplay getDisplay();
+
 	Map<String, ItemTexture> getLayers();
+
 	String generateResource(@Nonnull IMinecraftMod mod) throws IOException;
 
 }

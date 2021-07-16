@@ -12,8 +12,11 @@ public interface IItemEntity {
 	}
 
 	void setPickUpDelay(int delay);
+
 	void setItem(IItemStack itemStack);
+
 	void setVelocity(double d, double e, double f);
+
 	ItemEntity getModel();
 
 }

@@ -6,11 +6,13 @@ import com.worldsofminecraft.mod.util.Volatile;
 import net.minecraft.item.ItemStack;
 
 public class ItemStackAdapter implements IItemStack {
-	
+
 	private final ItemStack stack;
 
 	public ItemStackAdapter(IItem item, int amount) {
-		this.stack = new ItemStack(item.getRegistryObject().get(), amount);
+		this.stack = new ItemStack(item	.getRegistryObject()
+										.get(),
+				amount);
 	}
 
 	@Volatile

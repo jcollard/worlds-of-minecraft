@@ -5,9 +5,9 @@ import java.io.IOException;
 import com.worldsofminecraft.mod.IMinecraftMod;
 
 public class VanillaItemTexture extends ItemTexture {
-	
+
 	private final String registryName;
-	
+
 	public VanillaItemTexture(String registryName) {
 		this.registryName = registryName;
 	}

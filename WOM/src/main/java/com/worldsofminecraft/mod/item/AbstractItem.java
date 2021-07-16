@@ -32,12 +32,15 @@ public abstract class AbstractItem implements IItem {
 	private int useDuration = 20;
 
 	public static boolean checkRegistration(Builder b) {
-		Set<String> key = b.getItems().keySet();
+		Set<String> key = b	.getItems()
+							.keySet();
 		boolean pass = true;
 		for (AbstractItem item : ALL_ITEMS) {
 			if (!key.contains("item." + b.MOD_ID + "." + item.simpleRegistryName)) {
-				Utils.getInstance().getLogger().warn("WARNING: \"" + item.name
-						+ "\" was created but never registered! Did you forget to add it to your mod?");
+				Utils	.getInstance()
+						.getLogger()
+						.warn("WARNING: \"" + item.name
+								+ "\" was created but never registered! Did you forget to add it to your mod?");
 				pass = false;
 			}
 		}
@@ -53,14 +56,18 @@ public abstract class AbstractItem implements IItem {
 	}
 
 	public AbstractItem(@Nonnull String name, @Nonnull ItemTexture texture) {
-		this(name, ItemModel.getBuilder(texture).build());
+		this(name, ItemModel.getBuilder(texture)
+							.build());
 	}
 
 	public AbstractItem(@Nonnull String name, @Nonnull IItemModel model) {
 		Preconditions.checkArgument(name != null, "item name must not be null.");
 		Preconditions.checkArgument(model != null, "model must not be null");
-		this.name = Utils.getInstance().validateName(name);
-		this.simpleRegistryName = Utils.getInstance().validateRegistryName(Utils.getInstance().safeRegistryName(name));
+		this.name = Utils	.getInstance()
+							.validateName(name);
+		this.simpleRegistryName = Utils	.getInstance()
+										.validateRegistryName(Utils	.getInstance()
+																	.safeRegistryName(name));
 		this.model = model;
 		ALL_ITEMS.add(this);
 	}

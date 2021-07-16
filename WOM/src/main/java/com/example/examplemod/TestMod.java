@@ -30,6 +30,7 @@ public class TestMod extends QuickMod {
 
 	public static final String MODID = "mymod";
 
+	@Override
 	public Builder getBuilder() {
 		String authors = "Joseph Collard";
 		String modName = "Example Mod";
@@ -38,61 +39,67 @@ public class TestMod extends QuickMod {
 		builder.description("This is an example mod. Modify this line of code to change the description in Minecraft!");
 
 		ItemTab bananaTab = builder.createCustomTab("Bananas", "assets/common/bananas.png");
-		
 
 		QuickItem bananaPeel = new QuickItem("Banana Peel", "assets/common/banana_peel.png");
-		bananaPeel.getProperties().tab(bananaTab);
+		bananaPeel	.getProperties()
+					.tab(bananaTab);
 		builder.addItem(bananaPeel);
-		
+
 		QuickFood peeledBanana = new QuickFood("Peeled Banana", "assets/common/banana_peeled.png");
-		peeledBanana.getProperties().tab(bananaTab);
-		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST).level(5).duration(20.0F));
+		peeledBanana.getProperties()
+					.tab(bananaTab);
+		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST)	.level(5)
+															.duration(20.0F));
 		peeledBanana.foodPoints(3);
 		peeledBanana.onConsumed = (context) -> {
 			context.entity.showMessage("Mmm! Tasty!");
 			context.entity.dropItemStack(context.world, IItemStack.construct(bananaPeel, 1));
 			return context.itemStack;
 		};
-		builder.addItem(peeledBanana);	
-		
+		builder.addItem(peeledBanana);
+
 		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
-		banana.getProperties().tab(bananaTab);
+		banana	.getProperties()
+				.tab(bananaTab);
 		banana.onUse = (context) -> {
-			Utils.getInstance().getLogger().info("Hello world!");
+			Utils	.getInstance()
+					.getLogger()
+					.info("Hello world!");
 			context.entity.showMessage("Hello world!");
 			return context.itemStack;
 		};
 		builder.addItem(banana);
-		
-		
+
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
-		bananas.getProperties().tab(bananaTab);
+		bananas	.getProperties()
+				.tab(bananaTab);
 		bananas.onUse = (context) -> {
-			DelayedExecution execution = new DelayedExecution(() -> context.entity.dropItemStack(context.world, IItemStack.construct(banana, 1)));
-			for(int i = 0; i < 8; i++) {
+			DelayedExecution execution = new DelayedExecution(
+					() -> context.entity.dropItemStack(context.world, IItemStack.construct(banana, 1)));
+			for (int i = 0; i < 8; i++) {
 				execution.executeAfter(0.1 * i);
 			}
 			context.itemStack.setCount(context.itemStack.getCount() - 1);
 			return context.itemStack;
 		};
-		
+
 		bananas.setUseDuration(32);
 		bananas.setUseAction(IItem.Action.EAT);
 		builder.addItem(bananas);
-		
+
 		QuickSword sword = new QuickSword("My Sword", ItemModel.get(VanillaItem.IRON_SWORD), Tier.IRON);
 		sword.setDamage(3);
 		sword.setSpeed(-2.4F);
 		builder.addItem(sword);
-		
+
 		SimpleItemExtender customCompass = new SimpleItemExtender("My Compass", VanillaItem.COMPASS);
 		builder.addItem(customCompass);
-		
+
 		SimpleItemExtender talkingClock = new SimpleItemExtender("Talking Clock", VanillaItem.CLOCK);
 		talkingClock.onUse = (context) -> {
 			float time = context.world.getTimeOfDay();
-			int minutes = ((int)((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
-			int hour = minutes/60;
+			int minutes = ((int) ((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
+			int hour = minutes / 60;
 			String ampm = hour > 11 ? "PM" : "AM";
 			if (hour > 12) {
 				hour -= 12;
@@ -104,7 +111,7 @@ public class TestMod extends QuickMod {
 			return context.itemStack;
 		};
 		builder.addItem(talkingClock);
-		
+
 		QuickAxe myAxe = new QuickAxe("My Axe", ItemModel.get(VanillaItem.IRON_AXE), Tier.IRON);
 		myAxe.onUse = (context) -> {
 			context.entity.showMessage("Using my axe!");
@@ -117,17 +124,17 @@ public class TestMod extends QuickMod {
 		builder.addItem(myPickaxe);
 		QuickShovel myShovel = new QuickShovel("My Shovel", ItemModel.get(VanillaItem.IRON_SHOVEL), Tier.IRON);
 		builder.addItem(myShovel);
-		
+
 		QuickItem boatCapsul = new QuickItem("Boat Capsul", ItemModel.get(VanillaItem.ACACIA_BUTTON));
 		boatCapsul.onUse = (context) -> {
 			context.entity.dropItemStack(context.world, IItemStack.construct(VanillaItem.ACACIA_BOAT, 1));
 			return context.itemStack;
 		};
 		builder.addItem(boatCapsul);
-		
+
 		return builder;
 	}
-	
+
 	public static void main(String[] args) {
 		TestMod mod = new TestMod();
 		mod.BUILDER.build();

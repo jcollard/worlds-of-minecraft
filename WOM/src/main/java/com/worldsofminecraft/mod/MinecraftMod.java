@@ -166,7 +166,8 @@ public class MinecraftMod implements IMinecraftMod {
 		public final String MOD_NAME;
 		public final String AUTHORS;
 
-		private Logger LOGGER = Utils.getInstance().getLogger();
+		private Logger LOGGER = Utils	.getInstance()
+										.getLogger();
 
 		private final Map<String, IItem> items = new TreeMap<>();
 		private final Map<Path, Path> resources = new HashMap<>();
@@ -197,8 +198,10 @@ public class MinecraftMod implements IMinecraftMod {
 		 */
 		private Builder(@Nonnull String authors, @Nonnull String modName, @Nonnull String modId) {
 			this.AUTHORS = authors.trim();
-			this.MOD_ID = Utils.getInstance().validateModId(modId.trim());
-			this.MOD_NAME = Utils.getInstance().validateName(modName.trim());
+			this.MOD_ID = Utils	.getInstance()
+								.validateModId(modId.trim());
+			this.MOD_NAME = Utils	.getInstance()
+									.validateName(modName.trim());
 		}
 
 		public Builder license(@Nonnull String license) {
@@ -217,7 +220,7 @@ public class MinecraftMod implements IMinecraftMod {
 			this.logoFile = PNGResource.get(logoFile);
 			return this;
 		}
-		
+
 		public Builder logoFile(@Nonnull IPNGResource logoFile) {
 			Preconditions.checkArgument(logoFile != null, "logoFile must be non-null.");
 			this.logoFile = logoFile;
@@ -241,8 +244,8 @@ public class MinecraftMod implements IMinecraftMod {
 			String registryName = "item." + MOD_ID + "." + item.getSimpleRegistryName();
 			if (items.containsKey(registryName)) {
 				throw new IllegalStateException(
-						"Unable to add the item \"" + item.getName() + "\". The registry name, \""
-								+ registryName + "\", matched another item that was previously registered.");
+						"Unable to add the item \"" + item.getName() + "\". The registry name, \"" + registryName
+								+ "\", matched another item that was previously registered.");
 			}
 			items.put(registryName, item);
 			return this;
@@ -256,7 +259,9 @@ public class MinecraftMod implements IMinecraftMod {
 		public Builder addResource(@Nonnull Path fromPath, @Nonnull Path toPath) {
 			Preconditions.checkArgument(fromPath != null);
 			Preconditions.checkArgument(toPath != null);
-			if (!Utils.getInstance().isLive() && !Files.exists(fromPath)) {
+			if (!Utils	.getInstance()
+						.isLive()
+					&& !Files.exists(fromPath)) {
 				throw new IllegalArgumentException("The file \"" + fromPath + "\" could not be found.");
 			}
 			resources.put(fromPath, toPath);
@@ -300,16 +305,16 @@ public class MinecraftMod implements IMinecraftMod {
 
 				@Override
 				public ItemStack makeIcon() {
-					return new ItemStack(itemRegistryObject.get(item.getSimpleRegistryName()).get());
+					return new ItemStack(itemRegistryObject	.get(item.getSimpleRegistryName())
+															.get());
 				}
 			};
 		}
 
-
 		public ItemTab createCustomTab(@Nonnull String label, @Nonnull String icon) {
 			return createCustomTab(label, PNGResource.get(icon));
 		}
-		
+
 		/**
 		 * Creates a Custom Tab with the specified label and icon.
 		 * 
@@ -319,7 +324,8 @@ public class MinecraftMod implements IMinecraftMod {
 		 */
 		public ItemTab createCustomTab(@Nonnull String label, @Nonnull IPNGResource icon) {
 			QuickItem item = new QuickItem("Custom Tab Icon " + label, icon);
-			item.getProperties().tab(null);
+			item.getProperties()
+				.tab(null);
 			this.addItem(item);
 			return createCustomTab(label, item);
 		}
@@ -342,10 +348,11 @@ public class MinecraftMod implements IMinecraftMod {
 		}
 
 		public IMinecraftMod build() {
-			if (Utils.getInstance().isLive()) {
+			if (Utils	.getInstance()
+						.isLive()) {
 				throw new BuildFailedException("Cannot build mod during live mode.", new IllegalStateException());
 			}
-			if(!AbstractItem.checkRegistration(this) && stopOnWarnings) {
+			if (!AbstractItem.checkRegistration(this) && stopOnWarnings) {
 				System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
 				Scanner s = new Scanner(System.in);
 				s.nextLine();
@@ -368,7 +375,9 @@ public class MinecraftMod implements IMinecraftMod {
 			for (Entry<Path, Path> resource : resources.entrySet()) {
 				try {
 					LOGGER.info("Creating resource: " + resource.getValue());
-					Files.copy(resource.getKey(), Utils.getInstance().getResourcesDir().resolve(resource.getValue()),
+					Files.copy(resource.getKey(), Utils	.getInstance()
+														.getResourcesDir()
+														.resolve(resource.getValue()),
 							StandardCopyOption.REPLACE_EXISTING);
 				} catch (IOException e) {
 					throw new BuildFailedException("Could not copy resource from \"" + resource.getKey() + "\" to \""
@@ -381,14 +390,17 @@ public class MinecraftMod implements IMinecraftMod {
 			if (!clearPreviousMod) {
 				return;
 			}
-			Path modDir = Utils.getInstance().getAssetsDir(mod);
+			Path modDir = Utils	.getInstance()
+								.getAssetsDir(mod);
 			if (!Files.exists(modDir)) {
 				return;
 			}
 
 			LOGGER.info("Clearing out previous mod files: " + modDir);
 			try {
-				Files.walk(modDir).map(Path::toFile).forEach(File::delete);
+				Files	.walk(modDir)
+						.map(Path::toFile)
+						.forEach(File::delete);
 			} catch (IOException e) {
 				throw new BuildFailedException("Could not remove previous mod files.", e);
 			}
@@ -397,11 +409,14 @@ public class MinecraftMod implements IMinecraftMod {
 		private void generateItems(MinecraftMod mod) {
 			Utils utils = Utils.getInstance();
 			for (IItem item : this.items.values()) {
-				Path outfile = utils.getItemModelsDir(mod).resolve(item.getSimpleRegistryName() + ".json");
+				Path outfile = utils.getItemModelsDir(mod)
+									.resolve(item.getSimpleRegistryName() + ".json");
 				LOGGER.info("Creating model file: " + outfile);
 				// TODO(2021-07-09 jcollard): CREATE_NEW and blow up if file alredy exists?
 				try {
-					Files.write(outfile, item.getItemModel().generateResource(mod).getBytes(),
+					Files.write(outfile, item	.getItemModel()
+												.generateResource(mod)
+												.getBytes(),
 							StandardOpenOption.CREATE);
 				} catch (IOException e) {
 					throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
@@ -417,14 +432,22 @@ public class MinecraftMod implements IMinecraftMod {
 			}
 
 			for (String registryName : this.items.keySet()) {
-				lang.add(registryName, new JsonPrimitive(items.get(registryName).getName()));
+				lang.add(registryName, new JsonPrimitive(items	.get(registryName)
+																.getName()));
 			}
 
-			Path outfile = Utils.getInstance().getLangFileDir(mod).resolve("en_us.json");
+			Path outfile = Utils.getInstance()
+								.getLangFileDir(mod)
+								.resolve("en_us.json");
 			LOGGER.info("Creating language file: " + outfile);
 			try {
-				Files.createDirectories(Utils.getInstance().getLangFileDir(mod));
-				Files.write(outfile, Utils.getInstance().getGson().toJson(lang).getBytes(), StandardOpenOption.CREATE);
+				Files.createDirectories(Utils	.getInstance()
+												.getLangFileDir(mod));
+				Files.write(outfile, Utils	.getInstance()
+											.getGson()
+											.toJson(lang)
+											.getBytes(),
+						StandardOpenOption.CREATE);
 			} catch (IOException e) {
 				throw new BuildFailedException("Could not create language file \"" + outfile + "\".", e);
 			}
@@ -432,8 +455,10 @@ public class MinecraftMod implements IMinecraftMod {
 
 		private void generateModTOML(MinecraftMod mod) {
 			Utils utils = Utils.getInstance();
-			String modsToMLContents = Utils.getInstance().getModsToML(mod);
-			Path modsToML = utils.getMetaDir().resolve("mods.toml");
+			String modsToMLContents = Utils	.getInstance()
+											.getModsToML(mod);
+			Path modsToML = utils	.getMetaDir()
+									.resolve("mods.toml");
 			try {
 				Files.createDirectories(utils.getMetaDir());
 				LOGGER.info("Creating " + modsToML);
@@ -441,8 +466,14 @@ public class MinecraftMod implements IMinecraftMod {
 				Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
 
 				if (mod.getLogo() != null) {
-					LOGGER.info("Creating logo file: " + utils.getResourcesDir().resolve(mod.getLogo().getFileName()));
-					Files.copy(mod.getLogo().getPath(), utils.getResourcesDir().resolve(mod.getLogo().getFileName()),
+					LOGGER.info("Creating logo file: " + utils	.getResourcesDir()
+																.resolve(mod.getLogo()
+																			.getFileName()));
+					Files.copy(mod	.getLogo()
+									.getPath(),
+							utils	.getResourcesDir()
+									.resolve(mod.getLogo()
+												.getFileName()),
 							StandardCopyOption.REPLACE_EXISTING);
 				}
 			} catch (IOException e) {

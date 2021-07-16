@@ -16,7 +16,7 @@ import net.minecraft.item.crafting.Ingredient;
 public class QuickTieredItem extends QuickItem {
 
 	private final Tier tier;
-	
+
 	public QuickTieredItem(String name, IItemModel model, @Nonnull Tier tier) {
 		super(name, model);
 		this.tier = tier;
@@ -31,13 +31,13 @@ public class QuickTieredItem extends QuickItem {
 		super(name, texture);
 		this.tier = tier;
 	}
-	
+
 	public QuickTieredItem(@Nonnull String name, @Nonnull String texture, @Nonnull Tier tier) {
 		super(name, texture);
 		Preconditions.checkNotNull(tier, "QuickTieredItem requires a non-null Tier.");
 		this.tier = tier;
 	}
-	
+
 	public Tier getTier() {
 		return this.tier;
 	}
@@ -45,23 +45,23 @@ public class QuickTieredItem extends QuickItem {
 	protected static IItemTier getTier(Tier tier) {
 		return ItemTierAdapter.get(tier);
 	}
-	
+
 	private static class ItemTierAdapter implements IItemTier {
 
 		private final Tier tier;
 		private static final Map<Tier, IItemTier> TIERS = new HashMap<>();
-		
+
 		private static IItemTier get(Tier tier) {
-			if(!TIERS.containsKey(tier)) {
+			if (!TIERS.containsKey(tier)) {
 				TIERS.put(tier, new ItemTierAdapter(tier));
 			}
 			return TIERS.get(tier);
 		}
-		
+
 		private ItemTierAdapter(Tier t) {
 			this.tier = t;
 		}
-		
+
 		@Override
 		public int getUses() {
 			return tier.getUses();
@@ -89,9 +89,10 @@ public class QuickTieredItem extends QuickItem {
 
 		@Override
 		public Ingredient getRepairIngredient() {
-			return tier.getRepairIngredient().getModel();
+			return tier	.getRepairIngredient()
+						.getModel();
 		}
-		
+
 	}
 
 }

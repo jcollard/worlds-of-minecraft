@@ -6,5 +6,5 @@ public class Child extends Parent {
 		System.out.println("Child Method: " + a + ", " + b + ", " + c);
 		return "Child Method";
 	}
-	
+
 }

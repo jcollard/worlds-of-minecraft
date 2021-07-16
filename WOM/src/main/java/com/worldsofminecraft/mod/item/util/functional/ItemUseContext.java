@@ -19,14 +19,16 @@ public class ItemUseContext {
 	public final ILivingEntity entity;
 	public final Supplier<IItemStack> defaultAction;
 
-	public ItemUseContext(IItemStack itemStack, IWorld world, ILivingEntity entity, @Nonnull Supplier<IItemStack> defaultAction) {
+	public ItemUseContext(IItemStack itemStack, IWorld world, ILivingEntity entity,
+			@Nonnull Supplier<IItemStack> defaultAction) {
 		this.itemStack = itemStack;
 		this.world = world;
 		this.entity = entity;
 		this.defaultAction = defaultAction;
 	}
 
-	public ItemUseContext(ItemStack itemStack, World world, LivingEntity entity, @Nonnull Supplier<IItemStack> defaultAction) {
+	public ItemUseContext(ItemStack itemStack, World world, LivingEntity entity,
+			@Nonnull Supplier<IItemStack> defaultAction) {
 		this.itemStack = IItemStack.convert(itemStack);
 		this.world = IWorld.convert(world);
 		this.entity = ILivingEntity.convert(entity);

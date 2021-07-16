@@ -12,10 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 
 public interface IIngredient {
-	
+
 	Ingredient getModel();
-	
-	//TODO: Add ItemTags to allow ItemGroups
+
+	// TODO: Add ItemTags to allow ItemGroups
 	public static IIngredient EMPTY = new Adapter(() -> Ingredient.EMPTY);
 
 	public static IIngredient simple(VanillaItem item) {
@@ -23,24 +23,26 @@ public interface IIngredient {
 	}
 
 	public static IIngredient simple(IItem item) {
-		return new Adapter(() -> Ingredient.of(IItemStack.construct(item, 1).getModel()));
+		return new Adapter(() -> Ingredient.of(IItemStack	.construct(item, 1)
+															.getModel()));
 	}
-	
 
-	public static IIngredient simple(IItem ... items) {
+	public static IIngredient simple(IItem... items) {
 		return new Adapter(() -> {
 			ItemStack[] stack = new ItemStack[items.length];
-			for(int i = 0; i < items.length; i++) {
-				stack[i] = new ItemStack(items[i].getRegistryObject().get(), 1);
+			for (int i = 0; i < items.length; i++) {
+				stack[i] = new ItemStack(items[i]	.getRegistryObject()
+													.get(),
+						1);
 			}
 			return Ingredient.of(stack);
 		});
 	}
-	
-	public static IIngredient simple(VanillaItem ... items) {
+
+	public static IIngredient simple(VanillaItem... items) {
 		return new Adapter(() -> {
 			ItemStack[] stack = new ItemStack[items.length];
-			for(int i = 0; i < items.length; i++) {
+			for (int i = 0; i < items.length; i++) {
 				stack[i] = new ItemStack(items[i].SUPPLIER.get(), 1);
 			}
 			return Ingredient.of(stack);

@@ -27,14 +27,16 @@ public class QuickHoe extends QuickTool {
 	public QuickHoe(String name, String texture, Tier tier) {
 		super(name, texture, tier);
 	}
-	
+
 	@Override
 	protected Supplier<Item> getItemSupplier() {
 		return () -> new IItem.Adapter.Builder<HoeItem>(HoeItem.class)
-				.constructor(IItemTier.class, int.class, float.class, Item.Properties.class)
-				.args(QuickTieredItem.getTier(this.getTier()), (int) this.getAttack(), this.getSpeed(),
-						IItem.Adapter.getProperties(this))
-				.build(this).MODEL;
+																		.constructor(IItemTier.class, int.class,
+																				float.class, Item.Properties.class)
+																		.args(QuickTieredItem.getTier(this.getTier()),
+																				(int) this.getAttack(), this.getSpeed(),
+																				IItem.Adapter.getProperties(this))
+																		.build(this).MODEL;
 	}
 
 }

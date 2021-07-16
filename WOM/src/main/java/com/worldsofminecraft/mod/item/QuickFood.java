@@ -127,9 +127,8 @@ public class QuickFood extends AbstractItem {
 		}
 		p.food(fb.build());
 
-		IItem.Adapter.Builder<Item> b = new IItem.Adapter.Builder<>(Item.class)
-				.constructor(Item.Properties.class)
-				.args(p);
+		IItem.Adapter.Builder<Item> b = new IItem.Adapter.Builder<>(Item.class)	.constructor(Item.Properties.class)
+																				.args(p);
 		return () -> new Adapter(this, b).MODEL;
 	}
 
@@ -145,9 +144,9 @@ public class QuickFood extends AbstractItem {
 		@Override
 		public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
 			ItemStack defaultStack = livingEntity.eat(world, stack);
-			return food
-					.onConsumed(IItemStack.convert(defaultStack), IWorld.convert(world), ILivingEntity.convert(livingEntity))
-					.getModel();
+			return food	.onConsumed(IItemStack.convert(defaultStack), IWorld.convert(world),
+								ILivingEntity.convert(livingEntity))
+						.getModel();
 		}
 
 		@Override

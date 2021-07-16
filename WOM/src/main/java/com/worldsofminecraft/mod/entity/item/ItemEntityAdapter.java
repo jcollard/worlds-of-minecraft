@@ -10,7 +10,7 @@ import net.minecraft.entity.item.ItemEntity;
 public class ItemEntityAdapter implements IItemEntity {
 
 	private final ItemEntity model;
-	
+
 	public ItemEntityAdapter(@Nonnull IWorld world, double x, double y, double z) {
 		this.model = new ItemEntity(world.getModel(), x, y, z);
 	}
@@ -23,7 +23,7 @@ public class ItemEntityAdapter implements IItemEntity {
 	@Override
 	public void setItem(IItemStack itemStack) {
 		this.model.setItem(itemStack.getModel());
-		
+
 	}
 
 	@Override

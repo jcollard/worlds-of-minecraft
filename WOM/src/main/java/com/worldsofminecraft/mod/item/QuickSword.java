@@ -54,10 +54,13 @@ public class QuickSword extends QuickTieredItem {
 	@Override
 	protected Supplier<Item> getItemSupplier() {
 		return () -> new IItem.Adapter.Builder<SwordItem>(SwordItem.class)
-				.constructor(IItemTier.class, int.class, float.class, Item.Properties.class)
-				.args(QuickTieredItem.getTier(this.getTier()), this.getDamage(), this.getSpeed(),
-						IItem.Adapter.getProperties(this))
-				.build(this).MODEL;
+																			.constructor(IItemTier.class, int.class,
+																					float.class, Item.Properties.class)
+																			.args(QuickTieredItem.getTier(
+																					this.getTier()), this.getDamage(),
+																					this.getSpeed(),
+																					IItem.Adapter.getProperties(this))
+																			.build(this).MODEL;
 	}
 
 }

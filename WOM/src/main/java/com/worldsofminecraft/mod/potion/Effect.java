@@ -8,13 +8,13 @@ import net.minecraft.potion.Effects;
 public class Effect {
 
 	private final Type type;
-	private int duration = 30*20; // 30 seconds default
+	private int duration = 30 * 20; // 30 seconds default
 	private int level = 0;
 	private boolean showParticles = true;
 	private boolean isVisible = true;
 	private boolean showIcon = true;
-	
-	//TODO(2021-07-15 jcollard): EffectInstance has a hiddenEffect field. 
+
+	// TODO(2021-07-15 jcollard): EffectInstance has a hiddenEffect field.
 	// Consider adding this in
 
 	public Effect(Type type) {
@@ -30,11 +30,11 @@ public class Effect {
 		this.duration = ticks;
 		return this;
 	}
-	
+
 	public Effect duration(float seconds) {
-		return duration((int)(seconds * 20));
+		return duration((int) (seconds * 20));
 	}
-	
+
 	public int getLevel() {
 		return level + 1;
 	}

@@ -51,8 +51,6 @@ public class ItemModel implements IItemModel {
 		}
 
 	}
-	
-	
 
 	public static VanillaItemModel get(VanillaItem vanillaItem) {
 		return new VanillaItemModel(new VanillaItemTexture(vanillaItem.REGISTRY_NAME));
@@ -60,8 +58,8 @@ public class ItemModel implements IItemModel {
 
 	public static Builder getBuilder(@Nonnull ItemTexture texture) {
 		Preconditions.checkArgument(texture != null);
-		if(texture instanceof VanillaItemTexture) {
-			return VanillaItemModel.getBuilder((VanillaItemTexture)texture);
+		if (texture instanceof VanillaItemTexture) {
+			return VanillaItemModel.getBuilder((VanillaItemTexture) texture);
 		}
 		return new Builder(texture);
 	}
@@ -97,44 +95,57 @@ public class ItemModel implements IItemModel {
 
 		JsonObject model = new JsonObject();
 		model.add("parent", new JsonPrimitive(this.parent));
-		
+
 		JsonObject textures = new JsonObject();
 		for (Entry<String, ItemTexture> texture : layers.entrySet()) {
-			String textureRegistryName = texture.getValue().generateResource(mod);
+			String textureRegistryName = texture.getValue()
+												.generateResource(mod);
 			textures.add(texture.getKey(), new JsonPrimitive(textureRegistryName));
 		}
 		model.add("textures", textures);
 
-		if(this.display != null) {
+		if (this.display != null) {
 			JsonObject display = new JsonObject();
-			
-			for(Entry<Position, IItemTransform> transform : this.display.getTransforms().entrySet()) {
+
+			for (Entry<Position, IItemTransform> transform : this.display	.getTransforms()
+																			.entrySet()) {
 				JsonObject transforms = new JsonObject();
-				
+
 				JsonArray rotation = new JsonArray();
-				rotation.add(new JsonPrimitive(transform.getValue().getRotation().X));
-				rotation.add(new JsonPrimitive(transform.getValue().getRotation().Y));
-				rotation.add(new JsonPrimitive(transform.getValue().getRotation().Z));
+				rotation.add(new JsonPrimitive(transform.getValue()
+														.getRotation().X));
+				rotation.add(new JsonPrimitive(transform.getValue()
+														.getRotation().Y));
+				rotation.add(new JsonPrimitive(transform.getValue()
+														.getRotation().Z));
 				transforms.add("rotation", rotation);
-				
+
 				JsonArray translation = new JsonArray();
-				translation.add(new JsonPrimitive(transform.getValue().getTranslation().X));
-				translation.add(new JsonPrimitive(transform.getValue().getTranslation().Y));
-				translation.add(new JsonPrimitive(transform.getValue().getTranslation().Z));
+				translation.add(new JsonPrimitive(transform	.getValue()
+															.getTranslation().X));
+				translation.add(new JsonPrimitive(transform	.getValue()
+															.getTranslation().Y));
+				translation.add(new JsonPrimitive(transform	.getValue()
+															.getTranslation().Z));
 				transforms.add("translation", translation);
-				
+
 				JsonArray scale = new JsonArray();
-				scale.add(new JsonPrimitive(transform.getValue().getScale().X));
-				scale.add(new JsonPrimitive(transform.getValue().getScale().Y));
-				scale.add(new JsonPrimitive(transform.getValue().getScale().Z));
+				scale.add(new JsonPrimitive(transform	.getValue()
+														.getScale().X));
+				scale.add(new JsonPrimitive(transform	.getValue()
+														.getScale().Y));
+				scale.add(new JsonPrimitive(transform	.getValue()
+														.getScale().Z));
 				transforms.add("scale", scale);
-				
+
 				display.add(transform.getKey().KEY, transforms);
 			}
-			model.add("display",  display);
+			model.add("display", display);
 		}
-		
-		return Utils.getInstance().getGson().toJson(model);
+
+		return Utils.getInstance()
+					.getGson()
+					.toJson(model);
 	}
 
 }

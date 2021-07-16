@@ -7,6 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 @FunctionalInterface
-public interface FinishUsingItemFunction extends TriFunction<ItemStack, World, LivingEntity, ItemStack>{
+public interface FinishUsingItemFunction extends TriFunction<ItemStack, World, LivingEntity, ItemStack> {
 
 }

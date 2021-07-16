@@ -16,7 +16,8 @@ import com.worldsofminecraft.mod.util.Utils;
 public class VanillaItemGenerator {
 
 	public static void main(String[] args) throws IOException {
-		Gson gson = Utils.getInstance().getGson();
+		Gson gson = Utils	.getInstance()
+							.getGson();
 		String json = String.join("\n", Files.readAllLines(Paths.get("assets/utils/vanilla_items.json")));
 
 		@SuppressWarnings("unchecked")
@@ -24,15 +25,18 @@ public class VanillaItemGenerator {
 		List<String> entries = new LinkedList<String>();
 
 		Map<String, Consumer<String>> exceptions = new HashMap<>();
-		exceptions.put("GLOBE_BANNER_PATTERN", (registryName) -> entries.add("GLOBE_BANNER_PATTERN(\"" + registryName + "\", () -> Items.GLOBE_BANNER_PATTER)"));
-		//Missing!
-		exceptions.put("CUT_SANDSTONE_SLAB", (registryName) -> {});
+		exceptions.put("GLOBE_BANNER_PATTERN", (registryName) -> entries.add(
+				"GLOBE_BANNER_PATTERN(\"" + registryName + "\", () -> Items.GLOBE_BANNER_PATTER)"));
+		// Missing!
+		exceptions.put("CUT_SANDSTONE_SLAB", (registryName) -> {
+		});
 
 		for (Entry<String, String> e : mapping.entrySet()) {
 			String enumName = cleanName(e.getKey());
 			String registryName = cleanRegistryName(e.getKey());
 			if (exceptions.containsKey(enumName)) {
-				exceptions.get(enumName).accept(registryName);
+				exceptions	.get(enumName)
+							.accept(registryName);
 				continue;
 			}
 			entries.add(enumName + "(\"" + registryName + "\", () -> Items." + enumName + ")");
@@ -42,11 +46,15 @@ public class VanillaItemGenerator {
 	}
 
 	private static String cleanRegistryName(String key) {
-		return key.replace(":", "/").replace("minecraft", "item").trim();
+		return key	.replace(":", "/")
+					.replace("minecraft", "item")
+					.trim();
 	}
 
 	private static String cleanName(String value) {
-		return value.replace("minecraft:", "").trim().toUpperCase();
+		return value.replace("minecraft:", "")
+					.trim()
+					.toUpperCase();
 	}
 
 }

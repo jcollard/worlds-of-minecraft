@@ -40,12 +40,17 @@ public class PNGResource implements IPNGResource {
 	 * @throws {@link PNGResourceException} if the PNG cannot be resolved.
 	 */
 	public static PNGResource get(@Nonnull String path) {
-		return get(Utils.getInstance().getRootDir().resolve(path));
+		return get(Utils.getInstance()
+						.getRootDir()
+						.resolve(path));
 	}
 
 	public static void validateFileName(@Nonnull Path path) {
-		if (!path.getFileName().toString().matches("^[a-z][a-z_0-9]*.png$")) {
-			throw new PNGResourceException("Invalid PNG file name detected: \"" + path.getFileName().toString()
+		if (!path	.getFileName()
+					.toString()
+					.matches("^[a-z][a-z_0-9]*.png$")) {
+			throw new PNGResourceException("Invalid PNG file name detected: \"" + path	.getFileName()
+																						.toString()
 					+ "\". A PNG name end with \".png\", may contain digits, lower case letters, and underscores, and must begin with a letter.");
 		}
 	}
@@ -62,7 +67,8 @@ public class PNGResource implements IPNGResource {
 		validateFileName(path);
 
 		// If we are live, we don't have access to the local file structure.
-		if (Utils.getInstance().isLive()) {
+		if (Utils	.getInstance()
+					.isLive()) {
 			return new PNGResource(path);
 		}
 
@@ -73,7 +79,9 @@ public class PNGResource implements IPNGResource {
 		String type;
 		try {
 			type = Files.probeContentType(path);
-			if (type != null && !type.toLowerCase().trim().equals("image/png")) {
+			if (type != null && !type	.toLowerCase()
+										.trim()
+										.equals("image/png")) {
 				throw new PNGResourceException("The specified path \"" + path
 						+ "\" does not appear to be a PNG. Expected the mime-type \"image/png\" but found \"" + type
 						+ "\".");
@@ -93,13 +101,15 @@ public class PNGResource implements IPNGResource {
 
 	@Override
 	public String getSimpleName() {
-		String name = path.getFileName().toString();
+		String name = path	.getFileName()
+							.toString();
 		return name.substring(0, name.length() - 4);
 	}
 
 	@Override
 	public String getFileName() {
-		return path.getFileName().toString();
+		return path	.getFileName()
+					.toString();
 	}
 
 	@Override

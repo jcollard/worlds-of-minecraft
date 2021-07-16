@@ -21,7 +21,7 @@ public class ItemTab {
 	public static final ItemTab SEARCH = new ItemTab(ItemGroup.TAB_SEARCH);
 	public static final ItemTab TOOLS = new ItemTab(ItemGroup.TAB_TOOLS);
 	public static final ItemTab TRANSPORTATION = new ItemTab(ItemGroup.TAB_TRANSPORTATION);
-	
+
 	private final ItemGroup itemGroup;
 
 	public ItemTab(@Nonnull ItemGroup tab) {

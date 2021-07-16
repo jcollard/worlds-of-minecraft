@@ -6,5 +6,5 @@ public class Parent {
 		System.out.println("Parent Method: " + a + ", " + b + ", " + c);
 		return "Parent Method";
 	}
-	
+
 }
