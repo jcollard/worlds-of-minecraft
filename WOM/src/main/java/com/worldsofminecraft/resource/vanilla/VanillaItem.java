@@ -5,9 +5,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.worldsofminecraft.mod.util.Volatile;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
+/**
+ * A {@link VanillaItem} is a reference to an item that comes as part of Vanilla
+ * Minecraft.
+ * 
+ * @author Joseph Collard <jcollard@worldsofminecraft.com>
+ *
+ */
 public enum VanillaItem {
 
 	ACACIA_BOAT("item/acacia_boat", () -> Items.ACACIA_BOAT),
@@ -817,6 +826,13 @@ public enum VanillaItem {
 	ZOMBIE_VILLAGER_SPAWN_EGG("item/zombie_villager_spawn_egg", () -> Items.ZOMBIE_VILLAGER_SPAWN_EGG),
 	ZOMBIFIED_PIGLIN_SPAWN_EGG("item/zombified_piglin_spawn_egg", () -> Items.ZOMBIFIED_PIGLIN_SPAWN_EGG);
 
+	/**
+	 * This class contains a reference to all of the simple {@link VanillaItem}s.
+	 * These are items that can be extended using the {@link ItemExtender} class.
+	 * 
+	 * @author Joseph Collard <jcollard@worldsofminecraft.com>
+	 *
+	 */
 	public static class Simple {
 		public static VanillaItem APPLE = VanillaItem.APPLE;
 		public static VanillaItem ARMOR_STAND = VanillaItem.ARMOR_STAND;
@@ -945,8 +961,16 @@ public enum VanillaItem {
 		public static VanillaItem WRITTEN_BOOK = VanillaItem.WRITTEN_BOOK;
 	}
 
+	/** This {@link VanillaItem}s registry name */
 	public final String REGISTRY_NAME;
+
+	/**
+	 * This {@link VanillaItem}s supplier. Using this supplier outside of a running
+	 * game may result in errors.
+	 */
+	@Volatile
 	public final Supplier<Item> SUPPLIER;
+
 	private static final List<VanillaItem> items = new ArrayList<>(values().length);
 
 	static {
