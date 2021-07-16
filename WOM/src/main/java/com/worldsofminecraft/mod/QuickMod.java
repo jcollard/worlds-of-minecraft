@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.worldsofminecraft.mod.item.ItemExtender;
+import com.worldsofminecraft.mod.item.SimpleItemExtender;
 import com.worldsofminecraft.mod.util.Utils;
 
 import net.minecraft.block.Block;
@@ -79,8 +79,8 @@ public abstract class QuickMod {
 
 		initItemProperties();
 		BUILDER.getItems().forEach((key, item) -> {
-			if (item instanceof ItemExtender) {
-				ItemExtender ie = (ItemExtender) item;
+			if (item instanceof SimpleItemExtender) {
+				SimpleItemExtender ie = (SimpleItemExtender) item;
 				Item modeled = ie.getVanillaItem().SUPPLIER.get();
 				Utils.getInstance().getLogger().info("Copying properties from \"" + modeled.getRegistryName() + "\" to \"" + BUILDER.MOD_ID + ":" + ie.getSimpleRegistryName() + "\".");
 				if(!ITEM_PROPERTIES.containsKey(modeled)) {

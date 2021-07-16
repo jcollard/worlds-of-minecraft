@@ -5,37 +5,40 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.worldsofminecraft.mod.exception.BuildFailedException;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
-import com.worldsofminecraft.resource.model.item.VanillaItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.item.Item;
 
 @Volatile
-public class ItemExtender extends QuickItem {
+public class SimpleItemExtender extends QuickItem {
 
 	private final Supplier<Item> itemSupplier;
 	private final VanillaItem vanillaItem;
 	
-	public ItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem) {
-		super(name, ItemModel.get(vanillaItem));
-		//TODO(2021-07-05 jcollard): Need to fix item extender.
-		this.itemSupplier = null; //() -> new IItem.Adapter(this, vanillaItem.SUPPLIER.get().getClass()).MODEL;
-		this.vanillaItem = vanillaItem;
-	}
-
-	public ItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem, @Nonnull Supplier<Item> supplier) {
-		this(name, VanillaItemModel.get(vanillaItem), vanillaItem, supplier);
+	public SimpleItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem) {
+		this(name, vanillaItem, ItemModel.get(vanillaItem));
+		
 	}
 	
-	public ItemExtender(@Nonnull String name, @Nonnull IItemModel model, @Nonnull VanillaItem vanillaItem, Supplier<Item> itemSupplier) {
+	public SimpleItemExtender(@Nonnull String name, @Nonnull VanillaItem vanillaItem, @Nonnull IItemModel model) {
 		super(name, model);
 		Preconditions.checkArgument(name != null, "item name must not be null.");
 		Preconditions.checkArgument(model != null, "model must not be null");
 		Preconditions.checkArgument(vanillaItem != null, "The itemToModel must be non-null");
-		this.itemSupplier = itemSupplier;
+		try {
+			//Checks to see if the item is simple enough to use basic Item.Properties.
+			vanillaItem.SUPPLIER.get().getClass().getConstructor(Item.Properties.class);
+		} catch (NoSuchMethodException | SecurityException e) {
+			throw new BuildFailedException("Could not extend \"" + vanillaItem.toString() + "\". The item is too complex.", e);
+		}
+		this.itemSupplier = () -> new IItem.Adapter.Builder<Item>(vanillaItem.SUPPLIER.get().getClass())
+				.constructor(Item.Properties.class)
+				.args(IItem.Adapter.getProperties(this))
+				.build(this).MODEL;
 		this.vanillaItem = vanillaItem;
 	}
 

@@ -2,6 +2,7 @@ package com.example.examplemod;
 
 import java.util.Map.Entry;
 
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.MinecraftMod;
@@ -9,6 +10,7 @@ import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.IItem.Tier;
+import com.worldsofminecraft.mod.item.SimpleItemExtender;
 import com.worldsofminecraft.mod.item.QuickAxe;
 import com.worldsofminecraft.mod.item.QuickFood;
 import com.worldsofminecraft.mod.item.QuickHoe;
@@ -90,41 +92,27 @@ public class TestMod extends QuickMod {
 		QuickSword sword = new QuickSword("My Sword", ItemModel.get(VanillaItem.IRON_SWORD), Tier.IRON);
 		sword.setDamage(3);
 		sword.setSpeed(-2.4F);
-		sword.setUseAction(IItem.Action.BLOCK);
-		sword.onUse = (context) -> {
-			if(!context.world.getModel().isClientSide()) {
-				return context.itemStack;
-			}
-			IForgeRegistry<Item> items = ForgeRegistries.ITEMS;
-			JsonObject json = new JsonObject();
-			for(Entry<RegistryKey<Item>, Item> e : items.getEntries()) {
-				json.add(e.getValue().getRegistryName().toString(), new JsonPrimitive(e.getValue().getName(new ItemStack(e.getValue())).getString()));
-			}
-			System.out.println(Utils.getInstance().getGson().toJson(json));
-			return context.itemStack;
-		};
-		
 		builder.addItem(sword);
 		
-//		ItemExtender customCompass = new ItemExtender("My Compass", VanillaItem.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
-//		builder.addItem(customCompass);
-//		
-//		ItemExtender talkingClock = new ItemExtender("Talking Clock", VanillaItem.CLOCK);
-//		talkingClock.onUse = (context) -> {
-//			float time = context.world.getTimeOfDay();
-//			int minutes = ((int)((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
-//			int hour = minutes/60;
-//			String ampm = hour > 11 ? "PM" : "AM";
-//			if (hour > 12) {
-//				hour -= 12;
-//			} else if (hour == 0) {
-//				hour = 12;
-//			}
-//			String timeMessage = hour + ":" + Strings.padStart("" + minutes % 60, 2, '0') + " " + ampm;
-//			context.entity.showMessage("The time is " + timeMessage);
-//			return context.itemStack;
-//		};
-//		builder.addItem(talkingClock);
+		SimpleItemExtender customCompass = new SimpleItemExtender("My Compass", VanillaItem.COMPASS);
+		builder.addItem(customCompass);
+		
+		SimpleItemExtender talkingClock = new SimpleItemExtender("Talking Clock", VanillaItem.CLOCK);
+		talkingClock.onUse = (context) -> {
+			float time = context.world.getTimeOfDay();
+			int minutes = ((int)((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
+			int hour = minutes/60;
+			String ampm = hour > 11 ? "PM" : "AM";
+			if (hour > 12) {
+				hour -= 12;
+			} else if (hour == 0) {
+				hour = 12;
+			}
+			String timeMessage = hour + ":" + Strings.padStart("" + minutes % 60, 2, '0') + " " + ampm;
+			context.entity.showMessage("The time is " + timeMessage);
+			return context.itemStack;
+		};
+		builder.addItem(talkingClock);
 		
 		QuickAxe myAxe = new QuickAxe("My Axe", ItemModel.get(VanillaItem.IRON_AXE), Tier.IRON);
 		myAxe.onUse = (context) -> {
