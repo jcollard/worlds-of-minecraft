@@ -1,10 +1,13 @@
 package com.worldsofminecraft.mod.item;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
@@ -17,7 +20,9 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 public abstract class AbstractItem implements IItem {
-	
+
+	private static final Set<AbstractItem> ALL_ITEMS = new HashSet<>();
+
 	private final String name;
 	private final IItemModel model;
 	private final IItem.Properties properties = new IItem.Properties();
@@ -25,15 +30,28 @@ public abstract class AbstractItem implements IItem {
 	private RegistryObject<Item> registryObject;
 	private Action action = Action.NONE;
 	private int useDuration = 20;
-	
+
+	public static boolean checkRegistration(Builder b) {
+		Set<String> key = b.getItems().keySet();
+		boolean pass = true;
+		for (AbstractItem item : ALL_ITEMS) {
+			if (!key.contains("item." + b.MOD_ID + "." + item.simpleRegistryName)) {
+				Utils.getInstance().getLogger().warn("WARNING: \"" + item.name
+						+ "\" was created but never registered! Did you forget to add it to your mod?");
+				pass = false;
+			}
+		}
+		return pass;
+	}
+
 	public AbstractItem(@Nonnull String name, @Nonnull String texture) {
 		this(name, PNGResource.get(texture));
 	}
-	
+
 	public AbstractItem(@Nonnull String name, @Nonnull IPNGResource texture) {
 		this(name, ItemTexture.get(texture));
 	}
-	
+
 	public AbstractItem(@Nonnull String name, @Nonnull ItemTexture texture) {
 		this(name, ItemModel.getBuilder(texture).build());
 	}
@@ -44,8 +62,9 @@ public abstract class AbstractItem implements IItem {
 		this.name = Utils.getInstance().validateName(name);
 		this.simpleRegistryName = Utils.getInstance().validateRegistryName(Utils.getInstance().safeRegistryName(name));
 		this.model = model;
+		ALL_ITEMS.add(this);
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.name;
@@ -63,7 +82,8 @@ public abstract class AbstractItem implements IItem {
 
 	@Override
 	public RegistryObject<Item> register(DeferredRegister<Item> register) {
-		Preconditions.checkState(this.registryObject == null, "This item was previously registered. Cannot register an item multiple times.");
+		Preconditions.checkState(this.registryObject == null,
+				"This item was previously registered. Cannot register an item multiple times.");
 		this.registryObject = register.register(simpleRegistryName, this.getItemSupplier());
 		return this.registryObject;
 	}
@@ -73,12 +93,12 @@ public abstract class AbstractItem implements IItem {
 		Preconditions.checkState(this.registryObject != null, "This item has not yet been registered.");
 		return this.registryObject;
 	}
-	
+
 	@Override
-	public IItem.Properties getProperties(){
+	public IItem.Properties getProperties() {
 		return this.properties;
 	}
-	
+
 	@Override
 	public int getUseDuration() {
 		return useDuration;
@@ -99,7 +119,6 @@ public abstract class AbstractItem implements IItem {
 		this.action = action;
 	}
 
-	
 	protected abstract Supplier<Item> getItemSupplier();
 
 }

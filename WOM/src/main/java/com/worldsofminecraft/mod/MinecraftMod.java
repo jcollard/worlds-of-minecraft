@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 import javax.annotation.Nonnull;
@@ -22,6 +23,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.exception.BuildFailedException;
+import com.worldsofminecraft.mod.item.AbstractItem;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.tab.CustomItemTab;
@@ -184,6 +186,7 @@ public class MinecraftMod implements IMinecraftMod {
 		private String credits = null;
 		private String description = "TODO: Set Description in Builder";
 		private boolean clearPreviousMod = true;
+		public boolean stopOnWarnings = true;
 
 		/**
 		 * Creates a MinecraftModBuilder by specifying the authors, modName, and modId.
@@ -341,6 +344,12 @@ public class MinecraftMod implements IMinecraftMod {
 		public IMinecraftMod build() {
 			if (Utils.getInstance().isLive()) {
 				throw new BuildFailedException("Cannot build mod during live mode.", new IllegalStateException());
+			}
+			if(!AbstractItem.checkRegistration(this) && stopOnWarnings) {
+				System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
+				Scanner s = new Scanner(System.in);
+				s.nextLine();
+				s.close();
 			}
 			MinecraftMod mod = new MinecraftMod(this);
 			clearPreviousMod(mod);

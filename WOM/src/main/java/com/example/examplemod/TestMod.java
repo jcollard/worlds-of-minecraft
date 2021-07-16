@@ -1,16 +1,11 @@
 package com.example.examplemod;
 
-import java.util.Map.Entry;
-
 import com.google.common.base.Strings;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.IItem.Tier;
-import com.worldsofminecraft.mod.item.SimpleItemExtender;
 import com.worldsofminecraft.mod.item.QuickAxe;
 import com.worldsofminecraft.mod.item.QuickFood;
 import com.worldsofminecraft.mod.item.QuickHoe;
@@ -18,6 +13,7 @@ import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.QuickPickaxe;
 import com.worldsofminecraft.mod.item.QuickShovel;
 import com.worldsofminecraft.mod.item.QuickSword;
+import com.worldsofminecraft.mod.item.SimpleItemExtender;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.potion.Effect;
@@ -27,12 +23,7 @@ import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.RegistryKey;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(TestMod.MODID)
 public class TestMod extends QuickMod {
@@ -126,6 +117,13 @@ public class TestMod extends QuickMod {
 		builder.addItem(myPickaxe);
 		QuickShovel myShovel = new QuickShovel("My Shovel", ItemModel.get(VanillaItem.IRON_SHOVEL), Tier.IRON);
 		builder.addItem(myShovel);
+		
+		QuickItem boatCapsul = new QuickItem("Boat Capsul", ItemModel.get(VanillaItem.ACACIA_BUTTON));
+		boatCapsul.onUse = (context) -> {
+			context.entity.dropItemStack(context.world, IItemStack.construct(VanillaItem.ACACIA_BOAT, 1));
+			return context.itemStack;
+		};
+		builder.addItem(boatCapsul);
 		
 		return builder;
 	}
