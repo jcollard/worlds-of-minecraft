@@ -25,14 +25,14 @@ public class Effect {
 		return duration;
 	}
 
-	public Effect duration(int ticks) {
+	public Effect ticks(int ticks) {
 		Preconditions.checkArgument(ticks > 0, "Cannot create an Effect with duration less than 1.");
 		this.duration = ticks;
 		return this;
 	}
 
-	public Effect duration(float seconds) {
-		return duration((int) (seconds * 20));
+	public Effect seconds(float seconds) {
+		return ticks((int) (seconds * 20));
 	}
 
 	public int getLevel() {

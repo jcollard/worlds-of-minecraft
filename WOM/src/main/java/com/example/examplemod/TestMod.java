@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
+import com.worldsofminecraft.mod.item.IIngredient;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.IItem.Tier;
 import com.worldsofminecraft.mod.item.QuickAxe;
@@ -18,6 +19,7 @@ import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.potion.Effect.Type;
+import com.worldsofminecraft.mod.potion.QuickPotion;
 import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.ItemModel;
@@ -50,7 +52,7 @@ public class TestMod extends QuickMod {
 		peeledBanana.getProperties()
 					.tab(bananaTab);
 		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST)	.level(5)
-															.duration(20.0F));
+															.seconds(20.0F));
 		peeledBanana.foodPoints(3);
 		peeledBanana.onConsumed = (context) -> {
 			context.entity.showMessage("Mmm! Tasty!");
@@ -140,6 +142,13 @@ public class TestMod extends QuickMod {
 		};
 		builder.addItem(simpleItemFinder);
 
+		QuickPotion potatoWater = new QuickPotion("Potato Water",
+				IIngredient.simple(VanillaItem.POTATO, VanillaItem.BAKED_POTATO));
+		potatoWater	.addEffect(new Effect(Type.MOVEMENT_SPEED)	.seconds(20)
+																.level(3))
+					.addEffect(new Effect(Type.JUMP_BOOST)	.seconds(20)
+															.level(3));
+		builder.addPotion(potatoWater);
 		return builder;
 	}
 

@@ -28,6 +28,7 @@ import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.tab.CustomItemTab;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
+import com.worldsofminecraft.mod.potion.QuickPotion;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.png.IPNGResource;
 import com.worldsofminecraft.resource.png.PNGResource;
@@ -35,6 +36,7 @@ import com.worldsofminecraft.resource.png.PNGResource;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -170,6 +172,7 @@ public class MinecraftMod implements IMinecraftMod {
 										.getLogger();
 
 		private final Map<String, IItem> items = new TreeMap<>();
+		private final Map<String, QuickPotion> potions = new TreeMap<>();
 		private final Map<Path, Path> resources = new HashMap<>();
 
 		// TODO(2021-07-08 jcollard): Consider if these should be part of the
@@ -251,6 +254,18 @@ public class MinecraftMod implements IMinecraftMod {
 			return this;
 		}
 
+		public Builder addPotion(@Nonnull QuickPotion potion) {
+			Preconditions.checkNotNull(potion, "Cannot add a null potion to a mod. Did you initialize it?");
+			String registryName = MOD_ID + "." + potion.getSimpleRegistryName();
+			if (potions.containsKey(registryName)) {
+				throw new IllegalStateException(
+						"Unable to add the potion \"" + potion.getName() + "\". The registry name, \"" + registryName
+								+ "\", matched another item that was previously registered.");
+			}
+			potions.put(registryName, potion);
+			return this;
+		}
+
 		public Builder clearPreviousMod(boolean clear) {
 			this.clearPreviousMod = clear;
 			return this;
@@ -272,12 +287,17 @@ public class MinecraftMod implements IMinecraftMod {
 			return Collections.unmodifiableMap(this.items);
 		}
 
+		public Map<String, QuickPotion> getPotions() {
+			return Collections.unmodifiableMap(this.potions);
+		}
+
 		/**
 		 * A Map of custom ItemTabs for this mod. TreeMap keeps the keys sorted
 		 * alphabetically for convenience when generating the lang file
 		 */
 		private final Map<String, CustomItemTab> tabs = new TreeMap<>();
 		private final Map<String, RegistryObject<Item>> itemRegistryObject = new HashMap<>();
+		private final Map<String, RegistryObject<Potion>> potionRegistryObject = new HashMap<>();
 
 		/**
 		 * Register all items from this builder on the specified EventBus.
@@ -291,6 +311,14 @@ public class MinecraftMod implements IMinecraftMod {
 				itemRegistryObject.put(item.getSimpleRegistryName(), item.register(ITEMS));
 			}
 			ITEMS.register(bus);
+		}
+
+		public void registerPotions(@Nonnull IEventBus bus) {
+			DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, MOD_ID);
+			for (QuickPotion potion : potions.values()) {
+				potionRegistryObject.put(potion.getSimpleRegistryName(), potion.register(POTIONS, MOD_ID));
+			}
+			POTIONS.register(bus);
 		}
 
 		/**
@@ -352,7 +380,8 @@ public class MinecraftMod implements IMinecraftMod {
 						.isLive()) {
 				throw new BuildFailedException("Cannot build mod during live mode.", new IllegalStateException());
 			}
-			if (!AbstractItem.checkRegistration(this) && stopOnWarnings) {
+			boolean errors = !(AbstractItem.checkRegistration(this) && QuickPotion.checkRegistration(this));
+			if (errors && stopOnWarnings) {
 				System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
 				Scanner s = new Scanner(System.in);
 				s.nextLine();
@@ -434,6 +463,11 @@ public class MinecraftMod implements IMinecraftMod {
 			for (String registryName : this.items.keySet()) {
 				lang.add(registryName, new JsonPrimitive(items	.get(registryName)
 																.getName()));
+			}
+
+			for (String registryName : this.potions.keySet()) {
+				lang.add("item.minecraft.potion.effect." + registryName, new JsonPrimitive(potions	.get(registryName)
+																									.getName()));
 			}
 
 			Path outfile = Utils.getInstance()

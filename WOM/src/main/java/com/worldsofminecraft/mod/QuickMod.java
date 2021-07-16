@@ -9,15 +9,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.worldsofminecraft.mod.item.SimpleItemExtender;
+import com.worldsofminecraft.mod.potion.QuickPotion;
 import com.worldsofminecraft.mod.util.Utils;
+import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemModelsProperties;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -60,24 +65,42 @@ public abstract class QuickMod {
 		// Register the processIMC method for modloading
 		bus.addListener(this::processIMC);
 		// Register the doClientStuff method for modloading
-		bus.addListener(this::doClientStuff);
+		bus.addListener(this::clientSetup);
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
 
 		BUILDER.registerItems(bus);
+		BUILDER.registerPotions(bus);
 
+//		DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, BUILDER.MOD_ID);
+//
+//		EffectInstance instance = new Effect(Type.MOVEMENT_SPEED)	.seconds(20F)
+//																	.level(3)
+//																	.toInstance();
+//		Potion potion = new Potion("potato_water", instance);
+//		potatoeRegistry = POTIONS.register("potato_water", () -> potion);
+//		POTIONS.register(bus);
 	}
 
-	private void setup(final FMLCommonSetupEvent event) {
-		// some preinit code
-		LOGGER.info("HELLO FROM PREINIT");
-		LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+	public void setup(final FMLCommonSetupEvent event) {
+
+		for (QuickPotion potion : BUILDER	.getPotions()
+											.values()) {
+
+			Ingredient input = Ingredient.of(VanillaItem.POTION.SUPPLIER.get());
+			Ingredient ingredient = potion	.getIngredient()
+											.getModel();
+			ItemStack output = PotionUtils.setPotion(new ItemStack(VanillaItem.POTION.SUPPLIER.get()),
+					potion	.getRegistryObject()
+							.get());
+			BrewingRecipeRegistry.addRecipe(input, ingredient, output);
+		}
 	}
 
 	private static Map<Item, Map<ResourceLocation, IItemPropertyGetter>> ITEM_PROPERTIES = null;
 
-	private void doClientStuff(final FMLClientSetupEvent event) {
+	public void clientSetup(final FMLClientSetupEvent event) {
 
 		initItemProperties();
 		BUILDER	.getItems()
