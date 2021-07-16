@@ -1,14 +1,12 @@
 package com.example.examplemod;
 
 import java.util.Map.Entry;
-import java.util.Random;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
-import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.IItem.Tier;
 import com.worldsofminecraft.mod.item.QuickAxe;
@@ -24,7 +22,6 @@ import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.potion.Effect.Type;
 import com.worldsofminecraft.mod.util.DelayedExecution;
 import com.worldsofminecraft.mod.util.Utils;
-import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
@@ -49,10 +46,20 @@ public class TestMod extends QuickMod {
 
 		ItemTab bananaTab = builder.createCustomTab("Bananas", "assets/common/bananas.png");
 		
+
+		QuickItem bananaPeel = new QuickItem("Banana Peel", "assets/common/banana_peel.png");
+		bananaPeel.getProperties().tab(bananaTab);
+		builder.addItem(bananaPeel);
+		
 		QuickFood peeledBanana = new QuickFood("Peeled Banana", "assets/common/banana_peeled.png");
 		peeledBanana.getProperties().tab(bananaTab);
 		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST).level(5).duration(20.0F));
 		peeledBanana.foodPoints(3);
+		peeledBanana.onConsumed = (context) -> {
+			context.entity.showMessage("Mmm! Tasty!");
+			context.entity.dropItemStack(context.world, IItemStack.construct(bananaPeel, 1));
+			return context.itemStack;
+		};
 		builder.addItem(peeledBanana);	
 		
 		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
@@ -64,26 +71,11 @@ public class TestMod extends QuickMod {
 		};
 		builder.addItem(banana);
 		
-		QuickItem bananaPeel = new QuickItem("Banana Peel", "assets/common/banana_peel.png");
-		bananaPeel.getProperties().tab(bananaTab);
-		builder.addItem(bananaPeel);
 		
 		QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
 		bananas.getProperties().tab(bananaTab);
 		bananas.onUse = (context) -> {
-			Vector3d vec3d = context.entity.getPosition();
-			Vector3d front = context.entity.getForward();
-			Random r = new Random();
-			DelayedExecution execution = new DelayedExecution(() -> {
-				double x = vec3d.x + front.x;
-				double y = context.entity.getEyeY();
-				double z = vec3d.z + front.z;
-				IItemEntity entity = IItemEntity.construct(context.world, x, y, z);
-				entity.setVelocity(front.x/4, r.nextDouble()/4, front.z/4);
-				entity.setPickUpDelay(32);
-				entity.setItem(IItemStack.construct(banana, 1));
-				context.world.addItemEntity(entity);
-			});
+			DelayedExecution execution = new DelayedExecution(() -> context.entity.dropItemStack(context.world, IItemStack.construct(banana, 1)));
 			for(int i = 0; i < 8; i++) {
 				execution.executeAfter(0.1 * i);
 			}

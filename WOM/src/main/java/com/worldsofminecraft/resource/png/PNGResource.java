@@ -73,7 +73,7 @@ public class PNGResource implements IPNGResource {
 		String type;
 		try {
 			type = Files.probeContentType(path);
-			if (!type.toLowerCase().trim().equals("image/png")) {
+			if (type != null && !type.toLowerCase().trim().equals("image/png")) {
 				throw new PNGResourceException("The specified path \"" + path
 						+ "\" does not appear to be a PNG. Expected the mime-type \"image/png\" but found \"" + type
 						+ "\".");

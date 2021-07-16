@@ -2,6 +2,7 @@ package com.worldsofminecraft.mod.entity;
 
 import javax.annotation.Nonnull;
 
+import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;

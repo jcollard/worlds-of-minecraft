@@ -240,7 +240,7 @@ public interface IItem {
 			
 		}
 
-		private Adapter(@Nonnull IItem item, Builder<T> builder) {
+		public Adapter(@Nonnull IItem item, Builder<T> builder) {
 			Preconditions.checkNotNull(item, "Cannot create adapter on null reference.");
 			this.item = item;
 			Implementation implementation = MethodDelegation.to(this);
