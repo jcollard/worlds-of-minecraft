@@ -3,7 +3,6 @@ package com.example.examplemod;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.worldsofminecraft.mod.MinecraftMod;
@@ -12,7 +11,6 @@ import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.IItem.Tier;
-import com.worldsofminecraft.mod.item.ItemExtender;
 import com.worldsofminecraft.mod.item.QuickAxe;
 import com.worldsofminecraft.mod.item.QuickFood;
 import com.worldsofminecraft.mod.item.QuickHoe;
@@ -30,9 +28,7 @@ import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
-import net.minecraft.item.CompassItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.RegistryKey;
 import net.minecraftforge.fml.common.Mod;
@@ -55,12 +51,17 @@ public class TestMod extends QuickMod {
 		
 		QuickFood peeledBanana = new QuickFood("Peeled Banana", "assets/common/banana_peeled.png");
 		peeledBanana.getProperties().tab(bananaTab);
-		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST).level(5).duration(20.0F), 0.5F);
+		peeledBanana.addEffect(new Effect(Type.JUMP_BOOST).level(5).duration(20.0F));
 		peeledBanana.foodPoints(3);
 		builder.addItem(peeledBanana);	
 		
 		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
 		banana.getProperties().tab(bananaTab);
+		banana.onUse = (context) -> {
+			Utils.getInstance().getLogger().info("Hello world!");
+			context.entity.showMessage("Hello world!");
+			return context.itemStack;
+		};
 		builder.addItem(banana);
 		
 		QuickItem bananaPeel = new QuickItem("Banana Peel", "assets/common/banana_peel.png");
@@ -113,27 +114,31 @@ public class TestMod extends QuickMod {
 		
 		builder.addItem(sword);
 		
-		ItemExtender customCompass = new ItemExtender("My Compass", VanillaItem.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
-		builder.addItem(customCompass);
-		
-		ItemExtender talkingClock = new ItemExtender("Talking Clock", VanillaItem.CLOCK);
-		talkingClock.onUse = (context) -> {
-			float time = context.world.getTimeOfDay();
-			int minutes = ((int)((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
-			int hour = minutes/60;
-			String ampm = hour > 11 ? "PM" : "AM";
-			if (hour > 12) {
-				hour -= 12;
-			} else if (hour == 0) {
-				hour = 12;
-			}
-			String timeMessage = hour + ":" + Strings.padStart("" + minutes % 60, 2, '0') + " " + ampm;
-			context.entity.showMessage("The time is " + timeMessage);
-			return context.itemStack;
-		};
-		builder.addItem(talkingClock);
+//		ItemExtender customCompass = new ItemExtender("My Compass", VanillaItem.COMPASS, () -> new CompassItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
+//		builder.addItem(customCompass);
+//		
+//		ItemExtender talkingClock = new ItemExtender("Talking Clock", VanillaItem.CLOCK);
+//		talkingClock.onUse = (context) -> {
+//			float time = context.world.getTimeOfDay();
+//			int minutes = ((int)((24.0 * 60.0) * time) + 12 * 60) % (24 * 60);
+//			int hour = minutes/60;
+//			String ampm = hour > 11 ? "PM" : "AM";
+//			if (hour > 12) {
+//				hour -= 12;
+//			} else if (hour == 0) {
+//				hour = 12;
+//			}
+//			String timeMessage = hour + ":" + Strings.padStart("" + minutes % 60, 2, '0') + " " + ampm;
+//			context.entity.showMessage("The time is " + timeMessage);
+//			return context.itemStack;
+//		};
+//		builder.addItem(talkingClock);
 		
 		QuickAxe myAxe = new QuickAxe("My Axe", ItemModel.get(VanillaItem.IRON_AXE), Tier.IRON);
+		myAxe.onUse = (context) -> {
+			context.entity.showMessage("Using my axe!");
+			return context.itemStack;
+		};
 		builder.addItem(myAxe);
 		QuickHoe myHoe = new QuickHoe("My Hoe", ItemModel.get(VanillaItem.IRON_HOE), Tier.IRON);
 		builder.addItem(myHoe);

@@ -48,7 +48,10 @@ public class QuickItem extends AbstractItem {
 
 	@Override
 	protected Supplier<Item> getItemSupplier() {
-		return () -> new IItem.Adapter(this);
+		return () -> new IItem.Adapter.Builder<Item>(Item.class)
+				.constructor(Item.Properties.class)
+				.args(IItem.Adapter.getProperties(this))
+				.build(this).MODEL;
 	}
 
 }

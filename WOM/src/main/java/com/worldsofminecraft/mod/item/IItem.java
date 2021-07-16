@@ -1,5 +1,6 @@
 package com.worldsofminecraft.mod.item;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -7,15 +8,19 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.entity.ILivingEntity;
+import com.worldsofminecraft.mod.exception.BuildFailedException;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
-import com.worldsofminecraft.mod.item.util.functional.FinishUsingItemFunction;
 import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.Implementation;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.matcher.ElementMatchers;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -195,77 +200,102 @@ public interface IItem {
 		
 	}
 	
-	public static class Adapter extends Item {
+	public static class Adapter<T extends Item> {
 
-		private final Delegate delegate;
-
-		public Adapter(@Nonnull IItem item) {
-			super(Adapter.getProperties(item));
-			this.delegate = new Delegate(item, super::finishUsingItem);
+		private final IItem item;
+		public final T MODEL;
+		private final T defaultItem;
+		
+		public static class Builder<T extends Item> {
+			
+			public final Class<? extends T> klass;
+			private Class<?>[] constructor = {};
+			private Object[] args = {};
+			
+			public Builder(@Nonnull Class<? extends T> klass) {
+				Preconditions.checkNotNull(klass);
+				this.klass = klass;
+			}
+			
+			public Builder<T> constructor(Class<?> ... classes) {
+				this.constructor = classes;
+				return this;
+			}
+			
+			public Builder<T> args(Object ... objects){
+				this.args = objects;
+				return this;
+			}
+			
+			public Class<?>[] getConstructorArgs(){
+				return constructor;
+			}
+			public Object[] getArgs() {
+				return args;
+			}
+			
+			public Adapter<T> build(@Nonnull IItem item) {
+				return new Adapter<T>(item, this);
+			}
+			
 		}
 
-		public static Properties getProperties(@Nonnull IItem item) {
+		private Adapter(@Nonnull IItem item, Builder<T> builder) {
+			Preconditions.checkNotNull(item, "Cannot create adapter on null reference.");
+			this.item = item;
+			Implementation implementation = MethodDelegation.to(this);
+			Class<? extends T> dynamicType = new ByteBuddy()
+					  .subclass(builder.klass)
+					  .method(ElementMatchers.named("finishUsingItem"))
+					  .intercept(implementation)
+					  .method(ElementMatchers.named("getUseAnimation"))
+					  .intercept(implementation)
+					  .method(ElementMatchers.named("getUseDuration"))
+					  .intercept(implementation)
+					  .method(ElementMatchers.named("use"))
+					  .intercept(implementation)
+					  .make()
+					  .load(getClass().getClassLoader())
+					  .getLoaded();
+			try {
+				defaultItem = builder.klass.getConstructor(builder.getConstructorArgs()).newInstance(builder.getArgs());
+				MODEL = dynamicType.getConstructor(builder.getConstructorArgs()).newInstance(builder.getArgs());
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				throw new BuildFailedException("Could not create class for item: " + item, e);
+			}
+			
+		}
+
+		public static Item.Properties getProperties(@Nonnull IItem item) {
 			Preconditions.checkNotNull(item, "Cannot create an ItemAdapter from a null IItem.");
-			Properties p = new Item.Properties();
+			Item.Properties p = new Item.Properties();
 			if(item.getProperties().getTab() != null) {
 				p.tab(item.getProperties().getTab().getItemGroup());
 			}
 			return p;
 		}
 
-		@Override
 		public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
-			return delegate.finishUsingItem(stack, world, livingEntity);
+			Supplier<IItemStack> defaultAction = () -> IItemStack
+					.convert(defaultItem.finishUsingItem(stack, world, livingEntity));
+			ItemUseContext context = new ItemUseContext(stack, world, livingEntity, defaultAction);
+			IItemStack s = item.onUse(context.itemStack, context.world, context.entity, defaultAction);
+			return s.getModel();
 		}
 
-		@Override
 		public UseAction getUseAnimation(ItemStack stack) {
-			return this.delegate.getUseAnimation(stack);
+			return this.item.getUseAction().getUseAction();
 		}
 
-		@Override
 		public int getUseDuration(ItemStack stack) {
-			return this.delegate.getUseDuration(stack);
+			return this.item.getUseDuration();
 		}
 
-		@Override
 		public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-			return this.delegate.use(world, player, hand);
+			player.startUsingItem(hand);
+			return ActionResult.pass(player.getItemInHand(hand));
 
-		}
-		
-		public static class Delegate {
-			public FinishUsingItemFunction f;
-			public IItem item;
-			
-			public Delegate(@Nonnull IItem item, @Nonnull FinishUsingItemFunction finishUsingItem) {
-				Preconditions.checkNotNull(item);
-				Preconditions.checkNotNull(finishUsingItem);
-				this.f = finishUsingItem;
-				this.item = item;
-			}
-			
-			public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
-				Supplier<IItemStack> defaultAction = () -> IItemStack
-						.convert(f.apply(stack, world, livingEntity));
-				ItemUseContext context = new ItemUseContext(stack, world, livingEntity, defaultAction);
-				IItemStack s = item.onUse(context.itemStack, context.world, context.entity, defaultAction);
-				return s.getModel();
-			}
-			
-			public UseAction getUseAnimation(ItemStack stack) {
-				return this.item.getUseAction().getUseAction();
-			}
-
-			public int getUseDuration(ItemStack stack) {
-				return this.item.getUseDuration();
-			}
-
-			public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-				player.startUsingItem(hand);
-				return ActionResult.pass(player.getItemInHand(hand));
-
-			}
 		}
 
 	}
