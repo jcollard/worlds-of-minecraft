@@ -443,6 +443,7 @@ public class MinecraftMod implements IMinecraftMod {
 				LOGGER.info("Creating model file: " + outfile);
 				// TODO(2021-07-09 jcollard): CREATE_NEW and blow up if file alredy exists?
 				try {
+					Files.createDirectories(utils.getItemModelsDir(mod));
 					Files.write(outfile, item	.getItemModel()
 												.generateResource(mod)
 												.getBytes(),
