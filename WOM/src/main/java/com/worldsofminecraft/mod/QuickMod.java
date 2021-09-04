@@ -72,15 +72,6 @@ public abstract class QuickMod {
 
 		BUILDER.registerItems(bus);
 		BUILDER.registerPotions(bus);
-
-//		DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, BUILDER.MOD_ID);
-//
-//		EffectInstance instance = new Effect(Type.MOVEMENT_SPEED)	.seconds(20F)
-//																	.level(3)
-//																	.toInstance();
-//		Potion potion = new Potion("potato_water", instance);
-//		potatoeRegistry = POTIONS.register("potato_water", () -> potion);
-//		POTIONS.register(bus);
 	}
 
 	public void setup(final FMLCommonSetupEvent event) {
