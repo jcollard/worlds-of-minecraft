@@ -26,9 +26,7 @@ import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 import com.worldsofminecraft.util.SimpleItemGenerator;
 
-import net.minecraftforge.fml.common.Mod;
-
-@Mod(TestMod.MODID)
+//@Mod(TestMod.MODID)
 public class TestMod extends QuickMod {
 
 	public static final String MODID = "mymod";
