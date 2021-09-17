@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
-import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.model.item.IItemModel;
 import com.worldsofminecraft.resource.model.item.ItemModel;
@@ -30,13 +29,13 @@ public abstract class AbstractItem implements IItem {
 	private RegistryObject<Item> registryObject;
 	private Action action = Action.NONE;
 	private int useDuration = 20;
+	private boolean isRegistered = false;
 
-	public static boolean checkRegistration(Builder b) {
-		Set<String> key = b	.getItems()
-							.keySet();
+	public static boolean checkRegistration() {
 		boolean pass = true;
+
 		for (AbstractItem item : ALL_ITEMS) {
-			if (!key.contains("item." + b.MOD_ID + "." + item.simpleRegistryName)) {
+			if (!item.isRegistered) {
 				Utils	.getInstance()
 						.getLogger()
 						.warn("WARNING: \"" + item.name
@@ -44,6 +43,7 @@ public abstract class AbstractItem implements IItem {
 				pass = false;
 			}
 		}
+
 		return pass;
 	}
 
@@ -124,6 +124,11 @@ public abstract class AbstractItem implements IItem {
 	public void setUseAction(@Nonnull Action action) {
 		Preconditions.checkArgument(action != null, "Cannot set a null action.");
 		this.action = action;
+	}
+
+	@Override
+	public void register() {
+		this.isRegistered = true;
 	}
 
 	protected abstract Supplier<Item> getItemSupplier();

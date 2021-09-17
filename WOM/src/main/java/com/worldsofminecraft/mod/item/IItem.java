@@ -50,6 +50,8 @@ public interface IItem {
 
 	RegistryObject<Item> register(DeferredRegister<Item> register);
 
+	void register();
+
 	default IItemStack onUse(IItemStack stack, IWorld world, ILivingEntity livingEntity,
 			@Nonnull Supplier<IItemStack> defaultAction) {
 		return defaultAction.get();

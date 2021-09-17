@@ -14,6 +14,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.worldsofminecraft.mod.IMinecraftMod;
+import com.worldsofminecraft.mod.ModPack;
 
 public class Utils {
 
@@ -71,6 +72,54 @@ public class Utils {
 		b.append("\n'''");
 
 		// TODO(2021-07-08 jcollard): Write dependencies
+
+		return b.toString();
+	}
+
+	/**
+	 * Generates a mods.toml file for the specified ModPack
+	 *
+	 * @param mod The mod to be generated
+	 * @return a string containing the contents of the mods.toml
+	 */
+	public String getModToML(@Nonnull ModPack pack) {
+		Preconditions.checkArgument(pack != null);
+		Map<String, String> mapping = new HashMap<>();
+		StringBuilder b = new StringBuilder();
+
+		mapping.put("modLoader", pack.getModLoader());
+		mapping.put("loaderVersion", pack.getLoaderVersion());
+		mapping.put("license", pack.getLicense());
+
+		b.append("# This file was generated using the Worlds of Minecraft Mod Builder Library\n");
+		b.append("# This file should not be edited manually as it will likely be overwritten\n");
+		b.append("# during a build process.\n");
+		this.appendKeys(b, mapping, "modLoader", "loaderVersion", "license");
+
+		for (IMinecraftMod mod : pack.getMods()) {
+			Map<String, String> modMap = new HashMap<>();
+			modMap.put("modId", mod.getModId());
+			modMap.put("version", mod.getVersion());
+			modMap.put("displayName", mod.getDisplayName());
+			modMap.put("updateJSONURL", mod.getUpdateJSONURL());
+			modMap.put("displayURL", mod.getDisplayURL());
+			if (mod.getLogo() != null) {
+				modMap.put("logoFile", mod	.getLogo()
+											.getFileName());
+			}
+			modMap.put("credits", mod.getCredits());
+			modMap.put("authors", mod.getAuthors());
+			modMap.put("description", mod.getDescription());
+
+			b.append("[[mods]]\n");
+			this.appendKeys(b, modMap, "modId", "version", "displayName", "updateJSONURL", "displayURL", "logoFile",
+					"credits", "authors");
+			b.append("description='''\n");
+			b.append(mod.getDescription());
+			b.append("\n'''");
+		}
+
+		// TODO(2021-09-16 jcollard): Write dependencies
 
 		return b.toString();
 	}

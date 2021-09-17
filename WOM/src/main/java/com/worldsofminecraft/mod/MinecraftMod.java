@@ -191,6 +191,7 @@ public class MinecraftMod implements IMinecraftMod {
 		private String description = "TODO: Set Description in Builder";
 		private boolean clearPreviousMod = true;
 		public boolean stopOnWarnings = true;
+		private boolean isPackaged = false;
 
 		/**
 		 * Creates a MinecraftModBuilder by specifying the authors, modName, and modId.
@@ -205,6 +206,10 @@ public class MinecraftMod implements IMinecraftMod {
 								.validateModId(modId.trim());
 			this.MOD_NAME = Utils	.getInstance()
 									.validateName(modName.trim());
+		}
+
+		public void setPackagedMode(boolean b) {
+			this.isPackaged = b;
 		}
 
 		public Builder license(@Nonnull String license) {
@@ -251,6 +256,7 @@ public class MinecraftMod implements IMinecraftMod {
 								+ "\", matched another item that was previously registered.");
 			}
 			items.put(registryName, item);
+			item.register();
 			return this;
 		}
 
@@ -263,6 +269,7 @@ public class MinecraftMod implements IMinecraftMod {
 								+ "\", matched another item that was previously registered.");
 			}
 			potions.put(registryName, potion);
+			potion.register();
 			return this;
 		}
 
@@ -380,15 +387,18 @@ public class MinecraftMod implements IMinecraftMod {
 						.isLive()) {
 				throw new BuildFailedException("Cannot build mod during live mode.", new IllegalStateException());
 			}
-			boolean errors = !(AbstractItem.checkRegistration(this) && QuickPotion.checkRegistration(this));
-			if (errors && stopOnWarnings) {
-				System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
-				Scanner s = new Scanner(System.in);
-				s.nextLine();
-				s.close();
+			if (!isPackaged) {
+				boolean errors = !(AbstractItem.checkRegistration() && QuickPotion.checkRegistration());
+				if (errors && stopOnWarnings) {
+					System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
+					Scanner s = new Scanner(System.in);
+					s.nextLine();
+					s.close();
+				}
 			}
 			MinecraftMod mod = new MinecraftMod(this);
 			clearPreviousMod(mod);
+			createLogoFile(mod);
 			generateModTOML(mod);
 			generateItems(mod);
 			generateLangFile(mod);
@@ -488,7 +498,29 @@ public class MinecraftMod implements IMinecraftMod {
 			}
 		}
 
+		private void createLogoFile(MinecraftMod mod) {
+			Utils utils = Utils.getInstance();
+			if (mod.getLogo() != null) {
+				LOGGER.info("Creating logo file: " + utils	.getResourcesDir()
+															.resolve(mod.getLogo()
+																		.getFileName()));
+				try {
+					Files.copy(mod	.getLogo()
+									.getPath(),
+							utils	.getResourcesDir()
+									.resolve(mod.getLogo()
+												.getFileName()),
+							StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
+					throw new BuildFailedException("Could not create logo file.", e);
+				}
+			}
+		}
+
 		private void generateModTOML(MinecraftMod mod) {
+			if (this.isPackaged) {
+				return;
+			}
 			Utils utils = Utils.getInstance();
 			String modsToMLContents = Utils	.getInstance()
 											.getModsToML(mod);
@@ -500,17 +532,6 @@ public class MinecraftMod implements IMinecraftMod {
 				Files.deleteIfExists(modsToML);
 				Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
 
-				if (mod.getLogo() != null) {
-					LOGGER.info("Creating logo file: " + utils	.getResourcesDir()
-																.resolve(mod.getLogo()
-																			.getFileName()));
-					Files.copy(mod	.getLogo()
-									.getPath(),
-							utils	.getResourcesDir()
-									.resolve(mod.getLogo()
-												.getFileName()),
-							StandardCopyOption.REPLACE_EXISTING);
-				}
 			} catch (IOException e) {
 				throw new BuildFailedException("Could not create mods.toml.", e);
 			}

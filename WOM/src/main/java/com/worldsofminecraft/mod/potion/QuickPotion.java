@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
-import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.item.IIngredient;
 import com.worldsofminecraft.mod.util.Utils;
 
@@ -20,12 +19,10 @@ public class QuickPotion {
 
 	private static final Set<QuickPotion> ALL_POTIONS = new HashSet<>();
 
-	public static boolean checkRegistration(Builder b) {
-		Set<String> key = b	.getPotions()
-							.keySet();
+	public static boolean checkRegistration() {
 		boolean pass = true;
 		for (QuickPotion potion : ALL_POTIONS) {
-			if (!key.contains(b.MOD_ID + "." + potion.simpleRegistryName)) {
+			if (!potion.isRegistered) {
 				Utils	.getInstance()
 						.getLogger()
 						.warn("WARNING: \"" + potion.name
@@ -41,6 +38,7 @@ public class QuickPotion {
 	private final IIngredient ingredient;
 	private RegistryObject<Potion> registryObject;
 	private final Set<Effect> effects = new HashSet<>();
+	private boolean isRegistered = false;
 
 	public QuickPotion(@Nonnull String name, @Nonnull IIngredient ingredient) {
 		Preconditions.checkNotNull(name, "Potion name must not be null.");
@@ -91,6 +89,10 @@ public class QuickPotion {
 
 	public RegistryObject<Potion> getRegistryObject() {
 		return this.registryObject;
+	}
+
+	public void register() {
+		this.isRegistered = true;
 	}
 
 }
