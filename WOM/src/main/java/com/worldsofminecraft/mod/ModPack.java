@@ -39,9 +39,10 @@ public class ModPack {
 		return this.mods;
 	}
 
-	public ModPack addMod(MinecraftMod.Builder mod) {
-		mod.setPackagedMode(true);
-		this.builders.add(mod);
+	public ModPack addMod(QuickMod mod) {
+		MinecraftMod.Builder b = mod.getBuilder();
+		b.setPackagedMode(true);
+		this.builders.add(b);
 		return this;
 	}
 
