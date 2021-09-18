@@ -190,7 +190,7 @@ import com.worldsofminecraft.mod.potion.Effect;
  * applied to you for 20 seconds.
  * </p>
  * 
- * <img src="docs/images/jump-effect.png"/>
+ * <img src="docs/images/jump-effect.png" width="600px"/>
  * 
  * <h2>Challenge - Custom Food</h2>
  * 
