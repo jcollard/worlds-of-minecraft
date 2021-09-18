@@ -6,16 +6,16 @@ import net.minecraft.world.World;
 
 public interface IWorld {
 
-	World getModel();
+    World getModel();
 
-	void addItemEntity(IItemEntity entity);
+    void addItemEntity(IItemEntity entity);
 
-	long getDayTime();
+    long getDayTime();
 
-	float getTimeOfDay();
+    float getTimeOfDay();
 
-	static IWorld convert(World world) {
-		return new WorldAdapter(world);
-	}
+    static IWorld convert(World world) {
+        return new WorldAdapter(world);
+    }
 
 }

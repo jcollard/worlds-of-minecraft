@@ -11,26 +11,26 @@ import java.nio.file.Path;
  */
 public interface IPNGResource {
 
-	/**
-	 * Gets the simple name of this IPNGResource. For example `banana.png` returns
-	 * `banana`.
-	 * 
-	 * @return The simple name of this IPNGResource
-	 */
-	public String getSimpleName();
+    /**
+     * Gets the simple name of this IPNGResource. For example `banana.png` returns
+     * `banana`.
+     * 
+     * @return The simple name of this IPNGResource
+     */
+    public String getSimpleName();
 
-	/**
-	 * Gets the file name of this IPNGResource.
-	 * 
-	 * @return the file name of this IPNGResource.
-	 */
-	public String getFileName();
+    /**
+     * Gets the file name of this IPNGResource.
+     * 
+     * @return the file name of this IPNGResource.
+     */
+    public String getFileName();
 
-	/**
-	 * Returns the {@link Path} to the underlying png file.
-	 * 
-	 * @return the {@link Path} to the underlying png file.
-	 */
-	public Path getPath();
+    /**
+     * Returns the {@link Path} to the underlying png file.
+     * 
+     * @return the {@link Path} to the underlying png file.
+     */
+    public Path getPath();
 
 }

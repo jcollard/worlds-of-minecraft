@@ -9,10 +9,10 @@ package com.worldsofminecraft.resource.png;
  */
 public class PNGResourceException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public PNGResourceException(String message) {
-		super(message);
-	}
+    public PNGResourceException(String message) {
+        super(message);
+    }
 
 }

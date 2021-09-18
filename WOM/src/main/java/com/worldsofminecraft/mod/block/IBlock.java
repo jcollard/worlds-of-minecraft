@@ -4,8 +4,8 @@ import com.worldsofminecraft.mod.item.blockitem.IBlockItem;
 
 public interface IBlock {
 
-	public boolean canBeItem();
+    public boolean canBeItem();
 
-	public IBlockItem asBlockItem();
+    public IBlockItem asBlockItem();
 
 }

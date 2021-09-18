@@ -12,51 +12,51 @@ import com.worldsofminecraft.resource.texture.item.VanillaItemTexture;
 
 public class VanillaItemModel extends ItemModel {
 
-	private JsonObject model;
-	private final VanillaItemTexture texture;
+    private JsonObject model;
+    private final VanillaItemTexture texture;
 
-	public VanillaItemModel(VanillaItemTexture texture) {
-		super(VanillaItemModel.getBuilder(texture));
-		this.texture = texture;
-	}
+    public VanillaItemModel(VanillaItemTexture texture) {
+        super(VanillaItemModel.getBuilder(texture));
+        this.texture = texture;
+    }
 
-	public static ItemModel.Builder getBuilder(VanillaItemTexture texture) {
-		try {
-			Builder b = new Builder(texture);
-			b.parent(texture.generateResource(null));
-			return new Builder(texture).parent(texture.generateResource(null));
-		} catch (IOException e) {
-			throw new IllegalStateException("Unable to create model. " + e	.getClass()
-																			.getSimpleName()
-					+ ": " + e.getLocalizedMessage());
-		}
-	}
+    public static ItemModel.Builder getBuilder(VanillaItemTexture texture) {
+        try {
+            Builder b = new Builder(texture);
+            b.parent(texture.generateResource(null));
+            return new Builder(texture).parent(texture.generateResource(null));
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to create model. " + e.getClass()
+                                                                          .getSimpleName()
+                    + ": " + e.getLocalizedMessage());
+        }
+    }
 
-	@Override
-	public String generateResource(IMinecraftMod mod) throws IOException {
-		if (model == null) {
-			try {
-				// TODO(2021-07-13 jcollard): We need to be able to override the internals of
-				// the model.
-				Path p = Utils	.getInstance()
-								.get_1_16_AssetsDir()
-								.resolve("models/" + texture.getRegistryName() + ".json");
-				Gson g = Utils	.getInstance()
-								.getGson();
-				String json;
-				json = String.join("\n", Files.readAllLines(p));
-				JsonObject data = g.fromJson(json, JsonObject.class);
-				this.model = data;
-			} catch (IOException e) {
-				throw new IllegalStateException("Unable to create model. " + e	.getClass()
-																				.getSimpleName()
-						+ ": " + e.getLocalizedMessage());
-			}
-		}
+    @Override
+    public String generateResource(IMinecraftMod mod) throws IOException {
+        if (model == null) {
+            try {
+                // TODO(2021-07-13 jcollard): We need to be able to override the internals of
+                // the model.
+                Path p = Utils.getInstance()
+                              .get_1_16_AssetsDir()
+                              .resolve("models/" + texture.getRegistryName() + ".json");
+                Gson g = Utils.getInstance()
+                              .getGson();
+                String json;
+                json = String.join("\n", Files.readAllLines(p));
+                JsonObject data = g.fromJson(json, JsonObject.class);
+                this.model = data;
+            } catch (IOException e) {
+                throw new IllegalStateException("Unable to create model. " + e.getClass()
+                                                                              .getSimpleName()
+                        + ": " + e.getLocalizedMessage());
+            }
+        }
 
-		return Utils.getInstance()
-					.getGson()
-					.toJson(model);
-	}
+        return Utils.getInstance()
+                    .getGson()
+                    .toJson(model);
+    }
 
 }

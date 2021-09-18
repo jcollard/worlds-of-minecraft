@@ -15,77 +15,77 @@ import com.worldsofminecraft.mod.util.Utils;
 
 public class ModPack {
 
-	private final Set<MinecraftMod.Builder> builders = new HashSet<>();
+    private final Set<MinecraftMod.Builder> builders = new HashSet<>();
 
-	private final String modLoader = "javafml";
-	private final String loaderVersion = "[36,)";
-	private String license = "All rights reserved";
+    private final String modLoader = "javafml";
+    private final String loaderVersion = "[36,)";
+    private String license = "All rights reserved";
 
-	private Set<IMinecraftMod> mods = new HashSet<>();
+    private Set<IMinecraftMod> mods = new HashSet<>();
 
-	public String getModLoader() {
-		return this.modLoader;
-	}
+    public String getModLoader() {
+        return this.modLoader;
+    }
 
-	public String getLoaderVersion() {
-		return this.loaderVersion;
-	}
+    public String getLoaderVersion() {
+        return this.loaderVersion;
+    }
 
-	public String getLicense() {
-		return this.license;
-	}
+    public String getLicense() {
+        return this.license;
+    }
 
-	public Set<IMinecraftMod> getMods() {
-		return this.mods;
-	}
+    public Set<IMinecraftMod> getMods() {
+        return this.mods;
+    }
 
-	public ModPack addMod(QuickMod mod) {
-		MinecraftMod.Builder b = mod.getBuilder();
-		b.setPackagedMode(true);
-		this.builders.add(b);
-		return this;
-	}
+    public ModPack addMod(QuickMod mod) {
+        MinecraftMod.Builder b = mod.getBuilder();
+        b.setPackagedMode(true);
+        this.builders.add(b);
+        return this;
+    }
 
-	public void build() {
-		Utils utils = Utils.getInstance();
+    public void build() {
+        Utils utils = Utils.getInstance();
 
-		boolean errors = !(AbstractItem.checkRegistration() && QuickPotion.checkRegistration());
-		if (errors) {
-			System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
-			Scanner s = new Scanner(System.in);
-			s.nextLine();
-			s.close();
-		}
+        boolean errors = !(AbstractItem.checkRegistration() && QuickPotion.checkRegistration());
+        if (errors) {
+            System.err.println("Warnings occurred while generating your mod. Press Enter to Continue.");
+            Scanner s = new Scanner(System.in);
+            s.nextLine();
+            s.close();
+        }
 
-		utils	.getLogger()
-				.info("Building Mod Pack...");
+        utils.getLogger()
+             .info("Building Mod Pack...");
 
-		for (MinecraftMod.Builder builder : builders) {
-			mods.add(builder.build());
-		}
+        for (MinecraftMod.Builder builder : builders) {
+            mods.add(builder.build());
+        }
 
-		generateModTOML();
+        generateModTOML();
 
-		utils	.getLogger()
-				.info("Mod Pack Build complete!");
+        utils.getLogger()
+             .info("Mod Pack Build complete!");
 
-	}
+    }
 
-	private void generateModTOML() {
-		Utils utils = Utils.getInstance();
+    private void generateModTOML() {
+        Utils utils = Utils.getInstance();
 
-		String modsToMLContents = utils.getModToML(this);
-		Path modsToML = utils	.getMetaDir()
-								.resolve("mods.toml");
-		try {
-			Files.createDirectories(utils.getMetaDir());
-			utils	.getLogger()
-					.info("Creating " + modsToML);
-			Files.deleteIfExists(modsToML);
-			Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
-		} catch (IOException e) {
-			throw new BuildFailedException("Could not create mods.toml.", e);
-		}
-	}
+        String modsToMLContents = utils.getModToML(this);
+        Path modsToML = utils.getMetaDir()
+                             .resolve("mods.toml");
+        try {
+            Files.createDirectories(utils.getMetaDir());
+            utils.getLogger()
+                 .info("Creating " + modsToML);
+            Files.deleteIfExists(modsToML);
+            Files.write(modsToML, modsToMLContents.getBytes(), StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            throw new BuildFailedException("Could not create mods.toml.", e);
+        }
+    }
 
 }

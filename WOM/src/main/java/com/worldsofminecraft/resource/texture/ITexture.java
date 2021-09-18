@@ -6,6 +6,6 @@ import com.worldsofminecraft.mod.IMinecraftMod;
 
 public interface ITexture {
 
-	String generateResource(IMinecraftMod mod) throws IOException;
+    String generateResource(IMinecraftMod mod) throws IOException;
 
 }

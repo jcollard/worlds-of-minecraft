@@ -110,8 +110,8 @@ import com.worldsofminecraft.mod.potion.Effect;
  * 
  * <pre>
  * QuickFood banana = new QuickFood("Banana", "assets/common/banana.png");
- * banana  .getProperties()
- * 		.tab(bananaTab);
+ * banana.getProperties()
+ *       .tab(bananaTab);
  * banana.foodPoints(2);
  * banana.saturationRatio(0.3F);
  * </pre>
@@ -157,8 +157,8 @@ import com.worldsofminecraft.mod.potion.Effect;
  * </p>
  * 
  * <pre>
- * jumpEffect  .level(4)
- * 			.seconds(20);
+ * jumpEffect.level(4)
+ *           .seconds(20);
  * </pre>
  * 
  * <p>
@@ -173,14 +173,14 @@ import com.worldsofminecraft.mod.potion.Effect;
  * 
  * <pre>
  * QuickFood banana = new QuickFood("Banana", "assets/common/banana.png");
- * banana  .getProperties()
- * 		.tab(bananaTab);
+ * banana.getProperties()
+ *       .tab(bananaTab);
  * banana.foodPoints(2);
  * banana.saturationRatio(0.3F);
  * Effect jumpEffect;
  * jumpEffect = new Effect(Effect.Type.JUMP_BOOST);
- * jumpEffect  .level(4)
- * 			.seconds(20);
+ * jumpEffect.level(4)
+ *           .seconds(20);
  * banana.addEffect(jumpEffect);
  * </pre>
  * 
@@ -192,41 +192,50 @@ import com.worldsofminecraft.mod.potion.Effect;
  * 
  * <img src="docs/images/jump-effect.png"/>
  * 
+ * <h2>Challenge - Custom Food</h2>
+ * 
+ * <p>
+ * Use the pixel editor at Piskel (https://www.piskelapp.com/p/create/sprite) to
+ * create your own custom food item and add it to your BananaMod. Each food item
+ * can have as many effects as you want! Try to make a food that applies at
+ * least 2 different effects.
+ * </p>
+ * 
  * 
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
  */
 public class BananaModQuickFood {
 
-	public void challenge() {
-		MinecraftMod.Builder builder = MinecraftMod.getBuilder("Challenge Mod", "Joseph Colalrd", "challenge_mod");
-		ItemTab bananaTab = builder.createCustomTab("Bananas", "assets/common/bananas.png");
+    public void challenge() {
+        MinecraftMod.Builder builder = MinecraftMod.getBuilder("Challenge Mod", "Joseph Colalrd", "challenge_mod");
+        ItemTab bananaTab = builder.createCustomTab("Bananas", "assets/common/bananas.png");
 
-		// You should already have this code!
-		QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
-		banana	.getProperties()
-				.tab(bananaTab);
+        // You should already have this code!
+        QuickItem banana = new QuickItem("Banana", "assets/common/banana.png");
+        banana.getProperties()
+              .tab(bananaTab);
 
-		builder.addItem(banana);
+        builder.addItem(banana);
 
-		/** Copy below this line */
+        /** Copy below this line */
 
-		// TODO: Change the banana item to be a QuickFood so it is edible
+        // TODO: Change the banana item to be a QuickFood so it is edible
 
-		// TODO: Set the banana.foodPoints property to 2
+        // TODO: Set the banana.foodPoints property to 2
 
-		// TODO: Create a new Effect called bananaEffect.
-		// Make sure to import com.worldsofminecraft.mod.potion.Effect
+        // TODO: Create a new Effect called bananaEffect.
+        // Make sure to import com.worldsofminecraft.mod.potion.Effect
 
-		// TODO: Construct a new Effect and specify the Effect.Type to be JUMP_BOOS
+        // TODO: Construct a new Effect and specify the Effect.Type to be JUMP_BOOS
 
-		// TODO: Specify the bananaEffect to be level 4
+        // TODO: Specify the bananaEffect to be level 4
 
-		// TODO: Specify the bananaEffect to last 20 seconds.
+        // TODO: Specify the bananaEffect to last 20 seconds.
 
-		// TODO: Add the effect to the banana using the addEffect(bananaEffect) method
+        // TODO: Add the effect to the banana using the addEffect(bananaEffect) method
 
-		/** Copy above this line */
-	}
+        /** Copy above this line */
+    }
 
 }
