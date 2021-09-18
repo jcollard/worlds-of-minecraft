@@ -10,7 +10,7 @@ public class ModPackExample {
         ModPack pack = new ModPack();
 
         // Next, you construct and add each mod you would like to include
-        // pack.addMod(new BananaMod());
+        pack.addMod(new BananaMod());
         pack.addMod(new JumpingBeanMod());
 
         // Finally, you call the build() method for the ModPack
