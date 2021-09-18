@@ -27,6 +27,19 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+/**
+ * <h1>QuickFood</h1>
+ * <p>
+ * QuickFood provides a quick way to create edible items. It functions similarly
+ * to {@link QuickItem} however it has an {@link QuickFood#onConsumed} helper
+ * field rather than {@link QuickItem#onUse} helper field. Additionally, several
+ * methods are provided to quickly specify the foods properties and any special
+ * effects.
+ * </p>
+ * 
+ * @author Joseph Collard <jcollard@worldsofminecraft.com>
+ *
+ */
 public class QuickFood extends AbstractItem {
 
 	private boolean isAlwaysEdible = true;
@@ -52,6 +65,12 @@ public class QuickFood extends AbstractItem {
 		super(name, texture);
 	}
 
+	/**
+	 * Specifies if this food can be eaten if the player is already full.
+	 * 
+	 * @param isAlwaysEdible
+	 * @return
+	 */
 	public QuickFood isAlwaysEdible(boolean isAlwaysEdible) {
 		this.isAlwaysEdible = isAlwaysEdible;
 		return this;
@@ -61,6 +80,12 @@ public class QuickFood extends AbstractItem {
 		return this.isAlwaysEdible;
 	}
 
+	/**
+	 * Specifies if this food is considered meat.
+	 * 
+	 * @param isMeat
+	 * @return
+	 */
 	public QuickFood isMeat(boolean isMeat) {
 		this.isMeat = isMeat;
 		return this;
@@ -70,6 +95,12 @@ public class QuickFood extends AbstractItem {
 		return this.isMeat;
 	}
 
+	/**
+	 * Specifies the amount of hunger that is restored.
+	 * 
+	 * @param foodPoints
+	 * @return
+	 */
 	public QuickFood foodPoints(int foodPoints) {
 		Preconditions.checkArgument(foodPoints >= 1, "Food points must be at least 1.");
 		this.foodPoints = foodPoints;
@@ -80,6 +111,12 @@ public class QuickFood extends AbstractItem {
 		return this.foodPoints;
 	}
 
+	/**
+	 * Specifies how much saturation this food provides.
+	 * 
+	 * @param saturationRatio
+	 * @return
+	 */
 	public QuickFood saturationRatio(float saturationRatio) {
 		Preconditions.checkArgument(saturationRatio > 0, "Food saturation ration must be greater than 0.");
 		this.saturationRatio = saturationRatio;
@@ -90,10 +127,24 @@ public class QuickFood extends AbstractItem {
 		return this.saturationRatio;
 	}
 
+	/**
+	 * Adds an effect that is applied when eaten.
+	 * 
+	 * @param effect
+	 * @return
+	 */
 	public QuickFood addEffect(@Nonnull Effect effect) {
 		return addEffect(effect, 1.0F);
 	}
 
+	/**
+	 * Adds an effect that has a probability of being applied when eaten.
+	 * 
+	 * @param effect
+	 * @param probability A number between 0 and 1 where 0 is a 0% chance and 1 is a
+	 *                    100% chance.
+	 * @return
+	 */
 	public QuickFood addEffect(@Nonnull Effect effect, float probability) {
 		Preconditions.checkNotNull(effect, "Cannot add a null effect to food.");
 		Preconditions.checkArgument(probability > 0 && probability <= 1,
@@ -110,6 +161,9 @@ public class QuickFood extends AbstractItem {
 		return stack;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Supplier<Item> getItemSupplier() {
 		Item.Properties p = IItem.Adapter.getProperties(this);

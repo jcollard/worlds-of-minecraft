@@ -5,6 +5,47 @@ import com.google.common.base.Preconditions;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
+/**
+ * <h1>Effect</h1>
+ * 
+ * <p>
+ * An {@link Effect} typically provides LivingEntities with a bonus or a
+ * detriment. However, some Effects are completely neutral.
+ * </p>
+ * 
+ * <h2>Constructing an Effect</h2>
+ * 
+ * <p>
+ * Below is a simple example showing how to create an Effect which provides
+ * </p>
+ * 
+ * <pre>
+ * Effect magicEffect;
+ * magicEffect = new Effect(Type.REGENERATION);
+ * magicEffect.level(2);
+ * magicEffect.seconds(10);
+ * </pre>
+ * 
+ * <p>
+ * The code above creates a level 2 regeneration effect that lasts 10 seconds.
+ * </p>
+ * 
+ * <p>
+ * By itself, the effect doesn't do much. However, once an effect has been
+ * created, it can be applied to food, potions, or living entities.
+ * </p>
+ * 
+ * <h2>Types of Effects</h2>
+ * 
+ * <p>
+ * All of the built in effect types are available in the {@link Effect.Type}
+ * class. If you type {@code Effect.Type.} and wait, a full list of effect types
+ * will show up for you to choose from.
+ * </p>
+ * 
+ * @author Joseph Collard <jcollard@worldsofminecraft.com>
+ *
+ */
 public class Effect {
 
 	private final Type type;
