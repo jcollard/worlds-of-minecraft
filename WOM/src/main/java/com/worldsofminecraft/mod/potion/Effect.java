@@ -58,6 +58,11 @@ public class Effect {
 	// TODO(2021-07-15 jcollard): EffectInstance has a hiddenEffect field.
 	// Consider adding this in
 
+	/**
+	 * Creates a new effect specifying the type of the effect.
+	 * 
+	 * @param type
+	 */
 	public Effect(Type type) {
 		this.type = type;
 	}
@@ -66,12 +71,24 @@ public class Effect {
 		return duration;
 	}
 
+	/**
+	 * Specifies the number of seconds this effect will last on a normal server.
+	 * 
+	 * @param seconds
+	 * @return
+	 */
 	public Effect ticks(int ticks) {
 		Preconditions.checkArgument(ticks > 0, "Cannot create an Effect with duration less than 1.");
 		this.duration = ticks;
 		return this;
 	}
 
+	/**
+	 * Specifies the number of seconds this effect will last on a normal server.
+	 * 
+	 * @param seconds
+	 * @return
+	 */
 	public Effect seconds(float seconds) {
 		return ticks((int) (seconds * 20));
 	}
@@ -80,6 +97,13 @@ public class Effect {
 		return level + 1;
 	}
 
+	/**
+	 * Specifies the level of this effect. The higher the level, the more powerful
+	 * the effect.
+	 * 
+	 * @param level
+	 * @return
+	 */
 	public Effect level(int level) {
 		Preconditions.checkArgument(level >= 1, "Cannot create an Effect with a level less than 1.");
 		this.level = level - 1;
@@ -90,6 +114,12 @@ public class Effect {
 		return showParticles;
 	}
 
+	/**
+	 * Specifies if this effect should show particles.
+	 * 
+	 * @param showParticles
+	 * @return
+	 */
 	public Effect showParticles(boolean showParticles) {
 		this.showParticles = showParticles;
 		return this;
@@ -99,6 +129,12 @@ public class Effect {
 		return isVisible;
 	}
 
+	/**
+	 * Specifies if this effect is visible.
+	 * 
+	 * @param isVisible
+	 * @return
+	 */
 	public Effect visible(boolean isVisible) {
 		this.isVisible = isVisible;
 		return this;
@@ -108,6 +144,12 @@ public class Effect {
 		return showIcon;
 	}
 
+	/**
+	 * Specifies if this effect should display an icon when it is on the player
+	 * 
+	 * @param showIcon
+	 * @return
+	 */
 	public Effect showIcon(boolean showIcon) {
 		this.showIcon = showIcon;
 		return this;
