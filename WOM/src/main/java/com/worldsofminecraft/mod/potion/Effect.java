@@ -119,36 +119,69 @@ public class Effect {
 
 	public static class Type {
 
+		/** This is the {@code speed} effect in Minecraft 1.16 */
 		public static final Type MOVEMENT_SPEED = new Type(Effects.MOVEMENT_SPEED);
+		/** This is the {@code slowness} effect in Minecraft 1.16 */
 		public static final Type MOVEMENT_SLOWDOWN = new Type(Effects.MOVEMENT_SLOWDOWN);
+		/** This is the {@code haste} effect in Minecraft 1.16 */
 		public static final Type DIG_SPEED = new Type(Effects.DIG_SPEED);
+		/** This is the {@code mining_fatigue} effect in Minecraft 1.16 */
 		public static final Type DIG_SLOWDOWN = new Type(Effects.DIG_SLOWDOWN);
+		/** This is the {@code strength} effect in Minecraft 1.16 */
 		public static final Type DAMAGE_BOOST = new Type(Effects.DAMAGE_BOOST);
+		/** This is the {@code instant_health} effect in Minecraft 1.16 */
 		public static final Type HEAL = new Type(Effects.HEAL);
+		/** This is the {@code instant_damage} effect in Minecraft 1.16 */
 		public static final Type HARM = new Type(Effects.HARM);
+		/** This is the {@code jump_boost} effect in Minecraft 1.16 */
 		public static final Type JUMP_BOOST = new Type(Effects.JUMP);
+		/** This is the {@code nausea} effect in Minecraft 1.16 */
 		public static final Type CONFUSION = new Type(Effects.CONFUSION);
+		/** This is the {@code regeneration} effect in Minecraft 1.16 */
 		public static final Type REGENERATION = new Type(Effects.REGENERATION);
+		/** This is the {@code resistance} effect in Minecraft 1.16 */
 		public static final Type DAMAGE_RESISTANCE = new Type(Effects.DAMAGE_RESISTANCE);
+		/** This is the {@code fire_resistance} effect in Minecraft 1.16 */
 		public static final Type FIRE_RESISTANCE = new Type(Effects.FIRE_RESISTANCE);
+		/** This is the {@code water_breathing} effect in Minecraft 1.16 */
 		public static final Type WATER_BREATHING = new Type(Effects.WATER_BREATHING);
+		/** This is the {@code invisibility} effect in Minecraft 1.16 */
 		public static final Type INVISIBILITY = new Type(Effects.INVISIBILITY);
+		/** This is the {@code blindness} effect in Minecraft 1.16 */
 		public static final Type BLINDNESS = new Type(Effects.BLINDNESS);
+		/** This is the {@code night_vision} effect in Minecraft 1.16 */
 		public static final Type NIGHT_VISION = new Type(Effects.NIGHT_VISION);
+		/** This is the {@code hunger} effect in Minecraft 1.16 */
 		public static final Type HUNGER = new Type(Effects.HUNGER);
+		/** This is the {@code weakness} effect in Minecraft 1.16 */
 		public static final Type WEAKNESS = new Type(Effects.WEAKNESS);
+		/** This is the {@code poison} effect in Minecraft 1.16 */
 		public static final Type POISON = new Type(Effects.POISON);
+		/** This is the {@code wither} effect in Minecraft 1.16 */
 		public static final Type WITHER = new Type(Effects.WITHER);
+		/** This is the {@code health_boost} effect in Minecraft 1.16 */
 		public static final Type HEALTH_BOOST = new Type(Effects.HEALTH_BOOST);
+		/** This is the {@code absorption} effect in Minecraft 1.16 */
 		public static final Type ABSORPTION = new Type(Effects.ABSORPTION);
+		/** This is the {@code saturation} effect in Minecraft 1.16 */
 		public static final Type SATURATION = new Type(Effects.SATURATION);
+		/** This is the {@code glowing} effect in Minecraft 1.16 */
 		public static final Type GLOWING = new Type(Effects.GLOWING);
+		/** This is the {@code levitation} effect in Minecraft 1.16 */
 		public static final Type LEVITATION = new Type(Effects.LEVITATION);
+		/** This is the {@code luck} effect in Minecraft 1.16 */
 		public static final Type LUCK = new Type(Effects.LUCK);
+		/** This is the {@code unluck} effect in Minecraft 1.16 */
 		public static final Type UNLUCK = new Type(Effects.UNLUCK);
+		/** This is the {@code slow_falling} effect in Minecraft 1.16 */
 		public static final Type SLOW_FALLING = new Type(Effects.SLOW_FALLING);
+		/** This is the {@code conduit_power} effect in Minecraft 1.16 */
 		public static final Type CONDUIT_POWER = new Type(Effects.CONDUIT_POWER);
+		/** This is the {@code dolphins_grace} effect in Minecraft 1.16 */
+		public static final Type DOLPHINS_GRACE = new Type(Effects.DOLPHINS_GRACE);
+		/** This is the {@code bad_omen} effect in Minecraft 1.16 */
 		public static final Type BAD_OMEN = new Type(Effects.BAD_OMEN);
+		/** This is the {@code hero_of_the_village} effect in Minecraft 1.16 */
 		public static final Type HERO_OF_THE_VILLAGE = new Type(Effects.HERO_OF_THE_VILLAGE);
 
 		private final net.minecraft.potion.Effect effect;
