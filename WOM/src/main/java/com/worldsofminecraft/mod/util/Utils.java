@@ -90,12 +90,12 @@ public class Utils {
         mapping.put("modLoader", pack.getModLoader());
         mapping.put("loaderVersion", pack.getLoaderVersion());
         mapping.put("license", pack.getLicense());
-
+        
         b.append("# This file was generated using the Worlds of Minecraft Mod Builder Library\n");
         b.append("# This file should not be edited manually as it will likely be overwritten\n");
         b.append("# during a build process.\n");
         this.appendKeys(b, mapping, "modLoader", "loaderVersion", "license");
-
+        b.append("\n\n");
         for (IMinecraftMod mod : pack.getMods()) {
             Map<String, String> modMap = new HashMap<>();
             modMap.put("modId", mod.getModId());
@@ -111,12 +111,12 @@ public class Utils {
             modMap.put("authors", mod.getAuthors());
             modMap.put("description", mod.getDescription());
 
-            b.append("[[mods]]\n");
+            b.append("\n[[mods]]\n");
             this.appendKeys(b, modMap, "modId", "version", "displayName", "updateJSONURL", "displayURL", "logoFile",
                     "credits", "authors");
             b.append("description='''\n");
             b.append(mod.getDescription());
-            b.append("\n'''");
+            b.append("\n'''\n\n");
         }
 
         // TODO(2021-09-16 jcollard): Write dependencies
