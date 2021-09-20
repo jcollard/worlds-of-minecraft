@@ -1,7 +1,5 @@
 package org.chadwickschool.examples;
 
-import org.chadwickschool.jcollard.BananaMod;
-
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.ModPack;
 import com.worldsofminecraft.mod.entity.ILivingEntity;
