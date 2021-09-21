@@ -3,6 +3,7 @@ package org.chadwickschool.examples;
 import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.ModPack;
 import com.worldsofminecraft.mod.entity.ILivingEntity;
+import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.QuickFood;
 import com.worldsofminecraft.mod.item.QuickItem;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
@@ -135,9 +136,9 @@ import com.worldsofminecraft.mod.world.IWorld;
  * 
  * <p>
  * The easiest way to make an {@link IItemStack} is to use the
- * {@link IItemStack#construct(com.worldsofminecraft.mod.item.IItem, int)
- * method. This method can use {@link QuickItem}s, {@link QuickFood}s and pretty
- * much all World of Minecraft items.
+ * {@link IItemStack#construct(IItem, int) method. This method can use
+ * {@link QuickItem}s, {@link QuickFood}s and pretty much all World of Minecraft
+ * items.
  * </p>
  * 
  * <p>
