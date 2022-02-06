@@ -4,7 +4,9 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.resource.model.item.IItemModel;
+import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.png.IPNGResource;
+import com.worldsofminecraft.resource.png.PNGResource;
 import com.worldsofminecraft.resource.texture.item.ItemTexture;
 
 import net.minecraft.item.IItemTier;
@@ -15,6 +17,16 @@ public class QuickSword extends QuickTieredItem {
 
     private int damage = 3;
     private float speed = -2.4F;
+
+    private static IItemModel getQuickSwordModel(String texture) {
+        return ItemModel.getBuilder(ItemTexture.get(PNGResource.get(texture)))
+                        .parent("item/iron_sword")
+                        .build();
+    }
+
+    {
+        this.setUseAction(Action.BOW);
+    }
 
     public QuickSword(String name, IItemModel model, Tier tier) {
         super(name, model, tier);
@@ -29,7 +41,7 @@ public class QuickSword extends QuickTieredItem {
     }
 
     public QuickSword(String name, String texture, Tier tier) {
-        super(name, texture, tier);
+        super(name, QuickSword.getQuickSwordModel(texture), tier);
     }
 
     public int getDamage() {

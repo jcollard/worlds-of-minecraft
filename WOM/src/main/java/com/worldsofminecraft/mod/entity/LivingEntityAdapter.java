@@ -2,6 +2,7 @@ package com.worldsofminecraft.mod.entity;
 
 import javax.annotation.Nonnull;
 
+import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -41,6 +42,11 @@ public class LivingEntityAdapter implements ILivingEntity {
         if (entity instanceof ClientPlayerEntity) {
             entity.sendMessage(new StringTextComponent(message), entity.getUUID());
         }
+    }
+
+    @Override
+    public void addEffect(Effect regeneration) {
+        entity.addEffect(regeneration.toInstance());
     }
 
 }

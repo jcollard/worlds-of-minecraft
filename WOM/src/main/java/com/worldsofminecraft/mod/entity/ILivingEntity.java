@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.worldsofminecraft.mod.entity.item.IItemEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
+import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 import com.worldsofminecraft.mod.world.IWorld;
@@ -42,5 +43,7 @@ public interface ILivingEntity {
         entity.setItem(itemStack);
         world.addItemEntity(entity);
     }
+
+    void addEffect(Effect regeneration);
 
 }
