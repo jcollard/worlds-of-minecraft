@@ -1,4 +1,4 @@
-package org.chadwickschool.examples;
+package org.chadwickschool.examples.weapons;
 
 import java.util.Random;
 
