@@ -50,4 +50,10 @@ public class LivingEntityAdapter implements ILivingEntity {
         entity.addEffect(regeneration.toInstance());
     }
 
+    @Override
+    public String getName() {
+        return entity.getName()
+                     .getString();
+    }
+
 }

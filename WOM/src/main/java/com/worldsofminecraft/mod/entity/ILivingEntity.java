@@ -46,4 +46,6 @@ public interface ILivingEntity {
 
     void addEffect(Effect regeneration);
 
+    public String getName();
+
 }

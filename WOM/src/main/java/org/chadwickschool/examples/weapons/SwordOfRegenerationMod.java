@@ -83,10 +83,4 @@ public class SwordOfRegenerationMod extends QuickMod {
         // Return the item stack
         return context.itemStack;
     }
-
-    public static void main(String... args) {
-        new SwordOfRegenerationMod().getBuilder()
-                                    .build();
-    }
-
 }
