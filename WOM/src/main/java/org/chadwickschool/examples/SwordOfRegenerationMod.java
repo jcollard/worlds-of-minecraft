@@ -12,9 +12,15 @@ import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.potion.Effect.Type;
 
-import net.minecraftforge.fml.common.Mod;
-
-@Mod(SwordOfRegenerationMod.MODID)
+/**
+ * The Sword of Regeneration is a QuickSword which can bestow upon its user a
+ * level 2 regeneration effect. However, using the Sword of Regeneration has a
+ * 5% chance to cause it to break!
+ * 
+ * @author Joseph Collard <jcollard@worldsofminecraft.com>
+ *
+ */
+//@Mod(SwordOfRegenerationMod.MODID)
 public class SwordOfRegenerationMod extends QuickMod {
 
     public static final String MODID = "sword_of_regeneration";
@@ -39,7 +45,8 @@ public class SwordOfRegenerationMod extends QuickMod {
         builder.addItem(swordOfRegeneration);
 
         // Specify the number of ticks it takes to use the item when
-        // the player right clicks while wielding this item.
+        // the player right clicks while wielding this item. By default,
+        // 20 ticks is 1 second (but you can change this in game).
         swordOfRegeneration.setUseDuration(20);
 
         // Runs the code in the onUse method when the player right clicks
@@ -54,6 +61,9 @@ public class SwordOfRegenerationMod extends QuickMod {
         Effect regeneration = new Effect(Type.REGENERATION);
         regeneration.level(2)
                     .seconds(60);
+
+        // Display a message to the player
+        context.entity.showMessage("Your wounds begin to heal.");
 
         // Add the effect to the player
         context.entity.addEffect(regeneration);
