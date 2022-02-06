@@ -48,4 +48,6 @@ public interface ILivingEntity {
 
     public String getName();
 
+    public void setFire(int seconds);
+
 }

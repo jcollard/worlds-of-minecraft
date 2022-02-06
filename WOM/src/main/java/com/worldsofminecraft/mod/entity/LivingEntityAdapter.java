@@ -56,4 +56,9 @@ public class LivingEntityAdapter implements ILivingEntity {
                      .getString();
     }
 
+    @Override
+    public void setFire(int seconds) {
+        entity.setSecondsOnFire(seconds);
+    }
+
 }

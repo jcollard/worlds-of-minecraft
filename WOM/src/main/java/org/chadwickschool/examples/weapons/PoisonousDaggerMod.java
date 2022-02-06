@@ -7,13 +7,9 @@ import com.worldsofminecraft.mod.MinecraftMod.Builder;
 import com.worldsofminecraft.mod.QuickMod;
 import com.worldsofminecraft.mod.item.IItem.Tier;
 import com.worldsofminecraft.mod.item.QuickSword;
-import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.util.functional.ItemHitContext;
-import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.potion.Effect.Type;
-
-import net.minecraftforge.fml.common.Mod;
 
 /**
  * The Poisonous Dagger is a QuickSword which doesn't do much damage but is
@@ -23,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
  */
-@Mod(PoisonousDaggerMod.MODID)
+//@Mod(PoisonousDaggerMod.MODID)
 public class PoisonousDaggerMod extends QuickMod {
 
     public static final String MODID = "poisonous_dagger";
@@ -49,6 +45,9 @@ public class PoisonousDaggerMod extends QuickMod {
         // Set the speed of the dagger to be very quick!
         // A netherite sword has a speed of 12. This is twice as fast.
         poisonousDagger.setSpeed(24f);
+
+        // Set the damage to be quite low (this is 1/3 the damage of an Iron sword).
+        poisonousDagger.setDamage(1);
         builder.addItem(poisonousDagger);
 
         poisonousDagger.onHit = PoisonousDaggerMod::onHit;
@@ -80,39 +79,6 @@ public class PoisonousDaggerMod extends QuickMod {
             context.attacker.showMessage(message);
         }
 
-    }
-
-    public static IItemStack onUse(ItemUseContext context) {
-        // Create a regeneration effect to add to the player
-        Effect regeneration = new Effect(Type.REGENERATION);
-        regeneration.level(2)
-                    .seconds(60);
-
-        // Display a message to the player
-        context.entity.showMessage("Your wounds begin to heal.");
-
-        // Add the effect to the player
-        context.entity.addEffect(regeneration);
-
-        // Randomly generate a number between 0 and 1
-        Random random = new Random();
-        double chanceToBreak = random.nextDouble();
-
-        if (chanceToBreak < 0.05) {
-            // 5% chance that the sword will break!
-            context.entity.showMessage("Your sword broke!");
-
-            // Reduce the item stack to 0 (destroys the item)
-            context.itemStack.setCount(0);
-        }
-
-        // Return the item stack
-        return context.itemStack;
-    }
-
-    public static void main(String... args) {
-        new PoisonousDaggerMod().getBuilder()
-                                .build();
     }
 
 }
