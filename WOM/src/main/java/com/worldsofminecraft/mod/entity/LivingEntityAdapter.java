@@ -5,8 +5,8 @@ import javax.annotation.Nonnull;
 import com.worldsofminecraft.mod.potion.Effect;
 import com.worldsofminecraft.mod.util.math.Vector3d;
 
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 
 public class LivingEntityAdapter implements ILivingEntity {
@@ -39,8 +39,9 @@ public class LivingEntityAdapter implements ILivingEntity {
 
     @Override
     public void showMessage(String message) {
-        if (entity instanceof ClientPlayerEntity) {
-            entity.sendMessage(new StringTextComponent(message), entity.getUUID());
+        StringTextComponent msg = new StringTextComponent(message);
+        if (entity instanceof ServerPlayerEntity) {
+            entity.sendMessage(msg, entity.getUUID());
         }
     }
 

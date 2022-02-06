@@ -1,5 +1,6 @@
 package com.worldsofminecraft.mod.item;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -7,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
+import com.worldsofminecraft.mod.item.util.functional.ItemHitContext;
 import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.world.IWorld;
 import com.worldsofminecraft.resource.model.item.IItemModel;
@@ -39,6 +41,7 @@ public class QuickItem extends AbstractItem {
      * clicks this item while held.
      */
     public Function<ItemUseContext, IItemStack> onUse;
+    public Consumer<ItemHitContext> onHit;
 
     /**
      * Constructs a QuickItem specifying its name and a path to a texture to use.
@@ -106,6 +109,18 @@ public class QuickItem extends AbstractItem {
             return onUse.apply(new ItemUseContext(stack, world, livingEntity, defaultAction));
         }
         return super.onUse(stack, world, livingEntity, defaultAction);
+    }
+
+    /**
+     * This method is called when a player hits a LivingEntity. If the
+     * {@link QuickItem#onHit} helper field is defined, this method will use it.
+     * Otherwise, this method would be implemented by a subclass.
+     */
+    @Override
+    public void onHit(IItemStack stack, ILivingEntity attacker, ILivingEntity defender) {
+        if (onHit != null) {
+            onHit.accept(new ItemHitContext(stack, attacker, defender));
+        }
     }
 
     /**

@@ -11,6 +11,7 @@ import com.worldsofminecraft.mod.entity.ILivingEntity;
 import com.worldsofminecraft.mod.exception.BuildFailedException;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
+import com.worldsofminecraft.mod.item.util.functional.ItemHitContext;
 import com.worldsofminecraft.mod.item.util.functional.ItemUseContext;
 import com.worldsofminecraft.mod.util.Volatile;
 import com.worldsofminecraft.mod.world.IWorld;
@@ -114,6 +115,19 @@ public interface IItem {
     default IItemStack onUse(IItemStack stack, IWorld world, ILivingEntity livingEntity,
             @Nonnull Supplier<IItemStack> defaultAction) {
         return defaultAction.get();
+    }
+
+    /**
+     * This method should be overwritten by the implementing subclass if the item
+     * has an onHit effect. This method is called before the underlying concrete
+     * Item's hurtEnemy method.
+     * 
+     * @param stack
+     * @param attacker
+     * @param defender
+     */
+    default void onHit(IItemStack stack, ILivingEntity attacker, ILivingEntity defender) {
+
     }
 
     public static class Properties {
@@ -339,6 +353,8 @@ public interface IItem {
                                                             .intercept(implementation)
                                                             .method(ElementMatchers.named("use"))
                                                             .intercept(implementation)
+                                                            .method(ElementMatchers.named("hurtEnemy"))
+                                                            .intercept(implementation)
                                                             .make()
                                                             .load(getClass().getClassLoader())
                                                             .getLoaded();
@@ -365,6 +381,12 @@ public interface IItem {
                           .getItemGroup());
             }
             return p;
+        }
+
+        public boolean hurtEnemy(ItemStack stack, LivingEntity defender, LivingEntity attacker) {
+            ItemHitContext context = new ItemHitContext(stack, attacker, defender);
+            item.onHit(context.itemStack, context.attacker, context.defender);
+            return defaultItem.hurtEnemy(stack, attacker, defender);
         }
 
         public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity livingEntity) {
