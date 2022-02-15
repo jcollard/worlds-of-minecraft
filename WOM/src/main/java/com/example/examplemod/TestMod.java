@@ -15,6 +15,7 @@ import com.worldsofminecraft.mod.item.QuickPickaxe;
 import com.worldsofminecraft.mod.item.QuickShovel;
 import com.worldsofminecraft.mod.item.QuickSword;
 import com.worldsofminecraft.mod.item.SimpleItemExtender;
+import com.worldsofminecraft.mod.item.recipe.ShapelessRecipe;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.potion.Effect;
@@ -70,6 +71,16 @@ public class TestMod extends QuickMod {
             return context.itemStack;
         };
         builder.addItem(banana);
+
+        ShapelessRecipe bananaRecipe = new ShapelessRecipe("BananaRecipe", banana, 1);
+        bananaRecipe.addIngredient(VanillaItem.APPLE, 1);
+        bananaRecipe.addIngredient(VanillaItem.YELLOW_DYE, 1);
+        builder.addRecipe(bananaRecipe);
+
+        ShapelessRecipe appleRecipe = new ShapelessRecipe("AppleRecipe", VanillaItem.APPLE, 1);
+        appleRecipe.addIngredient(banana, 1);
+        appleRecipe.addIngredient(VanillaItem.RED_DYE, 1);
+        builder.addRecipe(appleRecipe);
 
         QuickItem bananas = new QuickItem("Bananas", "assets/common/bananas.png");
         bananas.getProperties()
