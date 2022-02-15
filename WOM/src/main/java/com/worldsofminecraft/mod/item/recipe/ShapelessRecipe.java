@@ -53,13 +53,13 @@ public class ShapelessRecipe implements IRecipe {
                     this.recipeName, item.getSimpleRegistryName(), count));
         }
 
-        if (count + this.ingredientCount > 9) {
+        if (this.ingredientCount >= 9) {
             throw new IllegalStateException(String.format(
-                    "The recipe '%s' could not be created because it has too many ingredients. The maximum number of ingredients is 9.",
+                    "The recipe '%s' could not be created because it has too many ingredients types. The maximum number of ingredients is 9.",
                     this.recipeName));
         }
         ingredients.put(item, count);
-        ingredientCount += count;
+        ingredientCount++;
         return this;
     }
 
@@ -77,13 +77,13 @@ public class ShapelessRecipe implements IRecipe {
                     this.recipeName, item.REGISTRY_NAME, count));
         }
 
-        if (count + this.ingredientCount > 9) {
+        if (this.ingredientCount >= 9) {
             throw new IllegalStateException(String.format(
-                    "The recipe '%s' could not be created because it has too many ingredients. The maximum number of ingredients is 9.",
+                    "The recipe '%s' could not be created because it has too many ingredients types. The maximum number of ingredients is 9.",
                     this.recipeName));
         }
         vanillaIngredients.put(item, count);
-        ingredientCount += count;
+        ingredientCount++;
         return this;
     }
 
