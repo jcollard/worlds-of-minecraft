@@ -26,6 +26,7 @@ import com.worldsofminecraft.mod.exception.BuildFailedException;
 import com.worldsofminecraft.mod.item.AbstractItem;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.QuickItem;
+import com.worldsofminecraft.mod.item.recipe.IRecipe;
 import com.worldsofminecraft.mod.item.tab.CustomItemTab;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.potion.QuickPotion;
@@ -172,6 +173,7 @@ public class MinecraftMod implements IMinecraftMod {
                                      .getLogger();
 
         private final Map<String, IItem> items = new TreeMap<>();
+        private final Map<String, IRecipe> recipes = new TreeMap<>();
         private final Map<String, QuickPotion> potions = new TreeMap<>();
         private final Map<Path, Path> resources = new HashMap<>();
 
@@ -256,7 +258,23 @@ public class MinecraftMod implements IMinecraftMod {
                                 + "\", matched another item that was previously registered.");
             }
             items.put(registryName, item);
-            item.register();
+            item.register(this.MOD_ID);
+            return this;
+        }
+
+        public Builder addRecipe(@Nonnull IRecipe recipe) {
+            Preconditions.checkNotNull(recipe);
+            Preconditions.checkArgument(recipe.getIngredientCount() > 0, String.format(
+                    "The recipe %s requires at least 1 ingredient before it can be added to a mod.", recipe.getName()));
+            String name = recipe.getName()
+                                .toLowerCase();
+            if (recipes.containsKey(name)) {
+                throw new IllegalStateException(String.format(
+                        "Unable to add the recipe \"%s\" because anothe recipe with that name was previously added.",
+                        name));
+
+            }
+            recipes.put(name, recipe);
             return this;
         }
 
@@ -397,10 +415,12 @@ public class MinecraftMod implements IMinecraftMod {
                 }
             }
             MinecraftMod mod = new MinecraftMod(this);
-            clearPreviousMod(mod);
+            clearPreviousModAssets(mod);
+            clearPreviousModData(mod);
             createLogoFile(mod);
             generateModTOML(mod);
             generateItems(mod);
+            generateRecipes(mod);
             generateLangFile(mod);
             generateResources(mod);
             return mod;
@@ -425,7 +445,7 @@ public class MinecraftMod implements IMinecraftMod {
             }
         }
 
-        private void clearPreviousMod(MinecraftMod mod) {
+        private void clearPreviousModAssets(MinecraftMod mod) {
             if (!clearPreviousMod) {
                 return;
             }
@@ -438,6 +458,26 @@ public class MinecraftMod implements IMinecraftMod {
             LOGGER.info("Clearing out previous mod files: " + modDir);
             try {
                 Files.walk(modDir)
+                     .map(Path::toFile)
+                     .forEach(File::delete);
+            } catch (IOException e) {
+                throw new BuildFailedException("Could not remove previous mod files.", e);
+            }
+        }
+
+        private void clearPreviousModData(MinecraftMod mod) {
+            if (!clearPreviousMod) {
+                return;
+            }
+            Path dataDir = Utils.getInstance()
+                                .getDataDir(mod);
+            if (!Files.exists(dataDir)) {
+                return;
+            }
+
+            LOGGER.info("Clearing out previous mod files: " + dataDir);
+            try {
+                Files.walk(dataDir)
                      .map(Path::toFile)
                      .forEach(File::delete);
             } catch (IOException e) {
@@ -461,6 +501,26 @@ public class MinecraftMod implements IMinecraftMod {
                 } catch (IOException e) {
                     throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
                 }
+            }
+        }
+
+        private void generateRecipes(MinecraftMod mod) {
+            Utils utils = Utils.getInstance();
+            for (IRecipe recipe : this.recipes.values()) {
+                Path outfile = utils.getRecipesDir(mod)
+                                    .resolve(recipe.getName()
+                                                   .toLowerCase()
+                                            + ".json");
+                LOGGER.info("Creating recipe file: " + outfile);
+                try {
+                    Files.createDirectories(utils.getRecipesDir(mod));
+                    Files.write(outfile, recipe.generateResource(mod)
+                                               .getBytes(),
+                            StandardOpenOption.CREATE);
+                } catch (IOException e) {
+                    throw new BuildFailedException("Could not write file \"" + outfile + "\". ", e);
+                }
+
             }
         }
 

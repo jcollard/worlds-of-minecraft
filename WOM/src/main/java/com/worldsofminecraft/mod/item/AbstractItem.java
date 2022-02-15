@@ -1,7 +1,10 @@
 package com.worldsofminecraft.mod.item;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -34,6 +37,10 @@ public abstract class AbstractItem implements IItem {
     private final IItem.Properties properties = new IItem.Properties();
     /** The simple registry name for this item */
     private final String simpleRegistryName;
+    /**
+     * The full registry name of this item if it has been registered otherwise null
+     */
+    private String registryName;
     /** The registry object for this item */
     private RegistryObject<Item> registryObject;
     /** The {@link Action} the player takes when using this item. */
@@ -42,6 +49,8 @@ public abstract class AbstractItem implements IItem {
     private int useDuration = 20;
     /** Tracks if this item has been registered on a builder */
     private boolean isRegistered = false;
+    /** A list of all listeners to be notified upon registration */
+    private final List<Consumer<String>> modNameListeners = new LinkedList<>();
 
     /**
      * Checks all known constructed {@link AbstractItem}s to see if they have been
@@ -145,6 +154,16 @@ public abstract class AbstractItem implements IItem {
         return this.simpleRegistryName;
     }
 
+    @Override
+    public String getRegistryName() {
+        if (!this.isRegistered) {
+            throw new IllegalStateException(
+                    String.format("Cannot getRegistryName for %s because it has not yet been added to a mod.",
+                            this.simpleRegistryName));
+        }
+        return this.registryName;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -216,8 +235,22 @@ public abstract class AbstractItem implements IItem {
      * {@inheritDoc}
      */
     @Override
-    public void register() {
+    public void register(String modID) {
+        if (this.isRegistered) {
+            throw new IllegalStateException(
+                    String.format("Item %s was registered multiple times.", this.simpleRegistryName));
+        }
         this.isRegistered = true;
+        this.registryName = modID + ":" + this.simpleRegistryName;
+        for (Consumer<String> handler : modNameListeners) {
+            handler.accept(modID);
+        }
+    }
+
+    @Override
+    public void onRegisterModName(@Nonnull Consumer<String> handler) {
+        Preconditions.checkNotNull(handler);
+        modNameListeners.add(handler);
     }
 
     /**

@@ -14,6 +14,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.worldsofminecraft.mod.IMinecraftMod;
+import com.worldsofminecraft.mod.MinecraftMod;
 import com.worldsofminecraft.mod.ModPack;
 
 public class Utils {
@@ -90,7 +91,7 @@ public class Utils {
         mapping.put("modLoader", pack.getModLoader());
         mapping.put("loaderVersion", pack.getLoaderVersion());
         mapping.put("license", pack.getLicense());
-        
+
         b.append("# This file was generated using the Worlds of Minecraft Mod Builder Library\n");
         b.append("# This file should not be edited manually as it will likely be overwritten\n");
         b.append("# during a build process.\n");
@@ -162,6 +163,17 @@ public class Utils {
     public Path getItemModelsDir(@Nonnull IMinecraftMod mod) {
         Preconditions.checkArgument(mod != null);
         return getAssetsDir(mod).resolve("models/item/");
+    }
+
+    public Path getDataDir(MinecraftMod mod) {
+        Preconditions.checkArgument(mod != null);
+        return Paths.get(rootDir)
+                    .resolve("src/main/resources/data/" + mod.getModId());
+    }
+
+    public Path getRecipesDir(@Nonnull MinecraftMod mod) {
+        Preconditions.checkArgument(mod != null);
+        return getDataDir(mod).resolve("recipes/");
     }
 
     public Path getItemsTextureDir(@Nonnull IMinecraftMod mod) {

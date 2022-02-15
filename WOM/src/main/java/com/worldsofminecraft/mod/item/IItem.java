@@ -1,6 +1,7 @@
 package com.worldsofminecraft.mod.item;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
@@ -34,6 +35,24 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 public interface IItem {
+
+    /**
+     * Registers a handler that will be passed the MOD_ID when this {@link IItem} is
+     * is registered.
+     * 
+     * @param handler The handler to be executed when the name is set
+     */
+    void onRegisterModName(Consumer<String> handler);
+
+    /**
+     * Returns the full Registry Name of this IItem. This method cannot be called
+     * prior to being added to a builder.
+     * 
+     * @throws IllegalStateException if this IItem has not yet been added to a
+     *                               builder.
+     * @return
+     */
+    String getRegistryName();
 
     /**
      * @return the english translated name of this item
@@ -99,7 +118,7 @@ public interface IItem {
      * This method should be called after this item has been registered on a
      * builder. This is used to determine if the item was added to a mod.
      */
-    void register();
+    void register(String modName);
 
     /**
      * This method should be overwritten by the implementing subclass if the item
