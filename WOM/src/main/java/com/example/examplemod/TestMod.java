@@ -15,6 +15,7 @@ import com.worldsofminecraft.mod.item.QuickPickaxe;
 import com.worldsofminecraft.mod.item.QuickShovel;
 import com.worldsofminecraft.mod.item.QuickSword;
 import com.worldsofminecraft.mod.item.SimpleItemExtender;
+import com.worldsofminecraft.mod.item.recipe.ShapedRecipe;
 import com.worldsofminecraft.mod.item.recipe.ShapelessRecipe;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
@@ -103,6 +104,14 @@ public class TestMod extends QuickMod {
         sword.setDamage(3);
         sword.setSpeed(-2.4F);
         builder.addItem(sword);
+
+        ShapedRecipe mySwordRecipe = new ShapedRecipe("MySwordRecipe", sword, 1);
+        mySwordRecipe.addIngredient(VanillaItem.IRON_INGOT, 0, 1);
+        mySwordRecipe.addIngredient(VanillaItem.IRON_INGOT, 1, 1);
+        mySwordRecipe.addIngredient(VanillaItem.IRON_INGOT, 1, 0);
+        mySwordRecipe.addIngredient(VanillaItem.IRON_INGOT, 1, 2);
+        mySwordRecipe.addIngredient(VanillaItem.STICK, 2, 1);
+        builder.addRecipe(mySwordRecipe);
 
         SimpleItemExtender customCompass = new SimpleItemExtender("My Compass", VanillaItem.COMPASS);
         builder.addItem(customCompass);

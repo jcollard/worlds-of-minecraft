@@ -514,7 +514,7 @@ public class MinecraftMod implements IMinecraftMod {
                 LOGGER.info("Creating recipe file: " + outfile);
                 try {
                     Files.createDirectories(utils.getRecipesDir(mod));
-                    Files.write(outfile, recipe.generateResource(mod)
+                    Files.write(outfile, recipe.generateResource()
                                                .getBytes(),
                             StandardOpenOption.CREATE);
                 } catch (IOException e) {

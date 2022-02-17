@@ -10,11 +10,17 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.worldsofminecraft.mod.IMinecraftMod;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
+/**
+ * A ShaplessRecipe is one for which the crafting materials may occupy any space
+ * within the crafting table (or crafting mechanism).
+ * 
+ * @author Joseph Collard <jcollard@worldsofminecraft.com>
+ *
+ */
 public class ShapelessRecipe implements IRecipe {
 
     private final Map<IItem, Integer> ingredients = new HashMap<>();
@@ -24,6 +30,56 @@ public class ShapelessRecipe implements IRecipe {
     private final VanillaItem resultVanillaItem;
     private final int resultCount;
     private int ingredientCount = 0;
+
+    /**
+     * Given a name, item to craft, and the number of items this recipe will
+     * produce, constructs a ShapelessRecipe.
+     * 
+     * @param recipeName The name of the recipe, this must be unique within a mod
+     * @param result     The item that is crafted
+     * @param count      The amount of items this recipe produces
+     * 
+     * @throws IllegalArgumentException If the provided recipe name contains
+     *                                  anything other than letters
+     */
+    public ShapelessRecipe(@Nonnull String recipeName, @Nonnull IItem result, int count) {
+        Preconditions.checkArgument(recipeName != null, "Recipe name must not be null.");
+        Preconditions.checkArgument(result != null, "Cannot create a recipe for a null item.");
+        for (char ch : recipeName.toCharArray()) {
+            if (!Character.isAlphabetic(ch)) {
+                throw new IllegalArgumentException(
+                        String.format("Illegal recipe name detected '%s'. A recipe name may only contain letters."));
+            }
+        }
+        this.recipeName = recipeName;
+        this.resultCount = count;
+        this.resultItem = result;
+        this.resultVanillaItem = null;
+    }
+
+    /**
+     * Given a name, item to craft, and the number of items this recipe will
+     * produce, constructs a ShapelessRecipe.
+     * 
+     * @param recipeName The name of the recipe, this must be unique within a mod
+     * @param result     The item that is crafted
+     * @param count      The amount of items this recipe produces
+     * 
+     * @throws IllegalArgumentException If the provided recipe name contains
+     *                                  anything other than letters
+     */
+    public ShapelessRecipe(@Nonnull String recipeName, @Nonnull VanillaItem result, int count) {
+        for (char ch : recipeName.toCharArray()) {
+            if (!Character.isAlphabetic(ch)) {
+                throw new IllegalArgumentException(
+                        String.format("Illegal recipe name detected '%s'. A recipe name may only contain letters."));
+            }
+        }
+        this.recipeName = recipeName;
+        this.resultCount = count;
+        this.resultItem = null;
+        this.resultVanillaItem = result;
+    }
 
     /**
      * Given an ingredient and a count specifying how many of that ingredient are
@@ -63,6 +119,20 @@ public class ShapelessRecipe implements IRecipe {
         return this;
     }
 
+    /**
+     * Given an ingredient and a count specifying how many of that ingredient are
+     * required, adds the ingredient to this recipe.
+     * 
+     * @param item  The item to be used as an ingredient
+     * @param count The number of that item that is required
+     * 
+     * @throws IllegalStateException    if the item is already an ingredient or if
+     *                                  the total count of this recipe is greater
+     *                                  than 9
+     * @throws IllegalArgumentException if the count is not a positive number
+     * 
+     * @return For convenience, returns this Builder
+     */
     public ShapelessRecipe addIngredient(@Nonnull VanillaItem item, int count) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         if (vanillaIngredients.containsKey(item)) {
@@ -87,34 +157,8 @@ public class ShapelessRecipe implements IRecipe {
         return this;
     }
 
-    public ShapelessRecipe(@Nonnull String recipeName, @Nonnull IItem result, int count) {
-        for (char ch : recipeName.toCharArray()) {
-            if (!Character.isAlphabetic(ch)) {
-                throw new IllegalArgumentException(
-                        String.format("Illegal recipe name detected '%s'. A recipe name may only contain letters."));
-            }
-        }
-        this.recipeName = recipeName;
-        this.resultCount = count;
-        this.resultItem = result;
-        this.resultVanillaItem = null;
-    }
-
-    public ShapelessRecipe(@Nonnull String recipeName, @Nonnull VanillaItem result, int count) {
-        for (char ch : recipeName.toCharArray()) {
-            if (!Character.isAlphabetic(ch)) {
-                throw new IllegalArgumentException(
-                        String.format("Illegal recipe name detected '%s'. A recipe name may only contain letters."));
-            }
-        }
-        this.recipeName = recipeName;
-        this.resultCount = count;
-        this.resultItem = null;
-        this.resultVanillaItem = result;
-    }
-
     @Override
-    public String generateResource(@Nonnull IMinecraftMod mod) {
+    public String generateResource() {
         JsonObject model = new JsonObject();
         model.add("type", new JsonPrimitive("minecraft:crafting_shapeless"));
         JsonArray ingredients = new JsonArray();
