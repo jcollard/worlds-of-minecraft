@@ -16,8 +16,8 @@ import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 /**
- * A ShaplessRecipe is one for which the crafting materials may occupy any space
- * within the crafting table (or crafting mechanism).
+ * A ShapedRecipe is one for which the crafting materials must occupy a specific
+ * cell within a crafting table (or crafting mechanism).
  * 
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
@@ -36,7 +36,7 @@ public class ShapedRecipe implements IRecipe {
 
     /**
      * Given a name, item to craft, and the number of items this recipe will
-     * produce, constructs a ShapelessRecipe.
+     * produce, constructs a ShapedRecipe.
      * 
      * @param recipeName The name of the recipe, this must be unique within a mod
      * @param result     The item that is crafted
@@ -62,7 +62,7 @@ public class ShapedRecipe implements IRecipe {
 
     /**
      * Given a name, item to craft, and the number of items this recipe will
-     * produce, constructs a ShapelessRecipe.
+     * produce, constructs a ShapedRecipe.
      * 
      * @param recipeName The name of the recipe, this must be unique within a mod
      * @param result     The item that is crafted
@@ -84,6 +84,15 @@ public class ShapedRecipe implements IRecipe {
         this.resultVanillaItem = result;
     }
 
+    /**
+     * Given an item ingredient, a row, and a column, adds this item to the recipe.
+     * 
+     * @param item The item to be used as an ingredient
+     * @param row  The row (0, 1, or 2)
+     * @param col  The column (0, 1, or 2)
+     * 
+     * @return For convenience returns this recipe
+     */
     public ShapedRecipe addIngredient(@Nonnull IItem item, int row, int col) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         Preconditions.checkArgument(row >= 0 && row < 3, "Row must be 0, 1, or 2.");
@@ -105,6 +114,15 @@ public class ShapedRecipe implements IRecipe {
         return this;
     }
 
+    /**
+     * Given an item ingredient, a row, and a column, adds this item to the recipe.
+     * 
+     * @param item The item to be used as an ingredient
+     * @param row  The row (0, 1, or 2)
+     * @param col  The column (0, 1, or 2)
+     * 
+     * @return For convenience returns this recipe
+     */
     public ShapedRecipe addIngredient(@Nonnull VanillaItem item, int row, int col) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         Preconditions.checkArgument(row >= 0 && row < 3, "Row must be 0, 1, or 2.");
