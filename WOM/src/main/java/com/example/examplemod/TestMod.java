@@ -15,8 +15,15 @@ import com.worldsofminecraft.mod.item.QuickPickaxe;
 import com.worldsofminecraft.mod.item.QuickShovel;
 import com.worldsofminecraft.mod.item.QuickSword;
 import com.worldsofminecraft.mod.item.SimpleItemExtender;
+import com.worldsofminecraft.mod.item.recipe.BlastingRecipe;
+import com.worldsofminecraft.mod.item.recipe.CampfireRecipe;
 import com.worldsofminecraft.mod.item.recipe.ShapedRecipe;
 import com.worldsofminecraft.mod.item.recipe.ShapelessRecipe;
+import com.worldsofminecraft.mod.item.recipe.SmallShapedRecipe;
+import com.worldsofminecraft.mod.item.recipe.SmeltingRecipe;
+import com.worldsofminecraft.mod.item.recipe.SmithingRecipe;
+import com.worldsofminecraft.mod.item.recipe.SmokingRecipe;
+import com.worldsofminecraft.mod.item.recipe.StoneCuttingRecipe;
 import com.worldsofminecraft.mod.item.stack.IItemStack;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
 import com.worldsofminecraft.mod.potion.Effect;
@@ -167,6 +174,37 @@ public class TestMod extends QuickMod {
                    .addEffect(new Effect(Type.JUMP_BOOST).seconds(20)
                                                          .level(3));
         builder.addPotion(potatoWater);
+
+        SmeltingRecipe testRecipe = new SmeltingRecipe("SmeltingRecipe", boatCapsul);
+        testRecipe.setIngredient(VanillaItem.ACACIA_BOAT);
+        builder.addRecipe(testRecipe);
+
+        BlastingRecipe blastingRecipe = new BlastingRecipe("BlastingRecipe", boatCapsul);
+        blastingRecipe.setIngredient(VanillaItem.ACACIA_BOAT);
+        builder.addRecipe(blastingRecipe);
+
+        CampfireRecipe campfireRecipe = new CampfireRecipe("CampfireRecipe", boatCapsul);
+        campfireRecipe.setIngredient(VanillaItem.ACACIA_BOAT);
+        builder.addRecipe(campfireRecipe);
+
+        SmokingRecipe smokingRecipe = new SmokingRecipe("SmokingRecipe", boatCapsul);
+        smokingRecipe.setIngredient(VanillaItem.ACACIA_BOAT);
+        builder.addRecipe(smokingRecipe);
+
+        StoneCuttingRecipe stoneCuttingRecipe = new StoneCuttingRecipe("StoneCuttingRecipe", boatCapsul, 1);
+        stoneCuttingRecipe.setIngredient(VanillaItem.ACACIA_BOAT);
+        builder.addRecipe(stoneCuttingRecipe);
+
+        SmithingRecipe smithingRecipe = new SmithingRecipe("SmithingRecipe", boatCapsul, 1);
+        smithingRecipe.setBaseItem(VanillaItem.ACACIA_BOAT);
+        smithingRecipe.setIngredient(VanillaItem.ACACIA_BUTTON);
+        builder.addRecipe(smithingRecipe);
+
+        SmallShapedRecipe dagger = new SmallShapedRecipe("DaggerRecipe", sword, 1);
+        dagger.addIngredient(VanillaItem.IRON_INGOT, 0, 1);
+        dagger.addIngredient(VanillaItem.IRON_INGOT, 1, 1);
+        builder.addRecipe(dagger);
+
         return builder;
     }
 
