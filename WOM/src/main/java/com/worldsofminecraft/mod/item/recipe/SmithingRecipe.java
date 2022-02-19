@@ -121,27 +121,34 @@ public class SmithingRecipe implements IRecipe {
     }
 
     private JsonElement getResult() {
+        JsonObject result = new JsonObject();
         if (this.resultItem != null) {
-            return new JsonPrimitive(this.resultItem.getRegistryName());
+            result.add("item", new JsonPrimitive(this.resultItem.getRegistryName()));
         } else {
-            return new JsonPrimitive(this.resultVanillaItem.RECIPE_NAME);
+            result.add("item", new JsonPrimitive(this.resultVanillaItem.RECIPE_NAME));
         }
+        return result;
     }
 
     private JsonElement getBase() {
+        JsonObject base = new JsonObject();
+
         if (this.baseItem != null) {
-            return new JsonPrimitive(this.baseItem.getRegistryName());
+            base.add("item", new JsonPrimitive(this.baseItem.getRegistryName()));
         } else {
-            return new JsonPrimitive(this.baseVanillaItem.RECIPE_NAME);
+            base.add("item", new JsonPrimitive(this.baseVanillaItem.RECIPE_NAME));
         }
+        return base;
     }
 
     private JsonElement getAddition() {
+        JsonObject addition = new JsonObject();
         if (this.ingredient != null) {
-            return new JsonPrimitive(this.ingredient.getRegistryName());
+            addition.add("item", new JsonPrimitive(this.ingredient.getRegistryName()));
         } else {
-            return new JsonPrimitive(this.vanillaIngredient.RECIPE_NAME);
+            addition.add("item", new JsonPrimitive(this.vanillaIngredient.RECIPE_NAME));
         }
+        return addition;
     }
 
     @Override

@@ -109,11 +109,13 @@ public class StoneCuttingRecipe implements IRecipe {
     }
 
     private JsonElement getIngredient() {
+        JsonObject ingredient = new JsonObject();
         if (this.ingredient != null) {
-            return new JsonPrimitive(this.ingredient.getRegistryName());
+            ingredient.add("item", new JsonPrimitive(this.ingredient.getRegistryName()));
         } else {
-            return new JsonPrimitive(this.vanillaIngredient.RECIPE_NAME);
+            ingredient.add("item", new JsonPrimitive(this.vanillaIngredient.RECIPE_NAME));
         }
+        return ingredient;
     }
 
     @Override

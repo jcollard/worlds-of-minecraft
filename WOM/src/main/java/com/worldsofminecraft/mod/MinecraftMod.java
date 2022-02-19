@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -264,8 +265,9 @@ public class MinecraftMod implements IMinecraftMod {
 
         public Builder addRecipe(@Nonnull IRecipe recipe) {
             Preconditions.checkNotNull(recipe);
-            Preconditions.checkArgument(recipe.getIngredientCount() > 0, String.format(
-                    "The recipe %s requires at least 1 ingredient before it can be added to a mod.", recipe.getName()));
+            Optional<String> errorMessage = recipe.getErrorMessage();
+            Preconditions.checkState(errorMessage.isPresent() == false,
+                    errorMessage.isPresent() ? errorMessage.get() : "");
             String name = recipe.getName()
                                 .toLowerCase();
             if (recipes.containsKey(name)) {

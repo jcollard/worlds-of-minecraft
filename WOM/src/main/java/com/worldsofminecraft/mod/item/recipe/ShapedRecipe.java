@@ -3,7 +3,6 @@ package com.worldsofminecraft.mod.item.recipe;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -126,8 +125,8 @@ public class ShapedRecipe implements IRecipe {
      */
     public ShapedRecipe addIngredient(@Nonnull VanillaItem item, int row, int col) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
-        Preconditions.checkArgument(row >= 0 && row < 3, "Row must be 0, 1, or 2.");
-        Preconditions.checkArgument(col >= 0 && col < 3, "Column must be 0, 1, or 2.");
+        Preconditions.checkArgument(row >= 0 && row < this.getMax(), "Row must be 0, 1, or 2.");
+        Preconditions.checkArgument(col >= 0 && col < this.getMax(), "Column must be 0, 1, or 2.");
         int index = this.getIndex(row, col);
         if (pattern[index] != ' ') {
             throw new IllegalStateException(
@@ -169,11 +168,15 @@ public class ShapedRecipe implements IRecipe {
         return result;
     }
 
-    private JsonElement getPattern() {
+    protected JsonElement getPattern() {
         JsonArray ingredients = new JsonArray();
-        ingredients.add(pattern[0] + "" + pattern[1] + "" + pattern[2]);
-        ingredients.add(pattern[3] + "" + pattern[4] + "" + pattern[5]);
-        ingredients.add(pattern[6] + "" + pattern[7] + "" + pattern[8]);
+        for (int row = 0; row < this.getMax(); row++) {
+            StringBuilder builder = new StringBuilder();
+            for (int col = 0; col < this.getMax(); col++) {
+                builder.append(pattern[getIndex(row, col)]);
+            }
+            ingredients.add(builder.toString());
+        }
         return ingredients;
     }
 
@@ -208,16 +211,12 @@ public class ShapedRecipe implements IRecipe {
         return this.ingredientCount;
     }
 
-    private int getIndex(int row, int column) {
+    protected int getIndex(int row, int column) {
         return row * 3 + column;
     }
 
-    @Override
-    public Optional<String> getErrorMessage() {
-        if (this.ingredientCount > 0)
-            return Optional.empty();
-        return Optional.of(String.format(
-                "The recipe %s requires at least 1 ingredient before it can be added to a mod.", this.recipeName));
+    protected int getMax() {
+        return 3;
     }
 
 }
