@@ -3,6 +3,7 @@ package com.worldsofminecraft.mod.item.recipe;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -209,6 +210,14 @@ public class ShapedRecipe implements IRecipe {
 
     private int getIndex(int row, int column) {
         return row * 3 + column;
+    }
+
+    @Override
+    public Optional<String> getErrorMessage() {
+        if (this.ingredientCount > 0)
+            return Optional.empty();
+        return Optional.of(String.format(
+                "The recipe %s requires at least 1 ingredient before it can be added to a mod.", this.recipeName));
     }
 
 }

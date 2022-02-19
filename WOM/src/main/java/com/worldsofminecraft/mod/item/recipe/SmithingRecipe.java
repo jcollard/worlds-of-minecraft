@@ -1,5 +1,7 @@
 package com.worldsofminecraft.mod.item.recipe;
 
+import java.util.Optional;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
@@ -11,58 +13,67 @@ import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 /**
- * A SmeltingRecipe is one for which there is a single ingredient and a single
- * output within a furnace.
+ * A SmithingRecipe is one for which there is a base item to be upgraded and an
+ * upgrade ingredient that result in an upgraded item.
  * 
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
  */
-public class SmeltingRecipe implements IRecipe {
+public class SmithingRecipe implements IRecipe {
 
+    private IItem baseItem;
+    private VanillaItem baseVanillaItem;
     private IItem ingredient;
     private VanillaItem vanillaIngredient;
     private final String recipeName;
     private final IItem resultItem;
     private final VanillaItem resultVanillaItem;
+    private final int count;
     private int ingredientCount = 0;
-    private double experience = 0.1;
-    private int cookingTime = 200;
 
     /**
-     * Given a name and a resulting item, creates a SmeltingRecipe
+     * Given a name and a resulting item, creates a SmithingRecipe
      * 
      * @param recipeName The name of the recipe, this must be unique within a mod
      * @param result     The item that is crafted
+     * @param count      The number of resulting items that are created by this
+     *                   recipe
      * 
      * @throws IllegalArgumentException If the provided recipe name contains
      *                                  anything other than letters
      */
-    public SmeltingRecipe(@Nonnull String recipeName, @Nonnull IItem result) {
+    public SmithingRecipe(@Nonnull String recipeName, @Nonnull IItem result, int count) {
         Preconditions.checkArgument(recipeName != null, "Recipe name must not be null.");
         Preconditions.checkArgument(result != null, "Cannot create a recipe for a null item.");
+        Preconditions.checkArgument(count > 0, "Recipe must have a count greater than 0.");
         this.recipeName = recipeName;
         this.resultItem = result;
         this.resultVanillaItem = null;
+        this.count = count;
     }
 
     /**
-     * Given a name and a resulting item, creates a SmeltingRecipe
+     * Given a name and a resulting item, creates a SmithingRecipe
      * 
      * @param recipeName The name of the recipe, this must be unique within a mod
      * @param result     The item that is crafted
+     * @param count      The number of resulting items that are created by this
+     *                   recipe
      * 
      * @throws IllegalArgumentException If the provided recipe name contains
      *                                  anything other than letters
      */
-    public SmeltingRecipe(@Nonnull String recipeName, @Nonnull VanillaItem result) {
+    public SmithingRecipe(@Nonnull String recipeName, @Nonnull VanillaItem result, int count) {
         Preconditions.checkArgument(recipeName != null, "Recipe name must not be null.");
         Preconditions.checkArgument(result != null, "Cannot create a recipe for a null item.");
+        Preconditions.checkArgument(count > 0, "Recipe must have a count greater than 0.");
         this.recipeName = recipeName;
         this.resultItem = null;
+        this.count = count;
         this.resultVanillaItem = result;
     }
 
-    public SmeltingRecipe setIngredient(@Nonnull IItem item) {
+    public SmithingRecipe setIngredient(@Nonnull IItem item) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         Preconditions.checkState(this.ingredient == null && this.vanillaIngredient == null,
                 "This recipe may only have 1 ingredient.");
@@ -71,7 +82,7 @@ public class SmeltingRecipe implements IRecipe {
         return this;
     }
 
-    public SmeltingRecipe setIngredient(@Nonnull VanillaItem item) {
+    public SmithingRecipe setIngredient(@Nonnull VanillaItem item) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         Preconditions.checkState(this.ingredient == null && this.vanillaIngredient == null,
                 "This recipe may only have 1 ingredient.");
@@ -80,46 +91,33 @@ public class SmeltingRecipe implements IRecipe {
         return this;
     }
 
-    /**
-     * Sets the amount of experience this recipe provides. The default value is 0.1.
-     * 
-     * @param experience a non-negative amount of experience.
-     * @return
-     */
-    public SmeltingRecipe setExperience(double experience) {
-        Preconditions.checkArgument(experience >= 0, "Recipe experience must be greater than or equal to 0.");
-        this.experience = experience;
+    public SmithingRecipe setBaseItem(@Nonnull IItem item) {
+        Preconditions.checkNotNull(item, "Cannot set a null base item.");
+        Preconditions.checkState(this.baseItem == null && this.vanillaIngredient == null,
+                "This recipe may only have 1 base item.");
+        this.baseItem = item;
         return this;
     }
 
-    /**
-     * Sets the amount of time this recipe takes in ticks. The default value is 200.
-     * 
-     * @param ticks A positive number of ticks
-     * @return For convenience returns this SmeltingRecipe
-     */
-    public SmeltingRecipe setCookingTime(int ticks) {
-        Preconditions.checkArgument(ticks > 0, "Cooking time must be at least 1 tick.");
-        this.cookingTime = ticks;
+    public SmithingRecipe setBaseItem(@Nonnull VanillaItem item) {
+        Preconditions.checkNotNull(item, "Cannot set a null base item.");
+        Preconditions.checkState(this.baseItem == null && this.vanillaIngredient == null,
+                "This recipe may only have 1 base item.");
+        this.baseVanillaItem = item;
         return this;
     }
 
     @Override
     public String generateResource() {
         JsonObject model = new JsonObject();
-        model.add("type", getType());
-
-        model.add("ingredient", getIngredient());
-        model.add("experience", new JsonPrimitive(experience));
-        model.add("cookingtime", new JsonPrimitive(cookingTime));
+        model.add("type", new JsonPrimitive("minecraft:smithing"));
+        model.add("base", getBase());
+        model.add("addition", getAddition());
         model.add("result", getResult());
+        model.add("count", new JsonPrimitive(count));
         return Utils.getInstance()
                     .getGson()
                     .toJson(model);
-    }
-
-    protected JsonElement getType() {
-        return new JsonPrimitive("minecraft:smelting");
     }
 
     private JsonElement getResult() {
@@ -130,7 +128,15 @@ public class SmeltingRecipe implements IRecipe {
         }
     }
 
-    private JsonElement getIngredient() {
+    private JsonElement getBase() {
+        if (this.baseItem != null) {
+            return new JsonPrimitive(this.baseItem.getRegistryName());
+        } else {
+            return new JsonPrimitive(this.baseVanillaItem.RECIPE_NAME);
+        }
+    }
+
+    private JsonElement getAddition() {
         if (this.ingredient != null) {
             return new JsonPrimitive(this.ingredient.getRegistryName());
         } else {
@@ -146,6 +152,18 @@ public class SmeltingRecipe implements IRecipe {
     @Override
     public int getIngredientCount() {
         return this.ingredientCount;
+    }
+
+    @Override
+    public Optional<String> getErrorMessage() {
+        if (this.baseItem == null && this.baseVanillaItem == null) {
+            return Optional.of(String.format("The recipe %s requires a base item before it can be added to a mod.",
+                    this.recipeName));
+        }
+        if (this.ingredientCount > 0)
+            return Optional.empty();
+        return Optional.of(String.format(
+                "The recipe %s requires at least 1 ingredient before it can be added to a mod.", this.recipeName));
     }
 
 }

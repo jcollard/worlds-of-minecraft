@@ -11,58 +11,65 @@ import com.worldsofminecraft.mod.util.Utils;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 
 /**
- * A SmeltingRecipe is one for which there is a single ingredient and a single
- * output within a furnace.
+ * A StoneCuttingRecipe is one for which there is a single ingredient and a
+ * single output within a stone cutter.
  * 
  * @author Joseph Collard <jcollard@worldsofminecraft.com>
  *
  */
-public class SmeltingRecipe implements IRecipe {
+public class StoneCuttingRecipe implements IRecipe {
 
     private IItem ingredient;
     private VanillaItem vanillaIngredient;
     private final String recipeName;
     private final IItem resultItem;
     private final VanillaItem resultVanillaItem;
+    private final int count;
     private int ingredientCount = 0;
-    private double experience = 0.1;
-    private int cookingTime = 200;
 
     /**
-     * Given a name and a resulting item, creates a SmeltingRecipe
+     * Given a name and a resulting item, creates a StoneCuttingRecipe
      * 
      * @param recipeName The name of the recipe, this must be unique within a mod
      * @param result     The item that is crafted
+     * @param count      The number of resulting items that are created by this
+     *                   recipe
      * 
      * @throws IllegalArgumentException If the provided recipe name contains
      *                                  anything other than letters
      */
-    public SmeltingRecipe(@Nonnull String recipeName, @Nonnull IItem result) {
+    public StoneCuttingRecipe(@Nonnull String recipeName, @Nonnull IItem result, int count) {
         Preconditions.checkArgument(recipeName != null, "Recipe name must not be null.");
         Preconditions.checkArgument(result != null, "Cannot create a recipe for a null item.");
+        Preconditions.checkArgument(count > 0, "Recipe must have a count greater than 0.");
         this.recipeName = recipeName;
         this.resultItem = result;
         this.resultVanillaItem = null;
+        this.count = count;
     }
 
     /**
-     * Given a name and a resulting item, creates a SmeltingRecipe
+     * Given a name and a resulting item, creates a StoneCuttingRecipe
      * 
      * @param recipeName The name of the recipe, this must be unique within a mod
      * @param result     The item that is crafted
+     * @param count      The number of resulting items that are created by this
+     *                   recipe
      * 
      * @throws IllegalArgumentException If the provided recipe name contains
      *                                  anything other than letters
      */
-    public SmeltingRecipe(@Nonnull String recipeName, @Nonnull VanillaItem result) {
+    public StoneCuttingRecipe(@Nonnull String recipeName, @Nonnull VanillaItem result, int count) {
         Preconditions.checkArgument(recipeName != null, "Recipe name must not be null.");
         Preconditions.checkArgument(result != null, "Cannot create a recipe for a null item.");
+        Preconditions.checkArgument(count > 0, "Recipe must have a count greater than 0.");
         this.recipeName = recipeName;
         this.resultItem = null;
+        this.count = count;
         this.resultVanillaItem = result;
     }
 
-    public SmeltingRecipe setIngredient(@Nonnull IItem item) {
+    public StoneCuttingRecipe setIngredient(@Nonnull IItem item) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         Preconditions.checkState(this.ingredient == null && this.vanillaIngredient == null,
                 "This recipe may only have 1 ingredient.");
@@ -71,7 +78,7 @@ public class SmeltingRecipe implements IRecipe {
         return this;
     }
 
-    public SmeltingRecipe setIngredient(@Nonnull VanillaItem item) {
+    public StoneCuttingRecipe setIngredient(@Nonnull VanillaItem item) {
         Preconditions.checkNotNull(item, "Cannot add a null ingredient");
         Preconditions.checkState(this.ingredient == null && this.vanillaIngredient == null,
                 "This recipe may only have 1 ingredient.");
@@ -80,46 +87,17 @@ public class SmeltingRecipe implements IRecipe {
         return this;
     }
 
-    /**
-     * Sets the amount of experience this recipe provides. The default value is 0.1.
-     * 
-     * @param experience a non-negative amount of experience.
-     * @return
-     */
-    public SmeltingRecipe setExperience(double experience) {
-        Preconditions.checkArgument(experience >= 0, "Recipe experience must be greater than or equal to 0.");
-        this.experience = experience;
-        return this;
-    }
-
-    /**
-     * Sets the amount of time this recipe takes in ticks. The default value is 200.
-     * 
-     * @param ticks A positive number of ticks
-     * @return For convenience returns this SmeltingRecipe
-     */
-    public SmeltingRecipe setCookingTime(int ticks) {
-        Preconditions.checkArgument(ticks > 0, "Cooking time must be at least 1 tick.");
-        this.cookingTime = ticks;
-        return this;
-    }
-
     @Override
     public String generateResource() {
         JsonObject model = new JsonObject();
-        model.add("type", getType());
+        model.add("type", new JsonPrimitive("minecraft:stonecutting"));
 
         model.add("ingredient", getIngredient());
-        model.add("experience", new JsonPrimitive(experience));
-        model.add("cookingtime", new JsonPrimitive(cookingTime));
         model.add("result", getResult());
+        model.add("count", new JsonPrimitive(count));
         return Utils.getInstance()
                     .getGson()
                     .toJson(model);
-    }
-
-    protected JsonElement getType() {
-        return new JsonPrimitive("minecraft:smelting");
     }
 
     private JsonElement getResult() {

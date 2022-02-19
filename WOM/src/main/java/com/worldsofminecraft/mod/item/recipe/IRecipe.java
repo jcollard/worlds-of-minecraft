@@ -1,5 +1,7 @@
 package com.worldsofminecraft.mod.item.recipe;
 
+import java.util.Optional;
+
 public interface IRecipe {
 
     /**
@@ -23,5 +25,19 @@ public interface IRecipe {
      * @return
      */
     int getIngredientCount();
+
+    /**
+     * Returns an optional error message or Empty if there are no errors.
+     * 
+     * @return
+     */
+    default Optional<String> getErrorMessage() {
+        if (this.getIngredientCount() > 0) {
+            return Optional.empty();
+        }
+        return Optional.of(String.format(
+                "The recipe %s requires at least 1 ingredient before it can be added to a mod.", this.getName()));
+
+    }
 
 }
