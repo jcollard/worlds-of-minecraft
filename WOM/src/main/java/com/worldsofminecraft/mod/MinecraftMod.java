@@ -27,6 +27,7 @@ import com.worldsofminecraft.mod.exception.BuildFailedException;
 import com.worldsofminecraft.mod.item.AbstractItem;
 import com.worldsofminecraft.mod.item.IItem;
 import com.worldsofminecraft.mod.item.QuickItem;
+import com.worldsofminecraft.mod.item.armor.QuickArmor;
 import com.worldsofminecraft.mod.item.recipe.IRecipe;
 import com.worldsofminecraft.mod.item.tab.CustomItemTab;
 import com.worldsofminecraft.mod.item.tab.ItemTab;
@@ -262,6 +263,12 @@ public class MinecraftMod implements IMinecraftMod {
             item.register(this.MOD_ID);
             return this;
         }
+        
+        public Builder addArmor(@Nonnull QuickArmor armor) {
+        	Preconditions.checkArgument(armor != null, "Cannot add a null Armor to a mod. Did you initialize it?");
+        	
+        	return this;
+        }
 
         public Builder addRecipe(@Nonnull IRecipe recipe) {
             Preconditions.checkNotNull(recipe);
@@ -493,7 +500,6 @@ public class MinecraftMod implements IMinecraftMod {
                 Path outfile = utils.getItemModelsDir(mod)
                                     .resolve(item.getSimpleRegistryName() + ".json");
                 LOGGER.info("Creating model file: " + outfile);
-                // TODO(2021-07-09 jcollard): CREATE_NEW and blow up if file alredy exists?
                 try {
                     Files.createDirectories(utils.getItemModelsDir(mod));
                     Files.write(outfile, item.getItemModel()

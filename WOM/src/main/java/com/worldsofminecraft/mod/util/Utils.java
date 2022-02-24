@@ -164,6 +164,11 @@ public class Utils {
         Preconditions.checkArgument(mod != null);
         return getAssetsDir(mod).resolve("models/item/");
     }
+    
+    public Path getArmorModelsDir(@Nonnull IMinecraftMod mod) {
+        Preconditions.checkArgument(mod != null);
+        return getAssetsDir(mod).resolve("models/armor/");
+    }
 
     public Path getDataDir(MinecraftMod mod) {
         Preconditions.checkArgument(mod != null);
