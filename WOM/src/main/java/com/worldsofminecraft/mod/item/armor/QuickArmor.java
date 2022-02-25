@@ -52,7 +52,6 @@ public class QuickArmor {
 	private IItemModel chestItemModel;
 	private String helmName;
 	private IItemModel helmItemModel;
-	private static final int[] DURABILITY_PER_SLOT = new int[]{13, 15, 16, 11};
 	private Map<ArmorType, Integer> armor = new TreeMap<>();
 	private int durability = 10;
 	private int enchantability = 0;
@@ -63,7 +62,6 @@ public class QuickArmor {
 	private final IPNGResource textureLayer1;
 	private final IPNGResource textureLayer2;
 	private String simpleRegistryName;
-	private boolean isRegistered = false;
 	
 	/** The registry object for this item */
     private Map<ArmorType, RegistryObject<Item>> registryObjects = new HashMap<>();
@@ -79,13 +77,21 @@ public class QuickArmor {
                               .safeRegistryName(name));
 		this.feetName = String.format("%s Boots", name);
 		this.legsName = String.format("%s Leggings", name);
-		this.chestName = String.format("%s Chest", name);
-		this.helmName = String.format("%s Helm", name);
+		this.chestName = String.format("%s Chestplate", name);
+		this.helmName = String.format("%s Helmet", name);
 		armor.put(ArmorType.FEET, 1);
 		armor.put(ArmorType.LEGS, 4);
 		armor.put(ArmorType.CHEST, 5);
 		armor.put(ArmorType.HEAD, 2);
-	}	
+	}
+	
+	public String getSimpleRegistryName() {
+		return this.simpleRegistryName;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
 	
 	public QuickArmor setProtection(@Nonnull ArmorType type, int protection) {
 		Preconditions.checkArgument(type != null, "Cannot set protection for a null armor type.");
@@ -206,17 +212,19 @@ public class QuickArmor {
 		generateItemResource(mod, feetName, feetItemModel);
 		generateItemResource(mod, helmName, helmItemModel);
 		
-		// Generate Armor Models
-//		Path textureDir = Utils.getInstance()
-//                .getItemsTextureDir(mod);
-//		Files.createDirectories(textureDir);
-//		Path outfile = textureDir.resolve(png.getFileName());
-//		Utils.getInstance()
-//		.getLogger()
-//		.info("Creating item texture: " + outfile);
-//		Files.copy(png.getPath(), outfile, StandardCopyOption.REPLACE_EXISTING);
-//		this.generated = mod.getModId() + ":items/" + png.getSimpleName();
-//		return this.generated;
+		// Generate Armor Textures
+		Path armorTexturesDir = Utils.getInstance().getArmorTextureDir(mod);
+		Files.createDirectories(armorTexturesDir);
+		Path layer1Outfile = armorTexturesDir.resolve(simpleRegistryName + "_layer_1.png");
+		Utils.getInstance()
+			.getLogger()
+			.info("Creating item texture: " + layer1Outfile);
+		Files.copy(textureLayer1.getPath(), layer1Outfile, StandardCopyOption.REPLACE_EXISTING);
+		Path layer2Outfile = armorTexturesDir.resolve(simpleRegistryName + "_layer_2.png");
+		Utils.getInstance()
+			.getLogger()
+			.info("Creating item texture: " + layer2Outfile);
+		Files.copy(textureLayer2.getPath(), layer2Outfile, StandardCopyOption.REPLACE_EXISTING);
 //		
 	}
 	
@@ -237,10 +245,10 @@ public class QuickArmor {
         }        
 	}
 	
-    public Map<ArmorType, RegistryObject<Item>> register(DeferredRegister<Item> register) {
-        Preconditions.checkState(this.registryObjects == null,
+    public Map<ArmorType, RegistryObject<Item>> register(String MOD_ID, DeferredRegister<Item> register) {
+        Preconditions.checkState(this.registryObjects.isEmpty(),
                 "This item was previously registered. Cannot register an item multiple times.");
-        ArmorMaterial material = new ArmorMaterial(this);
+        ArmorMaterial material = new ArmorMaterial(this, MOD_ID);
         Properties p = new Item.Properties();
 		p.tab(ItemGroup.TAB_COMBAT);
 		
@@ -289,6 +297,16 @@ public class QuickArmor {
 		return Optional.empty();
 	}
 	
+	public Map<String, String> getRegistryNames() {
+		Map<String, String> names = new HashMap<>();
+		Utils utils = Utils.getInstance();
+		names.put(utils.safeRegistryName(chestName), chestName);
+		names.put(utils.safeRegistryName(legsName), legsName);
+		names.put(utils.safeRegistryName(feetName), feetName);
+		names.put(utils.safeRegistryName(helmName), helmName);
+		return names;
+	}
+	
 	private static class ArmorMaterial implements IArmorMaterial {
 		
 		private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
@@ -301,8 +319,8 @@ public class QuickArmor {
 		   private final float knockbackResistance;
 		   private final LazyValue<Ingredient> repairIngredient;
 
-		   private ArmorMaterial(QuickArmor b) {
-			  this.name = b.simpleRegistryName;
+		   private ArmorMaterial(QuickArmor b, String MOD_ID) {
+			  this.name = MOD_ID + ":" + b.simpleRegistryName;
 		      this.durabilityMultiplier = b.durability;
 		      this.slotProtections = new int[] {b.armor.get(ArmorType.FEET), b.armor.get(ArmorType.LEGS), b.armor.get(ArmorType.CHEST), b.armor.get(ArmorType.HEAD)};
 		      this.enchantmentValue = b.enchantability;

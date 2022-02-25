@@ -15,6 +15,7 @@ import com.worldsofminecraft.mod.item.QuickPickaxe;
 import com.worldsofminecraft.mod.item.QuickShovel;
 import com.worldsofminecraft.mod.item.QuickSword;
 import com.worldsofminecraft.mod.item.SimpleItemExtender;
+import com.worldsofminecraft.mod.item.armor.QuickArmor;
 import com.worldsofminecraft.mod.item.recipe.BlastingRecipe;
 import com.worldsofminecraft.mod.item.recipe.CampfireRecipe;
 import com.worldsofminecraft.mod.item.recipe.ShapedRecipe;
@@ -35,7 +36,9 @@ import com.worldsofminecraft.resource.model.item.ItemModel;
 import com.worldsofminecraft.resource.vanilla.VanillaItem;
 import com.worldsofminecraft.util.SimpleItemGenerator;
 
-//@Mod(TestMod.MODID)
+import net.minecraftforge.fml.common.Mod;
+
+@Mod(TestMod.MODID)
 public class TestMod extends QuickMod {
 
     public static final String MODID = "mymod";
@@ -204,6 +207,14 @@ public class TestMod extends QuickMod {
         dagger.addIngredient(VanillaItem.IRON_INGOT, 0, 1);
         dagger.addIngredient(VanillaItem.IRON_INGOT, 1, 1);
         builder.addRecipe(dagger);
+        
+        QuickArmor pinkArmor = new QuickArmor("Pink", "assets/common/pink_armor/pink_layer_1.png", "assets/common/pink_armor/pink_layer_2.png");
+        pinkArmor.setChestItemTexture("assets/common/pink_armor/pink_chestplate.png");
+        pinkArmor.setFeetItemTexture("assets/common/pink_armor/pink_boots.png");
+        pinkArmor.setHelmItemTexture("assets/common/pink_armor/pink_helmet.png");
+        pinkArmor.setLegsItemTexture("assets/common/pink_armor/pink_leggings.png");
+        pinkArmor.setRepairIngredient(VanillaItem.IRON_INGOT);
+        builder.addArmor(pinkArmor);
 
         return builder;
     }

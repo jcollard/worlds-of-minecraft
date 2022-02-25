@@ -185,6 +185,11 @@ public class Utils {
         Preconditions.checkArgument(mod != null);
         return getAssetsDir(mod).resolve("textures/items/");
     }
+    
+    public Path getArmorTextureDir(@Nonnull IMinecraftMod mod) {
+        Preconditions.checkArgument(mod != null);
+        return getAssetsDir(mod).resolve("textures/models/armor/");
+    }
 
     public Path getLangFileDir(@Nonnull IMinecraftMod mod) {
         Preconditions.checkArgument(mod != null);

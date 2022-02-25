@@ -175,6 +175,7 @@ public class MinecraftMod implements IMinecraftMod {
                                      .getLogger();
 
         private final Map<String, IItem> items = new TreeMap<>();
+        private final Map<String, QuickArmor> armors = new TreeMap<>();
         private final Map<String, IRecipe> recipes = new TreeMap<>();
         private final Map<String, QuickPotion> potions = new TreeMap<>();
         private final Map<Path, Path> resources = new HashMap<>();
@@ -266,7 +267,12 @@ public class MinecraftMod implements IMinecraftMod {
         
         public Builder addArmor(@Nonnull QuickArmor armor) {
         	Preconditions.checkArgument(armor != null, "Cannot add a null Armor to a mod. Did you initialize it?");
-        	
+        	if (armors.containsKey(armor.getSimpleRegistryName())) {
+        		String error = String.format("Unable to add the item \"%s\". The registry name, \"%s\", matched another item that was previously registered.", armor.getName(), armor.getSimpleRegistryName());
+        		throw new IllegalStateException(error);
+        	}
+        	// TODO (jcollard 2022-02-25): Should add a check that the armor item names do not conflict with anything else 
+        	armors.put(armor.getSimpleRegistryName(), armor);
         	return this;
         }
 
@@ -344,8 +350,14 @@ public class MinecraftMod implements IMinecraftMod {
             for (IItem item : items.values()) {
                 itemRegistryObject.put(item.getSimpleRegistryName(), item.register(ITEMS));
             }
+            
+            for (QuickArmor armor : armors.values()) {
+            	armor.register(MOD_ID, ITEMS);
+            }
+            
             ITEMS.register(bus);
         }
+        
 
         public void registerPotions(@Nonnull IEventBus bus) {
             DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, MOD_ID);
@@ -429,6 +441,7 @@ public class MinecraftMod implements IMinecraftMod {
             createLogoFile(mod);
             generateModTOML(mod);
             generateItems(mod);
+            generateArmor(mod);
             generateRecipes(mod);
             generateLangFile(mod);
             generateResources(mod);
@@ -511,6 +524,16 @@ public class MinecraftMod implements IMinecraftMod {
                 }
             }
         }
+        
+        private void generateArmor(MinecraftMod mod) {
+            for (QuickArmor armor : this.armors.values()) {
+                try {
+					armor.generateResources(mod);
+				} catch (IOException e) {
+					throw new BuildFailedException(e.getMessage(), e);
+				}
+            }
+        }
 
         private void generateRecipes(MinecraftMod mod) {
             Utils utils = Utils.getInstance();
@@ -537,6 +560,14 @@ public class MinecraftMod implements IMinecraftMod {
 
             for (CustomItemTab tab : this.tabs.values()) {
                 lang.add("itemGroup." + tab.REGISTRY_NAME, new JsonPrimitive(tab.NAME));
+            }
+            
+            for (QuickArmor armor : this.armors.values()) {
+            	for (Entry<String, String> simpleName : armor.getRegistryNames().entrySet()) {
+            		String entryName = String.format("item.%s.%s", MOD_ID, simpleName.getKey());
+            		lang.add(entryName, new JsonPrimitive(simpleName.getValue()));
+            	}
+            	
             }
 
             for (String registryName : this.items.keySet()) {
